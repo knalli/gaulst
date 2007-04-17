@@ -8,6 +8,7 @@ import schach.brett.ISchlagbareFigur;
 import schach.system.NegativeConditionException;
 
 public class Bauer extends AbstrakteFigur implements IBauer {
+	private boolean doppelschritt = false;
 
 	public Bauer(Farbe farbe, IFeld feld) {
 		super(farbe, feld, Figurart.BAUER);
@@ -21,8 +22,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 	}
 
 	public boolean letzteRundeDoppelschritt() {
-		// TODO Auto-generated method stub
-		return false;
+		return doppelschritt;
 	}
 
 	public void schlaegt(IFeld ziel, ISchlagbareFigur gegner)
