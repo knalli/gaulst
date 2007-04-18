@@ -3,7 +3,7 @@ import schach.system.NegativeConditionException;
 
 /**
  * Ein Bauer in einer Schachpartie.
- * 
+ * Test, ob es klappt... <<vincent>>
  * @author Jan Philipp
  *
  */
