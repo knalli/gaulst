@@ -1,5 +1,6 @@
 package schach.brett.internal;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class AlleFiguren implements IAlleFiguren {
 	private AlleFiguren(){};
 	private List<IFigur> figuren = new LinkedList<IFigur>();
 	
-	public AlleFiguren getInstance() {
+	public static AlleFiguren getInstance() {
 		if(instance == null)
 			instance = new AlleFiguren();
 		

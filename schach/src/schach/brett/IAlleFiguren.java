@@ -10,7 +10,7 @@ public interface IAlleFiguren {
 	public void aufstellen();
 	
 	/**
-	 * Gibt alle Figuren der Partie zurück.
+	 * Gibt festgelegte Figuren der Partie zurück.
 	 * 
 	 * @param figuren
 	 * @param farben

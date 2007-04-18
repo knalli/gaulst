@@ -42,4 +42,10 @@ public interface IPartie {
 	 * @throws NegativeConditionException
 	 */
 	public void nehmeRemisAn(ISpieler spieler) throws NegativeConditionException;
+
+	/**
+	 * Startet die Programmlogik (kein Partiebeginn!)
+	 *
+	 */
+	public void start();
 }
