@@ -1,7 +1,10 @@
-// was ne Farbe Test von Vincent
-
 package schach.brett;
 
+/**
+ * Eine Schachfarbe.
+ * @author Jan Philipp
+ *
+ */
 public enum Farbe {
 	WEISS, SCHWARZ
 }
