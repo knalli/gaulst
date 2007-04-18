@@ -41,4 +41,8 @@ public class Partie implements IPartie {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void start() {
+		
+	}
 }

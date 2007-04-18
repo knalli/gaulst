@@ -1,26 +1,34 @@
 package schach.brett.internal;
 
+import java.util.Observable;
+
 import schach.brett.Farbe;
 import schach.brett.Figurart;
 import schach.brett.IFeld;
 import schach.brett.IFigur;
+import schach.main.View;
 import schach.partie.internal.Partiezustand;
 import schach.spieler.ISpieler;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePostConditionException;
 import schach.system.NegativePreConditionException;
 
-public abstract class AbstrakteFigur implements IFigur {
+public abstract class AbstrakteFigur extends Observable implements IFigur {
 	private IFeld position;
 	private IFeld grundposition;
 	private Farbe farbe;
 	private Figurart figurart;
 	
 	public AbstrakteFigur(Farbe farbe, IFeld feld, Figurart figurart) {
+		
+		addObserver(View.getView());
+		
 		this.farbe = farbe;
 		this.grundposition = feld;
 		this.position = feld;
 		this.figurart = figurart;
+
+
 	}
 
 	public void aufstellen(IFeld feld) throws NegativeConditionException {
@@ -65,6 +73,9 @@ public abstract class AbstrakteFigur implements IFigur {
 		
 		if(position != feld)
 			throw new NegativePostConditionException();
+		
+		setChanged();
+		notifyObservers(); 
 	}
 
 }
