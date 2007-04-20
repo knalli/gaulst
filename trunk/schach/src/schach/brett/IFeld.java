@@ -53,8 +53,14 @@ public interface IFeld {
 	public Linie gebeLinie();
 	
 	/**
-	 * Gitb zurŸck, ob das Feld besetzt ist.
+	 * Gibt zurŸck, ob das Feld besetzt ist.
 	 * @return
 	 */
 	public boolean istBesetzt();
+	
+	/**
+	 * Setzt das Feld (un)besetzt.
+	 * @param status
+	 */
+	public void istBesetzt(boolean status);
 }

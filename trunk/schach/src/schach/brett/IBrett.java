@@ -80,5 +80,5 @@ public interface IBrett {
 	 * @return
 	 * @throws NegativeConditionException
 	 */
-	public IFeld gebeFeld(Reihe reihe, Linie linie) throws NegativeConditionException;
+	public IFeld gebeFeld(Reihe reihe, Linie linie);
 }
