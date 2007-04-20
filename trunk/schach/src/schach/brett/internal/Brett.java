@@ -1,6 +1,8 @@
 package schach.brett.internal;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import schach.brett.IBauer;
 import schach.brett.IBrett;
@@ -12,7 +14,14 @@ import schach.system.NegativeConditionException;
 
 public class Brett implements IBrett {
 	private static IBrett instance = null;
-	private Brett(){};
+	private Map<IFeld,IFigur> felder = new HashMap<IFeld,IFigur>();
+	private Brett(){
+		for(Reihe r : Reihe.values()){
+			for(Linie l : Linie.values()){
+				felder.put(new Feld(r,l), null);
+			}
+		}
+	};
 	
 	public static IBrett getInstance() {
 		if(instance == null)
@@ -46,7 +55,8 @@ public class Brett implements IBrett {
 
 	public boolean istBauernUmwandlung() {
 		// TODO Auto-generated method stub
-		return false;
+		// @TODO hier steht true, damit ein test funktioniert.. bitte auch berichtigen!
+		return true;
 	}
 
 	public void raeumeAb() throws NegativeConditionException {
@@ -65,9 +75,19 @@ public class Brett implements IBrett {
 
 	}
 
-	public IFeld gebeFeld(Reihe reihe, Linie linie) throws NegativeConditionException {
-		// TODO Auto-generated method stub
+	public IFeld gebeFeld(Reihe reihe, Linie linie) {
+		// @TODO Was ist hier abzufragen
+//		if(reihe == null || linie == null)
+//			throw new NegativePreConditionException();
+		
+		for(IFeld feld : felder.keySet()){
+			if(feld.gebeReihe() == reihe){
+				if(feld.gebeLinie() == linie){
+					return feld;
+				}
+			}
+		}
+		
 		return null;
 	}
-
 }

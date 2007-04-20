@@ -6,12 +6,13 @@ import schach.brett.Farbe;
 import schach.brett.Figurart;
 import schach.brett.IFeld;
 import schach.brett.IFigur;
-import schach.main.View;
 import schach.partie.internal.Partiezustand;
 import schach.spieler.ISpieler;
+import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePostConditionException;
 import schach.system.NegativePreConditionException;
+import schach.system.View;
 
 public abstract class AbstrakteFigur extends Observable implements IFigur {
 	private IFeld position;
@@ -27,8 +28,9 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 		this.grundposition = feld;
 		this.position = feld;
 		this.figurart = figurart;
-
-
+		feld.istBesetzt(true);
+		
+		Logger.debug(farbe+" "+figurart+" wurde auf "+position.gebeReihe()+","+position.gebeLinie());
 	}
 
 	public void aufstellen(IFeld feld) throws NegativeConditionException {
@@ -58,7 +60,7 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	}
 
 	public boolean istAufDemSchachbrett() {
-		return grundposition != null;
+		return position == null;
 	}
 
 	public boolean istAufGrundposition() {
@@ -78,4 +80,11 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 		notifyObservers(); 
 	}
 
+	public Figurart gebeArt() {
+		return figurart;
+	}
+
+	public String toString(){
+		return figurart+" "+farbe;
+	}
 }

@@ -48,7 +48,14 @@ public class Feld implements IFeld {
 	}
 
 	public boolean equals(IFeld feld){
-		return reihe==feld.gebeReihe() && linie==feld.gebeLinie();
+		return reihe.equals(feld.gebeReihe()) && linie.equals(feld.gebeLinie());
+	}
+
+	public void istBesetzt(boolean status) {
+		besetzt = status;
 	}
 	
+	public String toString(){
+		return ""+linie+reihe;
+	}
 }
