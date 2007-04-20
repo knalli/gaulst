@@ -1,8 +1,12 @@
 package schach.partie.internal;
 
+import schach.brett.internal.AlleFiguren;
 import schach.partie.IPartie;
 import schach.spieler.ISpieler;
+import schach.system.ChessException;
+import schach.system.Logger;
 import schach.system.NegativeConditionException;
+import schach.system.View;
 
 
 public class Partie implements IPartie {
@@ -43,6 +47,13 @@ public class Partie implements IPartie {
 	}
 
 	public void start() {
-		
+		try {
+			Logger.info("Figuren werden aufgestellt.");
+			AlleFiguren.getInstance().stelleAlleFigurenAuf();
+			Logger.info("Figuren wurden aufgestellt.");
+			View.getView().update();
+		} catch (ChessException e) {
+			Logger.error("Ausnahme "+e.toString()+" aufgetreten."+e.getCause());
+		}
 	}
 }
