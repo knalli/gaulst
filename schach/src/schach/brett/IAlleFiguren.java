@@ -16,7 +16,7 @@ public interface IAlleFiguren {
 	 * @param farben
 	 * @return
 	 */
-	public List<IFigur> gebeFiguren(List<Figurart> figuren, List<Farbe> farben);
+	public List<IFigur> gebeFiguren(List<Figurart> figurarten, List<Farbe> farben);
 	
 	/**
 	 * Stellt alle Figuren auf dem Brett auf.
