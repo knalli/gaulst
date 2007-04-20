@@ -2,27 +2,20 @@ package schach.brett.internal;
 
 import schach.brett.Farbe;
 import schach.brett.Figurart;
-import schach.brett.IBauer;
 import schach.brett.IFeld;
 import schach.brett.ISchlagbareFigur;
+import schach.brett.ITurm;
 import schach.system.NegativeConditionException;
 
-public class Bauer extends AbstrakteFigur implements IBauer {
-	private boolean doppelschritt = false;
+public class Turm extends AbstrakteFigur implements ITurm {
 
-	public Bauer(Farbe farbe, IFeld feld) {
-		super(farbe, feld, Figurart.BAUER);
+	public Turm(Farbe farbe, IFeld feld) {
+		super(farbe, feld, Figurart.TURM);
 	}
-
-	public void entnehmen() throws NegativeConditionException {
+	
+	public void rochiert(IFeld ziel) throws NegativeConditionException {
 		// TODO Auto-generated method stub
-//		if(!Brett.getInstance().istBauernUmwandlung())
-//			throw new NegativePreConditionException();
-//		
-	}
 
-	public boolean letzteRundeDoppelschritt() {
-		return doppelschritt;
 	}
 
 	public void schlaegt(IFeld ziel, ISchlagbareFigur gegner)
@@ -31,10 +24,9 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 
 	}
 
-	public void schlaegtEnPassant(IFeld ziel)
-			throws NegativeConditionException {
+	public boolean wurdeBewegt() throws NegativeConditionException {
 		// TODO Auto-generated method stub
-
+		return false;
 	}
 
 	public void zieht(IFeld ziel) throws NegativeConditionException {
@@ -51,4 +43,5 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 }
