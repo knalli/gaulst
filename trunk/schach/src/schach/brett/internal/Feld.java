@@ -6,13 +6,18 @@ import schach.brett.Reihe;
 import schach.system.NegativeConditionException;
 
 public class Feld implements IFeld {
-	private Reihe reihe;
-	private Linie linie;
+	private final Reihe reihe;
+	private final Linie linie;
 	private boolean besetzt = false;
 	
 	public Feld(Reihe reihe, Linie linie){
-		this.reihe = reihe;
-		this.linie = linie;
+		if(reihe == null || linie == null){
+			throw new NullPointerException();
+		}
+		else {
+			this.reihe = reihe;
+			this.linie = linie;
+		}
 	}
 	
 	public Linie gebeLinie() {
