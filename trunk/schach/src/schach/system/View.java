@@ -1,5 +1,10 @@
 package schach.system;
 
+import java.lang.reflect.InvocationTargetException;
+
+import javax.swing.SwingUtilities;
+
+import schach.system.internal.GuiView;
 import schach.system.internal.TextView;
 
 public class View {
@@ -12,7 +17,23 @@ public class View {
 	 * @param name
 	 */
 	public static void setView(String name){
-		viewer = new TextView();
+		if(name.equals("gui")){
+			
+			try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+					public void run() {
+						GuiView.getInstance();					
+					}
+				});
+			} catch (Exception e) {
+				Logger.error("Fehler beim Starten der grafischen Oberfläche - nutze stattdessen die einfache!");
+				setView("text");
+			}
+			viewer = GuiView.getInstance();		
+		}
+		else {
+			viewer = new TextView();
+		}
 	}
 	
 	public static void setView() {
