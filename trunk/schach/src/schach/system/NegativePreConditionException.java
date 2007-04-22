@@ -2,6 +2,10 @@ package schach.system;
 
 public class NegativePreConditionException extends NegativeConditionException {
 
+	public NegativePreConditionException(String string) {
+		super(string);
+	}
+	
 	/**
 	 * 
 	 */
