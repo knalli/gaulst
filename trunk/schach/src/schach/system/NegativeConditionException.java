@@ -7,6 +7,10 @@ public class NegativeConditionException extends ChessException {
 		super(string);
 	}
 
+	public NegativeConditionException() {
+		super();
+	}
+
 	/**
 	 * 
 	 */

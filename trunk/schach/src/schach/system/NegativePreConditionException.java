@@ -6,6 +6,10 @@ public class NegativePreConditionException extends NegativeConditionException {
 		super(string);
 	}
 	
+	public NegativePreConditionException() {
+		super();
+	}
+
 	/**
 	 * 
 	 */
