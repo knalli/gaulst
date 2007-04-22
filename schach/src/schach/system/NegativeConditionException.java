@@ -3,6 +3,10 @@ package schach.system;
 
 public class NegativeConditionException extends ChessException {
 
+	public NegativeConditionException(String string) {
+		super(string);
+	}
+
 	/**
 	 * 
 	 */
