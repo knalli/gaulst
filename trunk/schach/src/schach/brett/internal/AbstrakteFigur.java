@@ -50,10 +50,6 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 		return position;
 	}
 
-	public Figurart gebeTyp() {
-		return figurart;
-	}
-
 	public ISpieler gehoertSpieler() {
 		// TODO Auto-generated method stub
 		return null;
