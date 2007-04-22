@@ -6,6 +6,10 @@ public class ChessException extends Exception {
 		super(string);
 	}
 
+	public ChessException() {
+		super();
+	}
+
 	/**
 	 * 
 	 */
