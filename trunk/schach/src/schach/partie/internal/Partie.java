@@ -1,8 +1,10 @@
 package schach.partie.internal;
 
+import schach.brett.Farbe;
 import schach.brett.internal.AlleFiguren;
 import schach.partie.IPartie;
 import schach.spieler.ISpieler;
+import schach.spieler.internal.Spieler;
 import schach.system.ChessException;
 import schach.system.Logger;
 import schach.system.NegativeConditionException;
@@ -23,7 +25,7 @@ public class Partie implements IPartie {
 
 	public ISpieler aktuellerSpieler() {
 		// TODO Auto-generated method stub
-		return null;
+		return new Spieler(Farbe.WEISS);
 	}
 
 	public void bieteRemisAn(ISpieler spieler) throws NegativeConditionException {
