@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import schach.brett.Farbe;
 import schach.brett.IBauer;
 import schach.brett.IBrett;
 import schach.brett.IFeld;
 import schach.brett.IFigur;
 import schach.brett.Linie;
 import schach.brett.Reihe;
+import schach.partie.internal.Partie;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
@@ -43,16 +45,28 @@ public class Brett implements IBrett {
 		if(start == null || ende == null)
 			throw new NullPointerException();
 		
-		if(start.gebeLinie().equals(ende.gebeLinie()))
+		if(!start.gebeLinie().equals(ende.gebeLinie()))
 			throw new NegativePreConditionException();
 		
 		List<IFeld> weg = new ArrayList<IFeld>(8);
-		Reihe r;
+		IBrett brett = Brett.getInstance();
+		Reihe i;
 		if(start.gebeReihe().ordinal() < ende.gebeReihe().ordinal()){
-			r = start.gebeReihe();
+			i = start.gebeReihe().naechste();
+			while(!i.equals(ende.gebeReihe())){
+				weg.add(brett.gebeFeld(i, start.gebeLinie()));
+				i = i.naechste();
+			}
+		}
+		else {
+			i = ende.gebeReihe().vorherige();
+			while(!i.equals(start.gebeReihe())){
+				weg.add(brett.gebeFeld(i, start.gebeLinie()));
+				i = i.vorherige();
+			}
 		}
 		
-		return null;
+		return weg;
 	}
 
 	public List<IFeld> gebeFelderInReihe(IFeld start, IFeld ende)
