@@ -66,10 +66,12 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	public void positionieren(IFeld feld) throws NegativeConditionException {
 		if(Brett.getInstance().istBauernUmwandlung() != true)
 			throw new NegativePreConditionException();
+		if(feld.istBesetzt())
+			throw new NegativePreConditionException();
 		
 		position = feld;
 		
-		if(position != feld)
+		if(!position.equals(feld))
 			throw new NegativePostConditionException();
 		
 		setChanged();
