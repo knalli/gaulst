@@ -1,5 +1,6 @@
 package schach.brett.internal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import schach.brett.IFigur;
 import schach.brett.Linie;
 import schach.brett.Reihe;
 import schach.system.NegativeConditionException;
+import schach.system.NegativePreConditionException;
 
 public class Brett implements IBrett {
 	private static IBrett instance = null;
@@ -38,7 +40,18 @@ public class Brett implements IBrett {
 
 	public List<IFeld> gebeFelderInLinie(IFeld start, IFeld ende)
 			throws NegativeConditionException {
-		// TODO Auto-generated method stub
+		if(start == null || ende == null)
+			throw new NullPointerException();
+		
+		if(start.gebeLinie().equals(ende.gebeLinie()))
+			throw new NegativePreConditionException();
+		
+		List<IFeld> weg = new ArrayList<IFeld>(8);
+		Reihe r;
+		if(start.gebeReihe().ordinal() < ende.gebeReihe().ordinal()){
+			r = start.gebeReihe();
+		}
+		
 		return null;
 	}
 
@@ -81,8 +94,8 @@ public class Brett implements IBrett {
 //			throw new NegativePreConditionException();
 		
 		for(IFeld feld : felder.keySet()){
-			if(feld.gebeReihe() == reihe){
-				if(feld.gebeLinie() == linie){
+			if(feld.gebeReihe().equals(reihe)){
+				if(feld.gebeLinie().equals(linie)){
 					return feld;
 				}
 			}
