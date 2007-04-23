@@ -148,10 +148,13 @@ public class Feld implements IFeld {
 	}
 
 	public boolean equals(IFeld feld){
-		return reihe.equals(feld.gebeReihe()) && linie.equals(feld.gebeLinie());
+		return reihe.equals(feld.gebeReihe()) && linie.equals(feld.gebeLinie()) && (istBesetzt() == feld.istBesetzt());
 	}
 
-	public void istBesetzt(boolean status) {
+	public void istBesetzt(boolean status) throws NegativeConditionException{
+		if((besetzt && status) || (!besetzt && !status))
+			throw new NegativePreConditionException();
+		
 		besetzt = status;
 	}
 	

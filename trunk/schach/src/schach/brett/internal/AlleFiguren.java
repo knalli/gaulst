@@ -76,7 +76,6 @@ public class AlleFiguren implements IAlleFiguren {
 		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.LAEUFER, brett.gebeFeld(Reihe.R8, Linie.F)));
 		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.SPRINGER, brett.gebeFeld(Reihe.R8, Linie.G)));
 		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.TURM, brett.gebeFeld(Reihe.R8, Linie.H)));
-		
 	}
 
 	private IFigur erzeugeFigur(Farbe farbe, Figurart figurart, IFeld feld) {

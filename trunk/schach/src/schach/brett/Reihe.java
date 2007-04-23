@@ -1,5 +1,8 @@
 package schach.brett;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Eine Reihe auf einem Schachbrett (1-8).
  * @author Jan Philipp
@@ -28,5 +31,9 @@ public enum Reihe {
 		case R8: return "8";
 		}
 		return "X";
+	}
+
+	public static List<Reihe> getAll(){
+		return Arrays.asList(values());
 	}
 }
