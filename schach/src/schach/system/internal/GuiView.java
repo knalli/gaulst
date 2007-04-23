@@ -34,7 +34,6 @@ import schach.brett.Linie;
 import schach.brett.Reihe;
 import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
-import schach.brett.internal.Feld;
 import schach.system.IView;
 import schach.system.Logger;
 

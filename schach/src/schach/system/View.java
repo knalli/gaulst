@@ -1,7 +1,5 @@
 package schach.system;
 
-import java.lang.reflect.InvocationTargetException;
-
 import javax.swing.SwingUtilities;
 
 import schach.system.internal.GuiView;

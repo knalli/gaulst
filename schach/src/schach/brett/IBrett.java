@@ -32,7 +32,7 @@ public interface IBrett {
 	public boolean sindAlleFelderFrei(List<IFeld> felder);
 	
 	/**
-	 * Gibt die Felder zwischen 2 Feldern in einer Reihe zurück.
+	 * Gibt die Felder <b>zwischen</b> 2 Feldern in einer Reihe zurück.
 	 * @param start Startfeld
 	 * @param ende Zielfeld
 	 * @return
@@ -41,7 +41,7 @@ public interface IBrett {
 	public List<IFeld> gebeFelderInReihe(IFeld start, IFeld ende) throws NegativeConditionException;
 	
 	/**
-	 * Gibt die Felder zwischen 2 Feldern in einer Linie zurück.
+	 * Gibt die Felder <b>zwischen</b> 2 Feldern in einer Linie zurück.
 	 * @param start Startfeld
 	 * @param ende Zielfeld
 	 * @return
@@ -50,7 +50,7 @@ public interface IBrett {
 	public List<IFeld> gebeFelderInLinie(IFeld start, IFeld ende) throws NegativeConditionException;
 
 	/**
-	 * Gibt die Felder zwischen 2 Feldern in einer Diagonalen zurück.
+	 * Gibt die Felder <b>zwischen</b> 2 Feldern in einer Diagonalen zurück.
 	 * @param start Startfeld
 	 * @param ende Zielfeld
 	 * @return

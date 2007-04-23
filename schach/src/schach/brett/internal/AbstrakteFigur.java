@@ -10,7 +10,6 @@ import schach.partie.internal.Partiezustand;
 import schach.spieler.ISpieler;
 import schach.system.Logger;
 import schach.system.NegativeConditionException;
-import schach.system.NegativePostConditionException;
 import schach.system.NegativePreConditionException;
 import schach.system.View;
 
@@ -22,20 +21,28 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	
 	public AbstrakteFigur(Farbe farbe, IFeld feld, Figurart figurart) {
 		
-		addObserver(View.getView());
+		try {
+			feld.istBesetzt(true);
+			this.farbe = farbe;
+			this.grundposition = feld;
+			this.position = feld;
+			this.figurart = figurart;
+			
+			addObserver(View.getView());
+			
+			Logger.debug(farbe+" "+figurart+" wurde auf "+position.gebeReihe()+","+position.gebeLinie());
+		} catch (NegativeConditionException e){
+			Logger.error("Wurde nicht erzeugt und aufgestellt: "+farbe+" "+figurart+" wurde auf "+position.gebeReihe()+","+position.gebeLinie());
+		}
 		
-		this.farbe = farbe;
-		this.grundposition = feld;
-		this.position = feld;
-		this.figurart = figurart;
-		feld.istBesetzt(true);
 		
-		Logger.debug(farbe+" "+figurart+" wurde auf "+position.gebeReihe()+","+position.gebeLinie());
 	}
 
 	public void aufstellen(IFeld feld) throws NegativeConditionException {
 		if(!Partiezustand.getInstance().inPartie())
 			throw new NegativePreConditionException();
+		
+		// @TODO brauchen wir das Ÿberhaupt noch (siehe Knstruktor)
 	}
 
 	public Farbe gebeFarbe() {
@@ -70,10 +77,6 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 			throw new NegativePreConditionException();
 		
 		position = feld;
-		
-		if(!position.equals(feld))
-			throw new NegativePostConditionException();
-		
 		setChanged();
 		notifyObservers(); 
 	}
