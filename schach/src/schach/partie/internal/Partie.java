@@ -13,6 +13,8 @@ import schach.system.View;
 
 public class Partie implements IPartie {
 	private static IPartie instance = null;
+	private Farbe aktuelleFarbe = Farbe.WEISS;
+	private ISpieler aktuellerSpieler = null;
 	
 	private Partie() {}
 	
@@ -57,5 +59,9 @@ public class Partie implements IPartie {
 		} catch (ChessException e) {
 			Logger.error("Ausnahme "+e.toString()+" aufgetreten."+e.getCause());
 		}
+	}
+
+	public Farbe aktuelleFarbe() {
+		return aktuelleFarbe;
 	}
 }
