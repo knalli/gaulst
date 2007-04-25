@@ -65,4 +65,5 @@ public interface IFigur {
 	 * @return
 	 */
 	public Figurart gebeArt();
+	
 }

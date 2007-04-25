@@ -38,7 +38,7 @@ public class Main {
 			AlleFiguren.getInstance().gebeFiguren(a,b).get(1).positionieren(Brett.getInstance().gebeFeld(Reihe.R4, Linie.B));
 		} catch (NegativeConditionException e) {
 			Logger.warning("Figur konnte nicht bewegt werden");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 

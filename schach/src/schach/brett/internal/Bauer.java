@@ -19,6 +19,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 //		if(!Brett.getInstance().istBauernUmwandlung())
 //			throw new NegativePreConditionException();
 //		
+		grundposition = null;
 	}
 
 	public boolean letzteRundeDoppelschritt() {
