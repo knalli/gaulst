@@ -1,5 +1,6 @@
 package schach.partie;
 
+import schach.brett.Farbe;
 import schach.spieler.ISpieler;
 import schach.system.NegativeConditionException;
 
@@ -15,6 +16,12 @@ public interface IPartie {
 	 * @return
 	 */
 	public ISpieler aktuellerSpieler();
+	
+	/**
+	 * Enthält den aktuell zugberechtigten Spieler.
+	 * @return
+	 */
+	public Farbe aktuelleFarbe();
 	
 	/**
 	 * Enthält den aktuell nicht zugberechtigen Spieler.
