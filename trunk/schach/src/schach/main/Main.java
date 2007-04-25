@@ -21,7 +21,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		View.setView("text");
+		View.setView(View.MULTI);
 		Logger.appendLogger("console");
 		Logger.debug("Main gestartet..");
 		

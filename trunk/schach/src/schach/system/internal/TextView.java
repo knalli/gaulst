@@ -38,7 +38,7 @@ public class TextView implements IView {
 		besetzteFelder.clear();
 		for(IFigur figur : allefiguren.gebeFiguren(listeFigurarten,listeFarben)){
 			besetzteFelder.put(figur.gebePosition(),figur);
-			Logger.debug("View: "+figur+" steht auf "+figur.gebePosition());
+//			Logger.debug("View: "+figur+" steht auf "+figur.gebePosition());
 		}
 		
 		// zeichne Brett
