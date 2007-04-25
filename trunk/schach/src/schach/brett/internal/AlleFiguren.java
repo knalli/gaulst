@@ -12,17 +12,21 @@ import schach.brett.IFeld;
 import schach.brett.IFigur;
 import schach.brett.Linie;
 import schach.brett.Reihe;
+import schach.partie.internal.Partie;
+import schach.partie.internal.Partiezustand;
 import schach.system.ChessException;
 import schach.system.Logger;
+import schach.system.NegativeConditionException;
+import schach.system.NegativePreConditionException;
 
 public class AlleFiguren implements IAlleFiguren {
-	private static AlleFiguren instance = null;
+	private static IAlleFiguren instance = null;
 	private AlleFiguren(){
 		Logger.debug("AlleFiguren Konstruktor");
 	};
 	private List<IFigur> figuren = new LinkedList<IFigur>();
 	
-	public static AlleFiguren getInstance() {
+	public static IAlleFiguren getInstance() {
 		if(instance == null)
 			instance = new AlleFiguren();
 		
@@ -38,7 +42,7 @@ public class AlleFiguren implements IAlleFiguren {
 		List<IFigur> figuren2 = new ArrayList<IFigur>();
 		
 		for(IFigur figur : this.figuren){
-			if(farben.contains(figur.gebeFarbe()) && figurarten.contains(figur.gebeArt())){
+			if(farben.contains(figur.gebeFarbe()) && figurarten.contains(figur.gebeArt()) && figur.istAufDemSchachbrett()){
 				figuren2.add(figur);
 			}
 		}
@@ -108,5 +112,34 @@ public class AlleFiguren implements IAlleFiguren {
 		figurarten.add(figurart);
 		farben.add(farbe);
 		return gebeFiguren(figurarten,farben);
+	}
+
+	public void entferneFiguren() throws NegativeConditionException {
+		if(Partiezustand.getInstance().inPartie())
+			throw new NegativePreConditionException();
+		
+		figuren.clear();
+	}
+
+
+	public void fuegeFigurAn(IFigur figur) throws NegativeConditionException {
+		// wie soll man das sonst testen?
+		if(Partie.getInstance().aktuelleFarbe().equals(Farbe.WEISS)){
+			if(!figur.gebePosition().gebeReihe().equals(Reihe.R8)){
+				throw new NegativePreConditionException();
+			}
+		}
+		else {
+			if(!figur.gebePosition().gebeReihe().equals(Reihe.R1)){
+				throw new NegativePreConditionException();
+			}
+		}
+		
+		if(!figur.istAufGrundposition()){
+			throw new NegativePreConditionException();
+		}
+		
+		figuren.add(figur);
+		figur.gebePosition().istBesetzt(true);
 	}
 }

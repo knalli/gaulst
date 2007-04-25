@@ -12,8 +12,10 @@ import schach.brett.IBauer;
 import schach.brett.IBrett;
 import schach.brett.IFeld;
 import schach.brett.IFigur;
+import schach.brett.IKoenig;
 import schach.brett.Linie;
 import schach.brett.Reihe;
+import schach.partie.internal.Partie;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
@@ -140,6 +142,10 @@ public class Brett implements IBrett {
 		
 		IFeld feld;
 		for(IFigur figur : AlleFiguren.getInstance().gebeFiguren(Figurart.getAll(), Farbe.getAll())){
+			
+			if(!figur.istAufDemSchachbrett())
+				continue;
+			
 			feld = figur.gebePosition();
 			if(feld != null){
 				if(feld.gebeLinie().equals(linie) && feld.gebeReihe().equals(reihe)){
@@ -151,14 +157,34 @@ public class Brett implements IBrett {
 	}
 
 	public boolean istBauernUmwandlung() {
-		// TODO Auto-generated method stub
-		// @TODO hier steht true, damit ein test funktioniert.. bitte auch berichtigen!
-		return true;
+		// alle bauern der aktuellen Partie
+		Farbe farbe = Partie.getInstance().aktuelleFarbe();
+		List<IFigur> bauern = AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe);
+		
+		// falls ein wei§er bauer auf r8 oder ein schwarzer bauer auf r1 steht, true
+		for(IFigur figur : bauern) {
+			if(!figur.istAufDemSchachbrett())
+				continue;
+			
+			if(farbe.equals(Farbe.WEISS)){
+				if(figur.gebePosition().gebeReihe().equals(Reihe.R8)){
+					return true;
+				}
+			}
+			else {
+				if(figur.gebePosition().gebeReihe().equals(Reihe.R1)){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public void raeumeAb() throws NegativeConditionException {
-		// TODO Auto-generated method stub
-
+		AlleFiguren.getInstance().entferneFiguren();
+		for(IFeld feld : felder.keySet()){
+			felder.remove(feld);
+		}
 	}
 
 	public boolean sindAlleFelderFrei(List<IFeld> felder) {
@@ -172,15 +198,39 @@ public class Brett implements IBrett {
 
 	public void wandleBauernUm(IBauer bauer, IFigur figur)
 			throws NegativeConditionException {
-		// TODO Auto-generated method stub
-
+		
+		if(!istBauernUmwandlung())
+			throw new NegativePreConditionException();
+		
+		if(bauer == null || figur == null)
+			throw new NegativePreConditionException();
+		
+		if(!bauer.gehoertSpieler().istZugberechtigt()){
+			throw new NegativePreConditionException();
+		}
+		
+		if(figur.istAufDemSchachbrett()){
+			throw new NegativePreConditionException();
+		}
+		
+		if(figur.gebeArt().equals(Figurart.KOENIG) || figur.gebeArt().equals(Figurart.BAUER)){
+			throw new NegativePreConditionException();
+		}
+		
+		if(((IKoenig) (AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, Partie.getInstance().aktuelleFarbe()).get(0))).istInEinerRochade()) {
+			throw new NegativePreConditionException();
+		}
+		
+		if(!bauer.gebeFarbe().equals(Partie.getInstance().aktuelleFarbe()) || !figur.gebeFarbe().equals(Partie.getInstance().aktuelleFarbe())) {
+			throw new NegativePreConditionException();
+		}
+		
+		IFeld feld = bauer.gebePosition();
+		bauer.entnehmen();
+		figur.positionieren(feld);
 	}
 
 	public IFeld gebeFeld(Reihe reihe, Linie linie) {
-		// @TODO Was ist hier abzufragen
-//		if(reihe == null || linie == null)
-//			throw new NegativePreConditionException();
-		
 		for(IFeld feld : felder.keySet()){
 			if(feld.gebeReihe().equals(reihe)){
 				if(feld.gebeLinie().equals(linie)){
@@ -188,7 +238,6 @@ public class Brett implements IBrett {
 				}
 			}
 		}
-		
 		return null;
 	}
 }

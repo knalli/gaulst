@@ -14,10 +14,10 @@ import schach.system.NegativePreConditionException;
 import schach.system.View;
 
 public abstract class AbstrakteFigur extends Observable implements IFigur {
-	private IFeld position;
-	private IFeld grundposition;
-	private Farbe farbe;
-	private Figurart figurart;
+	protected IFeld position;
+	protected IFeld grundposition;
+	protected Farbe farbe;
+	protected Figurart figurart;
 	
 	public AbstrakteFigur(Farbe farbe, IFeld feld, Figurart figurart) {
 		
@@ -30,7 +30,7 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 			
 			addObserver(View.getView());
 			
-			Logger.debug(farbe+" "+figurart+" wurde auf "+position.gebeReihe()+","+position.gebeLinie());
+			Logger.debug(farbe+" "+figurart+" wurde auf "+position.gebeLinie()+position.gebeReihe()+" positioniert.");
 		} catch (NegativeConditionException e){
 			Logger.error("Wurde nicht erzeugt und aufgestellt: "+farbe+" "+figurart+" wurde auf "+position.gebeReihe()+","+position.gebeLinie());
 		}
@@ -63,7 +63,7 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	}
 
 	public boolean istAufDemSchachbrett() {
-		return position == null;
+		return grundposition != null;
 	}
 
 	public boolean istAufGrundposition() {
@@ -71,12 +71,11 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	}
 
 	public void positionieren(IFeld feld) throws NegativeConditionException {
-		if(Brett.getInstance().istBauernUmwandlung() != true)
-			throw new NegativePreConditionException();
-		if(feld.istBesetzt())
+		if(!Brett.getInstance().istBauernUmwandlung())
 			throw new NegativePreConditionException();
 		
 		position = feld;
+		AlleFiguren.getInstance().fuegeFigurAn(this);
 		setChanged();
 		notifyObservers(); 
 	}
