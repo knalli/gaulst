@@ -137,7 +137,7 @@ public class Brett implements IBrett {
 	}
 	
 	public IFigur gebeFigurVonFeld(Reihe reihe, Linie linie){
-		if(reihe == null || linie == null || gebeFeld(reihe, linie).istBesetzt())
+		if(reihe == null || linie == null || !gebeFeld(reihe, linie).istBesetzt())
 			return null;
 		
 		IFeld feld;
