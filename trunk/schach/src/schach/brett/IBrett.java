@@ -18,6 +18,13 @@ public interface IBrett {
 	 * @return
 	 */
 	public IFigur gebeFigurVonFeld(IFeld feld);
+
+	/**
+	 * Gibt die Schachfigur zurück, die auf dem angegebenen <code>feld</code> steht.
+	 * @param feld
+	 * @return
+	 */
+	public IFigur gebeFigurVonFeld(Reihe reihe, Linie linie);
 	
 	/**
 	 * Prüft, ob aktuell eine Bauernumwandlung bevorsteht.
