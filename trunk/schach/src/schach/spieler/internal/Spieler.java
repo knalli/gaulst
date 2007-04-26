@@ -26,7 +26,7 @@ public class Spieler implements ISpieler {
 	}
 	
 	public boolean equals(Spieler spieler){
-		return this.gebeFarbe() == spieler.gebeFarbe();
+		return this.gebeFarbe().equals(spieler.gebeFarbe());
 	}
 
 }
