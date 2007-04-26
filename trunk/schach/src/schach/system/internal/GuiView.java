@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,12 +22,14 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
 import schach.brett.Farbe;
 import schach.brett.Figurart;
 import schach.brett.IAlleFiguren;
+import schach.brett.IBauer;
 import schach.brett.IBrett;
 import schach.brett.IFeld;
 import schach.brett.IFigur;
@@ -36,9 +39,10 @@ import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
 import schach.system.IView;
 import schach.system.Logger;
+import schach.system.NegativeConditionException;
 
 public class GuiView implements IView {
-	private static GuiView instance = null;
+	private static GuiView instance = null;  //  @jve:decl-index=0:
 	public static GuiView getInstance() {
 		if(instance == null)
 			instance = new GuiView();
@@ -50,6 +54,7 @@ public class GuiView implements IView {
 		Logger.debug("GuiView Konstruktor");
 		allefiguren = AlleFiguren.getInstance();
 		getJFrame().setVisible(true);
+		getJFrame().setSize(500, 700);
 	}
 
 	private JFrame jFrame = null;
@@ -84,6 +89,14 @@ public class GuiView implements IView {
 
 	private JLabel feld1 = null;
 
+	private JPanel jContentPane2;
+
+	private JPanel jContentPane3;
+
+	private JTextField jInputField;
+
+	private JButton jSendButton;
+
 	/**
 	 * This method initializes jFrame
 	 * 
@@ -109,7 +122,12 @@ public class GuiView implements IView {
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
-			jContentPane.setLayout(new GridLayout(8,8));
+			jContentPane2 = new JPanel();
+			jContentPane3 = new JPanel();
+			
+			jContentPane.setLayout(new GridLayout(2,1));
+			jContentPane2.setLayout(new GridLayout(8,8));
+			jContentPane3.setLayout(new GridLayout(1,2));
 			for(int r=1; r<=8; r++){
 				for(int l=1; l<=8; l++){
 					JPanel panel = new JPanel();
@@ -125,9 +143,32 @@ public class GuiView implements IView {
 						feld1.setForeground(Color.BLACK);
 					}
 					panel.add(feld1,null);
-					jContentPane.add(panel, null);
+					jContentPane2.add(panel, null);
 				}
 			}
+			jContentPane.add(jContentPane2);
+			jSendButton = new JButton();
+			jInputField = new JTextField();
+			jSendButton.setText("Absenden");
+			jSendButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+//					if(jInputField.getText().equals("b2b4")){
+						IFeld feld = Brett.getInstance().gebeFeld(Reihe.R4, Linie.B);
+						IFigur figur = Brett.getInstance().gebeFigurVonFeld(Reihe.R2, Linie.B);
+						Logger.debug(figur.toString());
+						try {
+							figur.zieht(feld);
+						} catch (NegativeConditionException e1) {
+							Logger.info(e1.getMessage());
+						}
+//					}
+					jInputField.setText("");
+				}
+			});
+			jInputField.setText("");
+			jContentPane3.add(jInputField);
+			jContentPane3.add(jSendButton);
+			jContentPane.add(jContentPane3);
 		}
 		return jContentPane;
 	}
