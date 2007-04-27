@@ -13,4 +13,6 @@ public interface IStellung {
 	public IFigur ziehendeFigur();
 	
 	public List<IFigur> gebeFiguren(List<Figurart> figurarten, List<Farbe> farben);
+	
+	public boolean istKoenigBedroht(Farbe farbe);
 }

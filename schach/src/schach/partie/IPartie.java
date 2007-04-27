@@ -55,4 +55,6 @@ public interface IPartie {
 	 *
 	 */
 	public void start();
+	
+	public void wechsleSpieler();
 }

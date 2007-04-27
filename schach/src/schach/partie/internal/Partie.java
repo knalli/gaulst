@@ -15,6 +15,7 @@ public class Partie implements IPartie {
 	private static IPartie instance = null;
 	private Farbe aktuelleFarbe = Farbe.WEISS;
 	private ISpieler aktuellerSpieler = null;
+	private ISpieler gegnerischerSpieler = null;
 	
 	private Partie() {}
 	
@@ -26,8 +27,7 @@ public class Partie implements IPartie {
 	}
 
 	public ISpieler aktuellerSpieler() {
-		// TODO Auto-generated method stub
-		return new Spieler(Farbe.WEISS);
+		return aktuellerSpieler;
 	}
 
 	public void bieteRemisAn(ISpieler spieler) throws NegativeConditionException {
@@ -36,8 +36,7 @@ public class Partie implements IPartie {
 	}
 
 	public ISpieler gegnerischerSpieler() {
-		// TODO Auto-generated method stub
-		return null;
+		return gegnerischerSpieler;
 	}
 
 	public void lehneRemisAb(ISpieler spieler) throws NegativeConditionException {
@@ -63,5 +62,18 @@ public class Partie implements IPartie {
 
 	public Farbe aktuelleFarbe() {
 		return aktuelleFarbe;
+	}
+	
+	public void wechsleSpieler() {
+		if(aktuelleFarbe.equals(Farbe.SCHWARZ)){
+			aktuelleFarbe = Farbe.WEISS;
+			aktuellerSpieler = Spieler.getInstance(Farbe.WEISS);
+			gegnerischerSpieler = Spieler.getInstance(Farbe.SCHWARZ);
+		}
+		else {
+			aktuelleFarbe = Farbe.SCHWARZ;
+			aktuellerSpieler = Spieler.getInstance(Farbe.SCHWARZ);
+			gegnerischerSpieler = Spieler.getInstance(Farbe.WEISS);
+		}
 	}
 }

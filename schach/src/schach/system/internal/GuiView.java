@@ -153,11 +153,20 @@ public class GuiView implements IView {
 			jSendButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 //					if(jInputField.getText().equals("b2b4")){
-						IFeld feld = Brett.getInstance().gebeFeld(Reihe.R4, Linie.B);
-						IFigur figur = Brett.getInstance().gebeFigurVonFeld(Reihe.R2, Linie.B);
+						IFeld feld = Brett.getInstance().gebeFeld(Reihe.R4, Linie.A);
+						IFigur figur = Brett.getInstance().gebeFigurVonFeld(Reihe.R2, Linie.A);
 						Logger.debug(figur.toString());
 						try {
 							figur.zieht(feld);
+						} catch (NegativeConditionException e1) {
+							Logger.info(e1.getMessage());
+						}
+						
+						IFeld feld2 = Brett.getInstance().gebeFeld(Reihe.R3, Linie.A);
+						IFigur figur2 = Brett.getInstance().gebeFigurVonFeld(Reihe.R1, Linie.A);
+						Logger.debug(figur.toString());
+						try {
+							figur2.zieht(feld2);
 						} catch (NegativeConditionException e1) {
 							Logger.info(e1.getMessage());
 						}

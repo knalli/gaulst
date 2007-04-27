@@ -6,8 +6,24 @@ import schach.spieler.ISpieler;
 
 public class Spieler implements ISpieler {
 	private Farbe farbe;
+	private static ISpieler instanceWEISS = null;
+	private static ISpieler instanceSCHWARZ = null;
 	
-	public Spieler(Farbe farbe) {
+	public static ISpieler getInstance(Farbe farbe){
+		if(instanceWEISS == null){
+			instanceWEISS = new Spieler(Farbe.WEISS);
+			instanceSCHWARZ = new Spieler(Farbe.SCHWARZ);
+		}
+		
+		if(farbe.equals(Farbe.WEISS)){
+			return instanceWEISS;
+		}
+		else {
+			return instanceSCHWARZ;
+		}
+	}
+		
+	private Spieler(Farbe farbe) {
 		this.farbe = farbe;
 	}
 	
