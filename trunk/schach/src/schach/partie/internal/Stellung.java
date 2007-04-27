@@ -39,4 +39,9 @@ public class Stellung implements IStellung {
 		return ziehendeFigur;
 	}
 
+	public boolean istKoenigBedroht(Farbe farbe) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

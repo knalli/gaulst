@@ -40,4 +40,6 @@ public interface IBauer extends ISchlagbareFigur {
 	 * @throws NegativeConditionException
 	 */
 	public void zieht(IFeld ziel) throws NegativeConditionException;
+
+	public void letzteRundeDoppelschritt(boolean b);
 }

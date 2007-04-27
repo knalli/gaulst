@@ -5,6 +5,7 @@ import schach.brett.Figurart;
 import schach.brett.IBauer;
 import schach.brett.IFeld;
 import schach.brett.ISchlagbareFigur;
+import schach.partie.internal.Partie;
 import schach.system.NegativeConditionException;
 
 public class Bauer extends AbstrakteFigur implements IBauer {
@@ -40,7 +41,9 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 
 	public void zieht(IFeld ziel) throws NegativeConditionException {
 		// TODO Auto-generated method stub
-
+		position = ziel;
+		setChanged();
+		notifyObservers();
 	}
 
 	public void geschlagenWerden() throws NegativeConditionException {
@@ -51,5 +54,11 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 	public boolean sollEntferntWerden() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public void letzteRundeDoppelschritt(boolean b) {
+		if(Partie.getInstance().aktuelleFarbe().equals(farbe)){
+			doppelschritt = b;
+		}
 	}
 }
