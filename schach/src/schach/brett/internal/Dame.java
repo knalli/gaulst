@@ -1,5 +1,5 @@
 package schach.brett.internal;
-
+// hier versuch ich mich dann mal...
 import schach.brett.Farbe;
 import schach.brett.Figurart;
 import schach.brett.IDame;
