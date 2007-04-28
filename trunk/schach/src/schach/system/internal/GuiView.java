@@ -29,7 +29,6 @@ import javax.swing.SwingConstants;
 import schach.brett.Farbe;
 import schach.brett.Figurart;
 import schach.brett.IAlleFiguren;
-import schach.brett.IBauer;
 import schach.brett.IBrett;
 import schach.brett.IFeld;
 import schach.brett.IFigur;
@@ -37,6 +36,7 @@ import schach.brett.Linie;
 import schach.brett.Reihe;
 import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
+import schach.partie.internal.Partie;
 import schach.system.IView;
 import schach.system.Logger;
 import schach.system.NegativeConditionException;
@@ -97,6 +97,12 @@ public class GuiView implements IView {
 
 	private JButton jSendButton;
 
+	private JPanel jContentPane1;
+
+	private JLabel jLabelAktuellerSpieler;
+
+	private JPanel jContentPane4;
+
 	/**
 	 * This method initializes jFrame
 	 * 
@@ -122,12 +128,19 @@ public class GuiView implements IView {
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
+			jContentPane1 = new JPanel();
 			jContentPane2 = new JPanel();
 			jContentPane3 = new JPanel();
+			jContentPane4 = new JPanel();
 			
 			jContentPane.setLayout(new GridLayout(2,1));
 			jContentPane2.setLayout(new GridLayout(8,8));
 			jContentPane3.setLayout(new GridLayout(1,2));
+			jContentPane4.setLayout(new GridLayout(2,1));
+			
+			jLabelAktuellerSpieler = new JLabel("Partie wird gestartet..");
+			jContentPane1.add(jLabelAktuellerSpieler);
+			
 			for(int r=1; r<=8; r++){
 				for(int l=1; l<=8; l++){
 					JPanel panel = new JPanel();
@@ -176,7 +189,9 @@ public class GuiView implements IView {
 			});
 			jInputField.setText("");
 			jContentPane3.add(jInputField);
-			jContentPane3.add(jSendButton);
+			jContentPane3.add(jContentPane4);
+			jContentPane4.add(jLabelAktuellerSpieler);
+			jContentPane4.add(jSendButton);
 			jContentPane.add(jContentPane3);
 		}
 		return jContentPane;
@@ -397,6 +412,8 @@ public class GuiView implements IView {
 			besetzteFelder.put(figur.gebePosition(),figur);
 //			Logger.debug("View: "+figur+" steht auf "+figur.gebePosition());
 		}
+		
+		jLabelAktuellerSpieler.setText("Aktueller Spieler: "+Partie.getInstance().aktuellerSpieler().toString());
 		
 		// zeichne Brett
 		IFeld feld;
