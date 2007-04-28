@@ -6,6 +6,7 @@ import schach.brett.IFeld;
 import schach.partie.IPartiehistorie;
 import schach.partie.IStellung;
 import schach.system.NegativeConditionException;
+import schach.system.NegativePreConditionException;
 
 public class Partiehistorie implements IPartiehistorie {
 	private static IPartiehistorie instance = null;
@@ -41,7 +42,13 @@ public class Partiehistorie implements IPartiehistorie {
 	public IStellung simuliereStellung(IFeld start, IFeld ziel)
 			throws NegativeConditionException {
 		// TODO Auto-generated method stub
-		return new Stellung(null,false,null);
+		if (start.istBesetzt()){
+			return new Stellung(null,false,null);
+		}else{
+			throw new NegativePreConditionException();
+		}
+		
+		
 	}
 
 }
