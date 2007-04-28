@@ -54,6 +54,9 @@ public class Partie implements IPartie {
 
 	public void nehmeRemisAn(ISpieler spieler) throws NegativeConditionException {
 		// TODO Auto-generated method stub
+		if((istRemisMoeglich()) || (istRemisAngebotVon(gegnerischerSpieler))){
+			
+		}
 		
 		
 	}
@@ -89,6 +92,11 @@ public class Partie implements IPartie {
 	public boolean istRemisAngebotVon(ISpieler Spieler) throws NegativeConditionException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public boolean istRemisMoeglich() throws NegativeConditionException {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 
