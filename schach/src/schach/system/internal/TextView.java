@@ -16,6 +16,7 @@ import schach.brett.Linie;
 import schach.brett.Reihe;
 import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
+import schach.partie.internal.Partie;
 import schach.system.IView;
 import schach.system.Logger;
 
@@ -42,6 +43,7 @@ public class TextView implements IView {
 		}
 		
 		// zeichne Brett
+		System.out.println("Aktueller Spieler: "+Partie.getInstance().aktuellerSpieler());
 		System.out.println("+--+--+--+--+--+--+--+--+");
 		IFeld feld;
 		IFigur figur;
