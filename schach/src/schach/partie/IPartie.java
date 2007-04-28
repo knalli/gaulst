@@ -61,6 +61,10 @@ public interface IPartie {
 	 * Startet die Programmlogik (kein Partiebeginn!)
 	 *
 	 */
+	/***
+	 * 
+	 */
+	public boolean istRemisMoeglich() throws NegativeConditionException;
 	public void start();
 	
 	public void wechsleSpieler();
