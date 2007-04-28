@@ -30,8 +30,16 @@ public class Partie implements IPartie {
 		return aktuellerSpieler;
 	}
 
-	public void bieteRemisAn(ISpieler spieler) throws NegativeConditionException {
+	public boolean bieteRemisAn(ISpieler spieler) throws NegativeConditionException {
 		// TODO Auto-generated method stub
+		//ISpieler s_spieler = aktuellerSpieler();
+		//return istRemisAngebtVon(aktuellerSpieler(spieler));
+		//boolean s=istRemisAngebotVon(aktuellerSpieler());
+		
+		if (!istRemisAngebotVon(aktuellerSpieler)){
+			return true;
+		}
+		return false;
 		
 	}
 
@@ -46,6 +54,7 @@ public class Partie implements IPartie {
 
 	public void nehmeRemisAn(ISpieler spieler) throws NegativeConditionException {
 		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -76,4 +85,11 @@ public class Partie implements IPartie {
 			gegnerischerSpieler = Spieler.getInstance(Farbe.WEISS);
 		}
 	}
+
+	public boolean istRemisAngebotVon(ISpieler Spieler) throws NegativeConditionException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 }
