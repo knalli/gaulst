@@ -34,7 +34,7 @@ public interface IPartie {
 	 * @param spieler
 	 * @throws NegativeConditionException
 	 */
-	public void bieteRemisAn(ISpieler spieler) throws NegativeConditionException;
+	public boolean bieteRemisAn(ISpieler spieler) throws NegativeConditionException;
 	
 	/**
 	 * Der Spieler lehnt ein Remis ab.
@@ -49,7 +49,14 @@ public interface IPartie {
 	 * @throws NegativeConditionException
 	 */
 	public void nehmeRemisAn(ISpieler spieler) throws NegativeConditionException;
-
+	
+	/**
+	 * prüft von welchem Spieler das Remisangebot kommt
+	 * @param Spieler
+	 * @return
+	 * @throws NegativeConditionException
+	 */
+	public boolean istRemisAngebotVon(ISpieler Spieler) throws NegativeConditionException;
 	/**
 	 * Startet die Programmlogik (kein Partiebeginn!)
 	 *
