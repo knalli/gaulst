@@ -53,4 +53,9 @@ public class Partiehistorie implements IPartiehistorie {
 		
 	}
 
+	public void protokolliereStellung() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

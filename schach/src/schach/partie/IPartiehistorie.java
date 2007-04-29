@@ -16,4 +16,6 @@ public interface IPartiehistorie {
 	public IStellung gebeStellung();
 	
 	public IStellung simuliereStellung(IFeld start, IFeld ziel) throws NegativeConditionException;
+	
+	public void protokolliereStellung();
 }
