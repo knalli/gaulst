@@ -27,7 +27,7 @@ public class Partie implements IPartie {
 	}
 
 	public ISpieler aktuellerSpieler() {
-		return aktuellerSpieler;
+		return aktuellerSpieler;   
 	}
 
 	public boolean bieteRemisAn(ISpieler spieler) throws NegativeConditionException {
