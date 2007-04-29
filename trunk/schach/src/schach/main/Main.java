@@ -33,11 +33,11 @@ public class Main {
 		List<Figurart> a = new ArrayList<Figurart>();
 		a.add(Figurart.BAUER);
 		List<Farbe> b = new ArrayList<Farbe>();
-		b.add(Farbe.SCHWARZ);
+		b.add(Farbe.WEISS);
 		try {
-			AlleFiguren.getInstance().gebeFiguren(a,b).get(1).positionieren(Brett.getInstance().gebeFeld(Reihe.R4, Linie.B));
+			AlleFiguren.getInstance().gebeFiguren(a,b).get(1).zieht(Brett.getInstance().gebeFeld(Reihe.R4, Linie.B));
 		} catch (NegativeConditionException e) {
-			Logger.warning("Figur konnte nicht bewegt werden");
+			Logger.warning("Figur konnte nicht bewegt werden (Grund: "+e.getMessage()+")");
 			//e.printStackTrace();
 		}
 	}

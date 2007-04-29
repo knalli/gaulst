@@ -5,8 +5,11 @@ import schach.spieler.ISpieler;
 
 public class Partiezustand implements IPartiezustand {
 	private static IPartiezustand instance = null;
+	private boolean inpartie = false;
 	
-	private Partiezustand() {}
+	private Partiezustand() {
+		inpartie = true;
+	}
 	
 	public static IPartiezustand getInstance() {
 		if(instance == null)
@@ -16,8 +19,7 @@ public class Partiezustand implements IPartiezustand {
 	}
 	
 	public boolean inPartie() {
-		// TODO Auto-generated method stub
-		return false;
+		return inpartie;
 	}
 
 	public boolean istPatt() {

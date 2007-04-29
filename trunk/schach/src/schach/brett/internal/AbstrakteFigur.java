@@ -8,6 +8,7 @@ import schach.brett.IFeld;
 import schach.brett.IFigur;
 import schach.partie.internal.Partiezustand;
 import schach.spieler.ISpieler;
+import schach.spieler.internal.Spieler;
 import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
@@ -65,8 +66,7 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	}
 
 	public ISpieler gehoertSpieler() {
-		// TODO Auto-generated method stub
-		return null;
+		return Spieler.getInstance(farbe);
 	}
 
 	public boolean istAufDemSchachbrett() {
