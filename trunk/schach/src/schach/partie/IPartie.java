@@ -64,6 +64,7 @@ public interface IPartie {
 	/***
 	 * 
 	 */
+
 	public boolean istRemisMoeglich() throws NegativeConditionException;
 	public void start();
 	
