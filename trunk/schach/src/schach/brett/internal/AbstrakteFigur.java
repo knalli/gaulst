@@ -37,6 +37,13 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 		
 		
 	}
+	
+	private AbstrakteFigur(IFigur figur){
+		farbe = figur.gebeFarbe();
+		grundposition = figur.gebeGrundposition();
+		position = figur.gebePosition();
+		figurart = figur.gebeArt();
+	}
 
 	public void aufstellen(IFeld feld) throws NegativeConditionException {
 		if(!Partiezustand.getInstance().inPartie())
@@ -87,4 +94,18 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	public String toString(){
 		return figurart+" "+farbe;
 	}
+	
+//	public IFigur clone() {
+//		IFigur figur;
+//		switch(figurart){
+//		case BAUER: 	figur = new Bauer(this);	break;
+//		case DAME: 		figur = new Dame(this);		break;
+//		case KOENIG: 	figur = new Koenig(this);	break;
+//		case LAEUFER: 	figur = new Laeufer(this);	break;
+//		case SPRINGER: 	figur = new Springer(this);	break;
+//		case TURM: 		figur = new Turm(this);		break;
+//		}
+//		
+//		return figur;
+//	}
 }
