@@ -45,7 +45,7 @@ public class Spieler implements ISpieler {
 	}
 	
 	public boolean equals(Spieler spieler){
-		return this.gebeFarbe().equals(spieler.gebeFarbe());
+		return farbe.equals(spieler.gebeFarbe());
 	}
 
 	public Reihe gebeGrundreihe() {

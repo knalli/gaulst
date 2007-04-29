@@ -54,32 +54,32 @@ public class AlleFiguren implements IAlleFiguren {
 		IBrett brett = Brett.getInstance();
 		
 		
-//		schwarze Bauern auf Reihe 2 A-H
+//		wei§e Bauern auf Reihe 2 A-H
 		for(Linie linie : Linie.values())
-			figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.BAUER, brett.gebeFeld(Reihe.R2, linie)));
+			figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.BAUER, brett.gebeFeld(Reihe.R2, linie)));
 		
-		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.TURM, brett.gebeFeld(Reihe.R1, Linie.A)));
-		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.SPRINGER, brett.gebeFeld(Reihe.R1, Linie.B)));
-		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.LAEUFER, brett.gebeFeld(Reihe.R1, Linie.C)));
-		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.DAME, brett.gebeFeld(Reihe.R1, Linie.D)));
-		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.KOENIG, brett.gebeFeld(Reihe.R1, Linie.E)));
-		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.LAEUFER, brett.gebeFeld(Reihe.R1, Linie.F)));
-		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.SPRINGER, brett.gebeFeld(Reihe.R1, Linie.G)));
-		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.TURM, brett.gebeFeld(Reihe.R1, Linie.H)));
+		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.TURM, brett.gebeFeld(Reihe.R1, Linie.A)));
+		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.SPRINGER, brett.gebeFeld(Reihe.R1, Linie.B)));
+		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.LAEUFER, brett.gebeFeld(Reihe.R1, Linie.C)));
+		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.DAME, brett.gebeFeld(Reihe.R1, Linie.D)));
+		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.KOENIG, brett.gebeFeld(Reihe.R1, Linie.E)));
+		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.LAEUFER, brett.gebeFeld(Reihe.R1, Linie.F)));
+		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.SPRINGER, brett.gebeFeld(Reihe.R1, Linie.G)));
+		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.TURM, brett.gebeFeld(Reihe.R1, Linie.H)));
 		
 		
-//		 wei§e Bauern auf Reihe 7 A-H
+//		schwarze  Bauern auf Reihe 7 A-H
 		for(Linie linie : Linie.values())
-			figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.BAUER, brett.gebeFeld(Reihe.R7, linie)));
+			figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.BAUER, brett.gebeFeld(Reihe.R7, linie)));
 		
-		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.TURM, brett.gebeFeld(Reihe.R8, Linie.A)));
-		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.SPRINGER, brett.gebeFeld(Reihe.R8, Linie.B)));
-		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.LAEUFER, brett.gebeFeld(Reihe.R8, Linie.C)));
-		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.DAME, brett.gebeFeld(Reihe.R8, Linie.D)));
-		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.KOENIG, brett.gebeFeld(Reihe.R8, Linie.E)));
-		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.LAEUFER, brett.gebeFeld(Reihe.R8, Linie.F)));
-		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.SPRINGER, brett.gebeFeld(Reihe.R8, Linie.G)));
-		figuren.add(erzeugeFigur(Farbe.WEISS, Figurart.TURM, brett.gebeFeld(Reihe.R8, Linie.H)));
+		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.TURM, brett.gebeFeld(Reihe.R8, Linie.A)));
+		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.SPRINGER, brett.gebeFeld(Reihe.R8, Linie.B)));
+		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.LAEUFER, brett.gebeFeld(Reihe.R8, Linie.C)));
+		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.DAME, brett.gebeFeld(Reihe.R8, Linie.D)));
+		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.KOENIG, brett.gebeFeld(Reihe.R8, Linie.E)));
+		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.LAEUFER, brett.gebeFeld(Reihe.R8, Linie.F)));
+		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.SPRINGER, brett.gebeFeld(Reihe.R8, Linie.G)));
+		figuren.add(erzeugeFigur(Farbe.SCHWARZ, Figurart.TURM, brett.gebeFeld(Reihe.R8, Linie.H)));
 	}
 
 	private IFigur erzeugeFigur(Farbe farbe, Figurart figurart, IFeld feld) {

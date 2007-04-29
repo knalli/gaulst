@@ -56,35 +56,35 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 	public void zieht(IFeld ziel) throws NegativeConditionException {
 		boolean macheEinenDoppelschritt = false;
 		if(!gehoertSpieler().istZugberechtigt())
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Spieler dieser Figur ist nicht zugberechtigt.");
 		
 		if(Partiezustand.getInstance().istRemis())
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Partie ist Remis");
 		
 		if(Partiezustand.getInstance().istPatt())
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Partie ist Patt");
 		
 		if(Partiezustand.getInstance().istSchachmatt())
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Partie ist Schachmatt");
 		
 		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
 		if(koenig.istInEinerRochade())
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
-		if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
-			throw new NegativePreConditionException();
+		//if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+		//	throw new NegativePreConditionException();
 		
 		if(position.plusReihe(1).equals(ziel)){
 			if(ziel.istBesetzt())
-				throw new NegativePreConditionException();
+				throw new NegativePreConditionException("Ziel ist besetzt");
 			
 		} else if(position.plusReihe(2).equals(ziel) && istAufGrundposition()) {
 			if(position.plusReihe(1).istBesetzt() || ziel.istBesetzt())
-				throw new NegativePreConditionException();
+				throw new NegativePreConditionException("Ziel ist besetzt oder ungültig");
 			macheEinenDoppelschritt = true;
 			
 		} else
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Ungültiges Ziel");
 		
 		position = ziel;
 		if(!Brett.getInstance().istBauernUmwandlung()){

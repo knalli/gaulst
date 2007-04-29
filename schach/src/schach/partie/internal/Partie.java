@@ -67,6 +67,10 @@ public class Partie implements IPartie {
 			AlleFiguren.getInstance().stelleAlleFigurenAuf();
 			Logger.info("Figuren wurden aufgestellt.");
 			View.getView().update();
+			
+			aktuellerSpieler = Spieler.getInstance(Farbe.WEISS);
+			gegnerischerSpieler = Spieler.getInstance(Farbe.SCHWARZ);
+			
 		} catch (ChessException e) {
 			Logger.error("Ausnahme "+e.toString()+" aufgetreten."+e.getCause());
 		}

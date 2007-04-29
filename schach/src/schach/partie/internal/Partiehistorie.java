@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import schach.brett.IFeld;
+import schach.brett.IFigur;
 import schach.partie.IPartiehistorie;
 import schach.partie.IStellung;
 import schach.system.NegativeConditionException;
@@ -11,7 +12,7 @@ import schach.system.NegativePreConditionException;
 
 public class Partiehistorie implements IPartiehistorie {
 	private static IPartiehistorie instance = null;
-	private List<IStellung> stellung=new ArrayList<IStellung>();
+	private List<IStellung> stellungen=new ArrayList<IStellung>();
 	private Partiehistorie() {}
 	
 	public static IPartiehistorie getInstance() {
@@ -23,7 +24,7 @@ public class Partiehistorie implements IPartiehistorie {
 	public List<IStellung> gebeAlleStellungen() {
 		// TODO Auto-generated method stub
 		
-		return stellung;
+		return stellungen;
 	}
 
 	public IStellung gebeStellung() {
@@ -45,17 +46,14 @@ public class Partiehistorie implements IPartiehistorie {
 			throws NegativeConditionException {
 		// TODO Auto-generated method stub
 		if (start.istBesetzt()){
-			return new Stellung(null,false,null);
+			return (new Stellung(new ArrayList<IFigur>(),false,null));
 		}else{
 			throw new NegativePreConditionException();
 		}
-		
-		
 	}
 
 	public void protokolliereStellung() {
-		// TODO Auto-generated method stub
-		
+		stellungen.add(new Stellung(new ArrayList<IFigur>(),false,null));
 	}
 
 }
