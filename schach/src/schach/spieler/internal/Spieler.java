@@ -1,18 +1,20 @@
 package schach.spieler.internal;
 
 import schach.brett.Farbe;
+import schach.brett.Reihe;
 import schach.partie.internal.Partie;
 import schach.spieler.ISpieler;
 
 public class Spieler implements ISpieler {
 	private Farbe farbe;
+	private Reihe reihe;
 	private static ISpieler instanceWEISS = null;
 	private static ISpieler instanceSCHWARZ = null;
 	
 	public static ISpieler getInstance(Farbe farbe){
 		if(instanceWEISS == null){
-			instanceWEISS = new Spieler(Farbe.WEISS);
-			instanceSCHWARZ = new Spieler(Farbe.SCHWARZ);
+			instanceWEISS = new Spieler(Farbe.WEISS, Reihe.R1);
+			instanceSCHWARZ = new Spieler(Farbe.SCHWARZ, Reihe.R8);
 		}
 		
 		if(farbe.equals(Farbe.WEISS)){
@@ -23,8 +25,9 @@ public class Spieler implements ISpieler {
 		}
 	}
 		
-	private Spieler(Farbe farbe) {
+	private Spieler(Farbe farbe, Reihe reihe) {
 		this.farbe = farbe;
+		this.reihe = reihe;
 	}
 	
 	/**
@@ -43,6 +46,10 @@ public class Spieler implements ISpieler {
 	
 	public boolean equals(Spieler spieler){
 		return this.gebeFarbe().equals(spieler.gebeFarbe());
+	}
+
+	public Reihe gebeGrundreihe() {
+		return reihe;
 	}
 
 }
