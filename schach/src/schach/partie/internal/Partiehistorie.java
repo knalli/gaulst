@@ -1,5 +1,6 @@
 package schach.partie.internal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import schach.brett.IFeld;
@@ -10,6 +11,7 @@ import schach.system.NegativePreConditionException;
 
 public class Partiehistorie implements IPartiehistorie {
 	private static IPartiehistorie instance = null;
+	private List<IStellung> stellungen=null;
 	
 	private Partiehistorie() {}
 	
@@ -21,7 +23,12 @@ public class Partiehistorie implements IPartiehistorie {
 	}
 	public List<IStellung> gebeAlleStellungen() {
 		// TODO Auto-generated method stub
-		return null;
+		List<IStellung> stellung2=new ArrayList<IStellung>();
+		
+		for(IStellung stellung:this.stellungen ){
+			stellung2.add(stellung);
+		}
+		return stellung2;
 	}
 
 	public IStellung gebeStellung() {
