@@ -11,8 +11,7 @@ import schach.system.NegativePreConditionException;
 
 public class Partiehistorie implements IPartiehistorie {
 	private static IPartiehistorie instance = null;
-	private List<IStellung> stellungen=null;
-	
+	private List<IStellung> stellung=new ArrayList<IStellung>();
 	private Partiehistorie() {}
 	
 	public static IPartiehistorie getInstance() {
@@ -23,12 +22,8 @@ public class Partiehistorie implements IPartiehistorie {
 	}
 	public List<IStellung> gebeAlleStellungen() {
 		// TODO Auto-generated method stub
-		List<IStellung> stellung2=new ArrayList<IStellung>();
 		
-		for(IStellung stellung:this.stellungen ){
-			stellung2.add(stellung);
-		}
-		return stellung2;
+		return stellung;
 	}
 
 	public IStellung gebeStellung() {
