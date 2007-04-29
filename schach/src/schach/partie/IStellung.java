@@ -14,5 +14,7 @@ public interface IStellung {
 	
 	public List<IFigur> gebeFiguren(List<Figurart> figurarten, List<Farbe> farben);
 	
+	public List<IFigur> gebeFiguren(Figurart figurarte, Farbe farbe);
+	
 	public boolean istKoenigBedroht(Farbe farbe);
 }

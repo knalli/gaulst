@@ -44,4 +44,12 @@ public class Stellung implements IStellung {
 		return false;
 	}
 
+	public List<IFigur> gebeFiguren(Figurart figurart, Farbe farbe) {
+		List<Figurart> figurarten = new ArrayList<Figurart>(1);
+		List<Farbe> farben = new ArrayList<Farbe>(1);
+		figurarten.add(figurart);
+		farben.add(farbe);
+		return gebeFiguren(figurarten,farben);
+	}
+
 }
