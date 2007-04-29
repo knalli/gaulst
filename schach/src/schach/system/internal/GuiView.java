@@ -433,8 +433,9 @@ public class GuiView implements IView {
 			}
 		}
 		
-		for(Reihe r : Reihe.values()){
-			
+		Reihe[] reihen = {Reihe.R8,Reihe.R7,Reihe.R6,Reihe.R5,
+				Reihe.R4,Reihe.R3,Reihe.R2,Reihe.R1};
+		for(Reihe r : reihen){
 			for(Linie l : Linie.values()){
 				feld = brett.gebeFeld(r, l);
 				StringBuilder sb = new StringBuilder();
