@@ -37,6 +37,7 @@ import schach.brett.Reihe;
 import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
 import schach.partie.internal.Partie;
+import schach.spieler.ISpieler;
 import schach.system.IView;
 import schach.system.Logger;
 import schach.system.NegativeConditionException;
@@ -410,10 +411,17 @@ public class GuiView implements IView {
 		besetzteFelder.clear();
 		for(IFigur figur : allefiguren.gebeFiguren(listeFigurarten,listeFarben)){
 			besetzteFelder.put(figur.gebePosition(),figur);
-//			Logger.debug("View: "+figur+" steht auf "+figur.gebePosition());
+			Logger.debug("View: "+figur+" steht auf "+figur.gebePosition());
 		}
 		
-		jLabelAktuellerSpieler.setText("Aktueller Spieler: "+Partie.getInstance().aktuellerSpieler().toString());
+		ISpieler aktSpieler = Partie.getInstance().aktuellerSpieler();
+		if(aktSpieler == null){
+			jLabelAktuellerSpieler.setText("Partie läuft nicht.");
+		}
+		else {
+			jLabelAktuellerSpieler.setText("Aktueller Spieler: "+aktSpieler.toString());
+		}
+		
 		
 		// zeichne Brett
 		IFeld feld;
