@@ -51,5 +51,8 @@ public class Spieler implements ISpieler {
 	public Reihe gebeGrundreihe() {
 		return reihe;
 	}
-
+	
+	public String toString() {
+		return "Spieler "+farbe;
+	}
 }
