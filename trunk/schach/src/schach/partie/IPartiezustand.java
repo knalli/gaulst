@@ -16,4 +16,6 @@ public interface IPartiezustand {
 	public boolean istSchachmatt();
 	
 	public boolean istRemisMoeglich();
+	
+
 }
