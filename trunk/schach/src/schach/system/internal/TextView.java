@@ -51,12 +51,16 @@ public class TextView implements IView {
 		else {
 			System.out.println("Aktueller Spieler: "+aktSpieler.toString());
 		}
-		System.out.println("+--+--+--+--+--+--+--+--+");
+		
+		System.out.println(" |AA|BB|CC|DD|EE|FF|GG|HH| ");
+		System.out.println(" +--+--+--+--+--+--+--+--+ ");
 		IFeld feld;
 		IFigur figur;
 		IBrett brett = Brett.getInstance();
-		for(Reihe r : Reihe.values()){
-			StringBuilder sb = new StringBuilder("|");
+		Reihe[] reihen = {Reihe.R8,Reihe.R7,Reihe.R6,Reihe.R5,
+				Reihe.R4,Reihe.R3,Reihe.R2,Reihe.R1};
+		for(Reihe r : reihen){
+			StringBuilder sb = new StringBuilder(r.toString()+"|");
 			for(Linie l : Linie.values()){
 				feld = brett.gebeFeld(r, l);
 				if(besetzteFelder.containsKey(feld)){
@@ -97,9 +101,10 @@ public class TextView implements IView {
 					sb.append("  |");
 				}
 			}
-			System.out.println(sb.toString());
-			System.out.println("+--+--+--+--+--+--+--+--+");
+			System.out.println(sb.append(r.toString()).toString());
+			System.out.println(" +--+--+--+--+--+--+--+--+ ");
 		}
+		System.out.println(" |AA|BB|CC|DD|EE|FF|GG|HH| ");
 	}
 
 }
