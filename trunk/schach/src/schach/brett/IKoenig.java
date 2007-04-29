@@ -5,7 +5,7 @@ import schach.system.NegativeConditionException;
 /**
  * Ein Koenig in einer Schachpartie.
  * @author Jan Philipp
- *
+ * test
  */
 public interface IKoenig extends IFigur {
 	/**
