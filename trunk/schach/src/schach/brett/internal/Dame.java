@@ -23,6 +23,11 @@ public class Dame extends AbstrakteFigur implements IDame {
 	public Dame(Farbe farbe, IFeld feld) {
 		super(farbe, feld, Figurart.DAME);
 	}
+	
+	protected Dame(IFigur figur){
+		super(figur);
+	}
+	
 	public void schlaegt(IFeld ziel, ISchlagbareFigur gegner)
 			throws NegativeConditionException {
 		if(position.equals(ziel))

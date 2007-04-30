@@ -1,6 +1,5 @@
 package schach.brett.internal;
 
-import quicktime.std.image.NearestPointInfo;
 import schach.brett.Farbe;
 import schach.brett.Figurart;
 import schach.brett.IBauer;
@@ -20,6 +19,10 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 
 	public Bauer(Farbe farbe, IFeld feld) {
 		super(farbe, feld, Figurart.BAUER);
+	}
+	
+	protected Bauer(IFigur figur){
+		super(figur);
 	}
 
 	public void entnehmen() throws NegativeConditionException {

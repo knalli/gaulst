@@ -39,7 +39,7 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 		
 	}
 	
-	private AbstrakteFigur(IFigur figur){
+	protected AbstrakteFigur(IFigur figur){
 		farbe = figur.gebeFarbe();
 		grundposition = figur.gebeGrundposition();
 		position = figur.gebePosition();
@@ -95,17 +95,18 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 		return figurart+" "+farbe;
 	}
 	
-//	public IFigur clone() {
-//		IFigur figur;
-//		switch(figurart){
-//		case BAUER: 	figur = new Bauer(this);	break;
-//		case DAME: 		figur = new Dame(this);		break;
-//		case KOENIG: 	figur = new Koenig(this);	break;
-//		case LAEUFER: 	figur = new Laeufer(this);	break;
-//		case SPRINGER: 	figur = new Springer(this);	break;
-//		case TURM: 		figur = new Turm(this);		break;
-//		}
-//		
-//		return figur;
-//	}
+	public IFigur clone(IFeld neuesfeld) {
+		IFigur figur = null;
+		
+		switch(figurart){
+		case BAUER: 	figur = new Bauer(this);	break;
+		case DAME: 		figur = new Dame(this);		break;
+		case KOENIG: 	figur = new Koenig(this);	break;
+		case LAEUFER: 	figur = new Laeufer(this);	break;
+		case SPRINGER: 	figur = new Springer(this);	break;
+		case TURM: 		figur = new Turm(this);		break;
+		}
+		
+		return figur;
+	}
 }

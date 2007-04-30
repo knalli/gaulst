@@ -6,6 +6,7 @@ import schach.brett.Farbe;
 import schach.brett.Figurart;
 import schach.brett.IBrett;
 import schach.brett.IFeld;
+import schach.brett.IFigur;
 import schach.brett.IKoenig;
 import schach.brett.ISchlagbareFigur;
 import schach.partie.IStellung;
@@ -20,6 +21,10 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 
 	public Koenig(Farbe farbe, IFeld feld) {
 		super(farbe, feld, Figurart.KOENIG);
+	}
+	
+	protected Koenig(IFigur figur) {
+		super(figur);
 	}
 	
 	public boolean istBedroht() {

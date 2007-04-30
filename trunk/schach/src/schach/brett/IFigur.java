@@ -80,4 +80,13 @@ public interface IFigur {
 	 * @throws NegativeConditionException
 	 */
 	public void schlaegt(IFeld ziel, ISchlagbareFigur gegner) throws NegativeConditionException;
+	
+	/**
+	 * Erstellt eine neue Kopie der Figur und positioniert sie auf ein Feld.
+	 * Dieses Feld sollte nicht auf dem Schachbrett vorhanden sein.
+	 * 
+	 * @param neuesfeld
+	 * @return
+	 */
+	public IFigur clone(IFeld neuesfeld);
 }

@@ -25,6 +25,10 @@ public class Turm extends AbstrakteFigur implements ITurm {
 		super(farbe, feld, Figurart.TURM);
 	}
 	
+	protected Turm(IFigur figur) {
+		super(figur);
+	}
+	
 	public void rochiert(IFeld ziel) throws NegativeConditionException {
 		// TODO Auto-generated method stub
 
@@ -37,8 +41,7 @@ public class Turm extends AbstrakteFigur implements ITurm {
 	}
 
 	public boolean wurdeBewegt() throws NegativeConditionException {
-		// TODO Auto-generated method stub
-		return false;
+		return schonBewegt;
 	}
 
 	public void zieht(IFeld ziel) throws NegativeConditionException {
