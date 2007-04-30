@@ -10,32 +10,8 @@ import schach.brett.Reihe;
  * @author knalli
  */
 public interface IController {
-	/**
-	 * Informiert den WŠchter Ÿber eine einfache Aktionshandlung auf einem Feld. 
-	 * @param feld
-	 */
-	public void addSingleAction(IFeld feld);
-	
-	/**
-	 * Informiert den WŠchter Ÿber eine einfache Aktionshandlung auf einem Feld. 
-	 * @param reihe
-	 * @param linie
-	 */
-	public void addSingleAction(Reihe reihe, Linie linie);
-	
-	/**
-	 * Informiert den WŠchter Ÿber eine komplette Aktionshandlung Ÿber Start- und Zielfeld.
-	 * @param startfeld
-	 * @param zielFeld
-	 */
-	public void addCompleteAction(IFeld startFeld, IFeld zielFeld);
-	
-	/**
-	 * Informiert den WŠchter Ÿber eine komplette Aktionshandlung Ÿber Start- und Zielfeld.
-	 * @param startReihe
-	 * @param startLinie
-	 * @param zielReihe
-	 * @param zielLinie
-	 */
-	public void addCompleteAction(Reihe startReihe, Linie startLinie, Reihe zielReihe, Linie zielLinie);
+	public void setzeFigur(IFeld feld);
+	public void setzeFigur(Reihe reihe, Linie linie);
+	public void setzeZielFeld(IFeld feld);
+	public void setzeZielFeld(Reihe reihe, Linie linie);
 }
