@@ -22,76 +22,70 @@ public class Controller implements IController {
 	private Controller() { }
 	
 	
-	private IFeld startfeld = null;
-	private IFeld zielfeld = null;
+	private IFigur figur = null;
+	private IFeld ziel = null;
 	
-	public void addCompleteAction(IFeld startFeld, IFeld zielFeld) {
-		startfeld = startFeld;
-		zielfeld = zielFeld;
-		
-		evaluateAction();
-		clearState();
-	}
-
-	public void addCompleteAction(Reihe startReihe, Linie startLinie,
-			Reihe zielReihe, Linie zielLinie) {
+	private boolean evaluateAction() {
+		Logger.debug("evaluiere: "+figur + " -> "+ziel);
 		IBrett brett = Brett.getInstance();
-		addCompleteAction(brett.gebeFeld(startReihe, startLinie),brett.gebeFeld(zielReihe, zielLinie));
-	}
-
-	public void addSingleAction(IFeld feld) {
-		if(startfeld==null){
-			if(feld.istBesetzt())
-				startfeld = feld;
-		}
-		else {
-			zielfeld = feld;
-			evaluateAction();
-			clearState();
-		}
-	}
-
-	public void addSingleAction(Reihe reihe, Linie linie) {
-		addSingleAction(Brett.getInstance().gebeFeld(reihe, linie));
-	}
-	
-	private void evaluateAction() {
-		IBrett brett = Brett.getInstance();
-		IFigur startfigur = brett.gebeFigurVonFeld(startfeld);
-		IFigur zielfigur = brett.gebeFigurVonFeld(zielfeld);
+		IFigur zielfigur = brett.gebeFigurVonFeld(ziel);
 		
 		try {
 			// steht da überhaupt wer?
-			if(startfigur != null){
+			if(figur == null){
 				throw new Exception("Auf dem Startfeld steht keine Schachfigur.");
 			}
 			
 			// Ziehzug? (ohne spezialfälle)
 			if(zielfigur == null){
-				startfigur.zieht(zielfeld);
+				figur.zieht(ziel);
 			}
 			// Schlagzug? (ohne spezialfälle)
 			else {
 				// gegnerische Figur schlagbar
 				if(zielfigur instanceof ISchlagbareFigur){
-					startfigur.schlaegt(zielfeld, (ISchlagbareFigur)zielfigur);
+					figur.schlaegt(ziel, (ISchlagbareFigur)zielfigur);
 				}
 				// gegnerische Figur nicht schlagbar
 				else {
-					zielfeld = null;
 					throw new Exception("Figur ist nicht schlagbar.");
 				}
-				
 			}
-			
 		} catch (Exception e) {
 			Logger.error(e.getMessage());
+			return false;
 		}
+		return true;
 	}
 	
 	private void clearState() {
-		startfeld = null;
-		zielfeld = null;
+		figur = null;
+		ziel = null;
 	}
 
+	public void setzeFigur(IFeld feld) {
+		setzeFigur(feld.gebeReihe(), feld.gebeLinie());
+	}
+
+	public void setzeFigur(Reihe reihe, Linie linie) {
+		IBrett brett = Brett.getInstance();
+		Logger.debug("Suche auf "+linie.toString()+reihe.toString());
+		figur = brett.gebeFigurVonFeld(reihe, linie);
+		ziel = null;
+	}
+
+	public void setzeZielFeld(IFeld feld) {
+		ziel = feld;
+		if(evaluateAction()){
+			
+			clearState();
+		}
+		else{
+			ziel = null;
+		}
+	}
+
+	public void setzeZielFeld(Reihe reihe, Linie linie) {
+		setzeZielFeld(Brett.getInstance().gebeFeld(reihe, linie)); 
+	}
 }

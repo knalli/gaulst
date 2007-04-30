@@ -38,9 +38,9 @@ import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
 import schach.partie.internal.Partie;
 import schach.spieler.ISpieler;
+import schach.system.IController;
 import schach.system.IView;
 import schach.system.Logger;
-import schach.system.NegativeConditionException;
 
 public class GuiView implements IView {
 	private static GuiView instance = null;  //  @jve:decl-index=0:
@@ -142,7 +142,7 @@ public class GuiView implements IView {
 			jLabelAktuellerSpieler = new JLabel("Partie wird gestartet..");
 			jContentPane1.add(jLabelAktuellerSpieler);
 			
-			for(int r=1; r<=8; r++){
+			for(int r=8; r>=1; r--){
 				for(int l=1; l<=8; l++){
 					JPanel panel = new JPanel();
 					feld1 = new JLabel();
@@ -166,25 +166,45 @@ public class GuiView implements IView {
 			jSendButton.setText("Absenden");
 			jSendButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-//					if(jInputField.getText().equals("b2b4")){
-						IFeld feld = Brett.getInstance().gebeFeld(Reihe.R4, Linie.A);
-						IFigur figur = Brett.getInstance().gebeFigurVonFeld(Reihe.R2, Linie.A);
-						Logger.debug(figur.toString());
-						try {
-							figur.zieht(feld);
-						} catch (NegativeConditionException e1) {
-							Logger.info(e1.getMessage());
-						}
-						
-						IFeld feld2 = Brett.getInstance().gebeFeld(Reihe.R3, Linie.A);
-						IFigur figur2 = Brett.getInstance().gebeFigurVonFeld(Reihe.R1, Linie.A);
-						Logger.debug(figur.toString());
-						try {
-							figur2.zieht(feld2);
-						} catch (NegativeConditionException e1) {
-							Logger.info(e1.getMessage());
-						}
-//					}
+					IController controller = Controller.getInstance();
+					IBrett brett = Brett.getInstance();
+					switch(debugcount){
+					case 0:
+						Logger.info("A2 => A3 (sollte geht)");
+						controller.setzeFigur(brett.gebeFeld(Reihe.R2, Linie.A));
+						controller.setzeZielFeld(brett.gebeFeld(Reihe.R3, Linie.A));
+						break;
+					case 1:
+						Logger.info("C2 => C3 (sollte nicht gehen)");
+						controller.setzeFigur(brett.gebeFeld(Reihe.R2, Linie.C));
+						controller.setzeZielFeld(brett.gebeFeld(Reihe.R3, Linie.C));
+						break;
+					case 2:
+						Logger.info("B7 => B5 (sollte gehen)");
+						controller.setzeFigur(brett.gebeFeld(Reihe.R7, Linie.B));
+						controller.setzeZielFeld(brett.gebeFeld(Reihe.R5, Linie.B));
+						break;
+					case 3:
+						Logger.info("A3 => A5 (sollte nicht gehen)");
+						controller.setzeFigur(brett.gebeFeld(Reihe.R3, Linie.A));
+						controller.setzeZielFeld(brett.gebeFeld(Reihe.R5, Linie.A));
+						break;
+					case 4:
+						Logger.info("A3 => A4 (sollte gehen)");
+						controller.setzeZielFeld(brett.gebeFeld(Reihe.R4, Linie.A));
+						break;
+					case 5:
+						Logger.info("H2 => H3 (sollte nicht gehen)");
+						controller.setzeFigur(brett.gebeFeld(Reihe.R2, Linie.H));
+						controller.setzeZielFeld(brett.gebeFeld(Reihe.R3, Linie.H));
+						break;
+					case 6:
+						Logger.info("H7 => H5 (sollte gehen)");
+						controller.setzeFigur(brett.gebeFeld(Reihe.R7, Linie.H));
+						controller.setzeZielFeld(brett.gebeFeld(Reihe.R5, Linie.H));
+						break;
+					}
+					debugcount++;
 					jInputField.setText("");
 				}
 			});
@@ -197,6 +217,7 @@ public class GuiView implements IView {
 		}
 		return jContentPane;
 	}
+	private int debugcount = 0;
 
 	/**
 	 * This method initializes jJMenuBar	
