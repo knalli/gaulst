@@ -53,6 +53,14 @@ public interface IFeld {
 	public Linie gebeLinie();
 	
 	/**
+	 * Gibt die diagonalen Felder zurück auf der sich die Firgur
+	 * zur Zeit befindet
+	 * 
+	 * @return
+	 */
+	//public Diagonale gebeDiagonale();
+	
+	/**
 	 * Gibt zurŸck, ob das Feld besetzt ist.
 	 * @return
 	 */
