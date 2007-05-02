@@ -15,7 +15,7 @@ public class Main {
 		Logger.debug("Main gestartet..");
 		
 		Partie.getInstance().start();
-
+		// nix
 	}
 
 }
