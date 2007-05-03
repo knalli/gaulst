@@ -29,11 +29,62 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 	public void schlaegt(IFeld ziel, ISchlagbareFigur gegner)
 			throws NegativeConditionException {
 		
+		if (!this.farbe.equals(gegner.gebeFarbe()))
+			throw new NegativePreConditionException();
+		
+
+		
+		
+		
+		List<IFigur> figuren = AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe);
+		IKoenig koenig = (IKoenig) figuren.get(0);
+		if(koenig.istInEinerRochade()){
+			throw new NegativePreConditionException();
+		}
+			
+			
 		if(position.equals(ziel))
 			throw new NegativePreConditionException();
 		
+		if(!position.plusReihe(1).plusLinie(2).equals(ziel)||
+				!position.plusReihe(1).minusLinie(2).equals(ziel) ||
+				!position.minusReihe(1).plusLinie(2).equals(ziel) ||
+				!position.minusReihe(1).minusLinie(2).equals(ziel) ||
+				!position.plusReihe(2).plusLinie(2).equals(ziel) ||
+				!position.plusReihe(2).minusLinie(1).equals(ziel) ||
+				!position.minusReihe(2).plusLinie(1).equals(ziel) ||
+				!position.minusReihe(2).minusLinie(1).equals(ziel)){
+			throw new NegativePreConditionException();
+		}
 		
-		// TODO Auto-generated method stub
+		if(!this.gehoertSpieler().istZugberechtigt() || Partiezustand.getInstance().istRemis()
+				|| Partiezustand.getInstance().istPatt() || Partiezustand.getInstance().istSchachmatt()){
+				throw new NegativePreConditionException();
+		}
+			
+		IStellung stellung = Partiehistorie.getInstance().simuliereStellung(position, ziel);
+		if(stellung.istKoenigBedroht(farbe))
+			throw new NegativePreConditionException();
+				
+		if(!ziel.istBesetzt()){
+			throw new NegativePreConditionException();
+		} 
+		else {
+			
+			// im OCL hatten wir gegner.aufDemSchachbrett() stehen
+			// stimmt das so?
+			gegner.sollEntferntWerden();
+			
+			
+			position.istBesetzt(false);
+			position = ziel;
+			position.istBesetzt(true);
+		}
+		
+		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
+			((IBauer) fig).letzteRundeDoppelschritt(false);
+		}
+		
 
 	}
 
@@ -82,10 +133,6 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
-							
-		
-		
-
 	}
 
 	public void geschlagenWerden() throws NegativeConditionException {
