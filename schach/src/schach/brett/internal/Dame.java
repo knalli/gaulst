@@ -56,6 +56,11 @@ public class Dame extends AbstrakteFigur implements IDame {
 		List <IFeld> k_reihe = Brett.getInstance().gebeFelderInReihe(position, ziel);
 		List <IFeld> k_linie = Brett.getInstance().gebeFelderInLinie(position, ziel);
 		List <IFeld> k_diagonale = Brett.getInstance().gebeFelderInDiagonalen(position, ziel);	
+
+		
+		// ?!?!?!?!?
+		// ziel.istBesetzt beim schlagen... sollte doch, oder?
+		// y dann Exception
 		
 		if (ziel.istBesetzt())
 			throw new NegativePreConditionException();
@@ -88,6 +93,10 @@ public class Dame extends AbstrakteFigur implements IDame {
 		}
 	}
 
+	
+	
+	
+	
 	public void zieht(IFeld ziel) throws NegativeConditionException {
 		if(!this.gehoertSpieler().istZugberechtigt() || Partiezustand.getInstance().istRemis()
 			|| Partiezustand.getInstance().istPatt() || Partiezustand.getInstance().istSchachmatt()){
