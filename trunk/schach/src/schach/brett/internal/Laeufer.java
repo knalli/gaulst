@@ -31,6 +31,9 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 			throws NegativeConditionException {
 		if(position.equals(ziel))
 			throw new NegativePreConditionException();
+		
+		
+		
 		if(!this.gehoertSpieler().istZugberechtigt() || Partiezustand.getInstance().istRemis()
 				|| Partiezustand.getInstance().istPatt() || Partiezustand.getInstance().istSchachmatt()){
 				throw new NegativePreConditionException();
@@ -54,6 +57,10 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 	}
 
 	public void zieht(IFeld ziel) throws NegativeConditionException {
+		
+		if(position.equals(ziel))
+			throw new NegativePreConditionException();
+		
 		if(!this.gehoertSpieler().istZugberechtigt() || Partiezustand.getInstance().istRemis()
 			|| Partiezustand.getInstance().istPatt() || Partiezustand.getInstance().istSchachmatt()){
 				throw new NegativePreConditionException();
