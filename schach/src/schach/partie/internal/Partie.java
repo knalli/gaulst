@@ -108,10 +108,7 @@ public class Partie implements IPartie {
 		return true;
 	}
 
-	public IStellung simuliereStellung(IFeld start, IFeld ziel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 
 }
