@@ -1,8 +1,10 @@
 package schach.partie.internal;
 
 import schach.brett.Farbe;
+import schach.brett.IFeld;
 import schach.brett.internal.AlleFiguren;
 import schach.partie.IPartie;
+import schach.partie.IStellung;
 import schach.spieler.ISpieler;
 import schach.spieler.internal.Spieler;
 import schach.system.ChessException;
@@ -16,7 +18,7 @@ public class Partie implements IPartie {
 	private Farbe aktuelleFarbe = Farbe.WEISS;
 	private ISpieler aktuellerSpieler = null;
 	private ISpieler gegnerischerSpieler = null;
-	private boolean lehneremisab=false;
+	private boolean lehneremisab;
 	
 	private Partie() {}
 	
@@ -58,7 +60,6 @@ public class Partie implements IPartie {
 	public void nehmeRemisAn(ISpieler spieler) throws NegativeConditionException {
 		// TODO Auto-generated method stub
 		if((istRemisMoeglich()) || (istRemisAngebotVon(gegnerischerSpieler))){
-		
 			
 		}
 		
@@ -105,6 +106,11 @@ public class Partie implements IPartie {
 	public boolean istRemisMoeglich() throws NegativeConditionException {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	public IStellung simuliereStellung(IFeld start, IFeld ziel) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
