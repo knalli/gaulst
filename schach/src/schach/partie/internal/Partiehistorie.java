@@ -12,6 +12,7 @@ import schach.system.NegativePreConditionException;
 
 public class Partiehistorie implements IPartiehistorie {
 	private static IPartiehistorie instance = null;
+	private boolean protokoll=false;
 	private List<IStellung> stellungen=new ArrayList<IStellung>();
 	private Partiehistorie() {}
 	
@@ -39,7 +40,7 @@ public class Partiehistorie implements IPartiehistorie {
 
 	public boolean istZugProtokolliert() {
 		// TODO Auto-generated method stub
-		return false;
+		return protokoll;
 	}
 
 	public IStellung simuliereStellung(IFeld start, IFeld ziel)
@@ -53,6 +54,7 @@ public class Partiehistorie implements IPartiehistorie {
 	}
 
 	public void protokolliereStellung() {
+		protokoll=true;
 		stellungen.add(new Stellung(new ArrayList<IFigur>(),false,null));
 	}
 
