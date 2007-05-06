@@ -30,12 +30,12 @@ public class Partiehistorie implements IPartiehistorie {
 
 	public IStellung gebeStellung() {
 		// TODO Auto-generated method stub
-		return null;
+		return new Stellung(new ArrayList<IFigur>(),false,null);
 	}
 
 	public List<IStellung> gebeStellungen(int n) {
 		// TODO Auto-generated method stub
-		return null;
+		return stellungen; 
 	}
 
 	public boolean istZugProtokolliert() {
