@@ -71,5 +71,5 @@ public interface IPartie {
 	
 	public void wechsleSpieler();
 	
-	public IStellung simuliereStellung(IFeld start,IFeld ziel);
+
 }
