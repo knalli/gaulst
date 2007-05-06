@@ -34,6 +34,7 @@ public class Partiehistorie implements IPartiehistorie {
 	}
 
 	public List<IStellung> gebeStellungen(int n) {
+	
 		// TODO Auto-generated method stub
 		return stellungen; 
 	}
