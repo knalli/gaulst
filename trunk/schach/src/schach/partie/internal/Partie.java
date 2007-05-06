@@ -60,7 +60,8 @@ public class Partie implements IPartie {
 	public void nehmeRemisAn(ISpieler spieler) throws NegativeConditionException {
 		// TODO Auto-generated method stub
 		if((istRemisMoeglich()) || (istRemisAngebotVon(gegnerischerSpieler))){
-			
+			//und dann????
+			//???? was kommt hierhin ???!? 
 		}
 		
 		
