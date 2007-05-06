@@ -16,6 +16,7 @@ public class Partie implements IPartie {
 	private Farbe aktuelleFarbe = Farbe.WEISS;
 	private ISpieler aktuellerSpieler = null;
 	private ISpieler gegnerischerSpieler = null;
+	private boolean lehneremisab=false;
 	
 	private Partie() {}
 	
@@ -49,12 +50,15 @@ public class Partie implements IPartie {
 
 	public void lehneRemisAb(ISpieler spieler) throws NegativeConditionException {
 		// TODO Auto-generated method stub
+		//return lehneremisab;
+		lehneremisab=true;
 		
 	}
 
 	public void nehmeRemisAn(ISpieler spieler) throws NegativeConditionException {
 		// TODO Auto-generated method stub
 		if((istRemisMoeglich()) || (istRemisAngebotVon(gegnerischerSpieler))){
+		
 			
 		}
 		
