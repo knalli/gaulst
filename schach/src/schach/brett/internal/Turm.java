@@ -116,4 +116,8 @@ public class Turm extends AbstrakteFigur implements ITurm {
 	public boolean sollEntferntWerden() {
 		return sollentferntwerden;
 	}
+	
+	public void setzeSollEntferntWerden() {
+		sollentferntwerden = true;
+	}
 }

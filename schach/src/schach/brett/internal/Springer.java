@@ -149,4 +149,8 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 	public boolean sollEntferntWerden() {
 		return sollentferntwerden;
 	}
+	
+	public void setzeSollEntferntWerden() {
+		sollentferntwerden = true;
+	}
 }

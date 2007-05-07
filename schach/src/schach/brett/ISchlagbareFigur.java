@@ -19,4 +19,6 @@ public interface ISchlagbareFigur extends IFigur {
 	 * @return
 	 */
 	public boolean sollEntferntWerden();
+	
+	public void setzeSollEntferntWerden();
 }
