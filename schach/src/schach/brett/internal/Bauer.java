@@ -197,7 +197,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
 		}
 		
-		if(!position.plusReihe(1).equals(ziel))
+		if(!position.plusReihe(1).equals(ziel) && !(position.plusReihe(2).equals(ziel) && !doppelschritt))
 			throw new NegativePreConditionException("Ungültiges Ziel");
 		
 		if(position.equals(ziel))
