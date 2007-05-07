@@ -73,6 +73,9 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel))
 			throw new NegativePreConditionException("Ungültiges Zielfeld");
 		
+		if(position.equals(ziel))
+			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+		
 		if(!ziel.istBesetzt())
 			throw new NegativePreConditionException("Schlagzug: Zielfeld ist nicht besetzt.");
 		
@@ -130,6 +133,9 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			
 			if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel))
 				throw new NegativePreConditionException("Ungültiges Zielfeld");
+			
+			if(position.equals(ziel))
+				throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
 			
 			if(ziel.istBesetzt())
 				throw new NegativePreConditionException("Schlagzug: Zielfeld ist besetzt.");
@@ -193,6 +199,9 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		
 		if(!position.plusReihe(1).equals(ziel))
 			throw new NegativePreConditionException("Ungültiges Ziel");
+		
+		if(position.equals(ziel))
+			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
 		
 		if(ziel.istBesetzt())
 			throw new NegativePreConditionException("Ziel ist besetzt");
