@@ -19,6 +19,7 @@ import schach.system.NegativePreConditionException;
 public class Dame extends AbstrakteFigur implements IDame {
 	
 	IBrett brett = Brett.getInstance();
+	private boolean sollentferntwerden;
 
 	public Dame(Farbe farbe, IFeld feld) {
 		super(farbe, feld, Figurart.DAME);
@@ -33,13 +34,7 @@ public class Dame extends AbstrakteFigur implements IDame {
 		if(position.equals(ziel))
 			throw new NegativePreConditionException();
 		
-		/**
-		 * es fehlt noch !position.gebeDiagonale().equals(ziel.gebeDiagonale()) 
-		 * da ja auch überprüft werden muss ob das zielfeld ggf. in einer der beiden
-		 * diagonalen liegt
-		 * das gleiche beim läufer auch bzw. da muss ja nur geprüft werden ob ziel in
-		 * den diagonalen liegt 
-		 */
+		
 		if(!position.gebeLinie().equals(ziel.gebeLinie()) && !position.gebeReihe().equals(ziel.gebeReihe())){
 			throw new NegativePreConditionException();
 		}
@@ -58,34 +53,28 @@ public class Dame extends AbstrakteFigur implements IDame {
 		List <IFeld> k_diagonale = Brett.getInstance().gebeFelderInDiagonalen(position, ziel);	
 
 		
-		// ?!?!?!?!?
-		// ziel.istBesetzt beim schlagen... sollte doch, oder?
-		// y dann Exception
-		
-		if (ziel.istBesetzt())
+		if (!ziel.istBesetzt())
 			throw new NegativePreConditionException();
-		else {
-			if (!brett.sindAlleFelderFrei(k_linie))
-				throw new NegativePreConditionException();
-			else{
-				position.istBesetzt(false);
-				position = ziel;
-				position.istBesetzt(true);
-			}
-			if (!brett.sindAlleFelderFrei(k_reihe))
-				throw new NegativePreConditionException();
-			else{
-				position.istBesetzt(false);
-				position = ziel;
-				position.istBesetzt(true);
-			}
-			if (!brett.sindAlleFelderFrei(k_diagonale))
-				throw new NegativePreConditionException();
-			else{
-				position.istBesetzt(false);
-				position = ziel;
-				position.istBesetzt(true);
-			}
+		if (!brett.sindAlleFelderFrei(k_linie))
+			throw new NegativePreConditionException();
+		else{
+			position.istBesetzt(false);
+			position = ziel;
+			position.istBesetzt(true);
+		}
+		if (!brett.sindAlleFelderFrei(k_reihe))
+			throw new NegativePreConditionException();
+		else{
+			position.istBesetzt(false);
+			position = ziel;
+			position.istBesetzt(true);
+		}
+		if (!brett.sindAlleFelderFrei(k_diagonale))
+			throw new NegativePreConditionException();
+		else{
+			position.istBesetzt(false);
+			position = ziel;
+			position.istBesetzt(true);
 		}
 				
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)){
@@ -139,13 +128,16 @@ public class Dame extends AbstrakteFigur implements IDame {
 	}
 
 	public void geschlagenWerden() throws NegativeConditionException {
-		// TODO Auto-generated method stub
-
+		if(!sollentferntwerden || !istAufDemSchachbrett()){
+			throw new NegativePreConditionException();
+		}
+		
+		position.istBesetzt(false);
+		position = null;
+		grundposition = null;
 	}
 
 	public boolean sollEntferntWerden() {
-		// TODO Auto-generated method stub
-		return false;
+		return sollentferntwerden;
 	}
-
 }

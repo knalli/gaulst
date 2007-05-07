@@ -20,6 +20,7 @@ import schach.system.NegativePreConditionException;
 public class Turm extends AbstrakteFigur implements ITurm {
 
 	private boolean schonBewegt = false;
+	private boolean sollentferntwerden;
 
 	public Turm(Farbe farbe, IFeld feld) {
 		super(farbe, feld, Figurart.TURM);
@@ -102,15 +103,17 @@ public class Turm extends AbstrakteFigur implements ITurm {
 					
 	}
 
-
 	public void geschlagenWerden() throws NegativeConditionException {
-		// TODO Auto-generated method stub
-
+		if(!sollentferntwerden || !istAufDemSchachbrett()){
+			throw new NegativePreConditionException();
+		}
+		
+		position.istBesetzt(false);
+		position = null;
+		grundposition = null;
 	}
 
 	public boolean sollEntferntWerden() {
-		// TODO Auto-generated method stub
-		return false;
+		return sollentferntwerden;
 	}
-
 }

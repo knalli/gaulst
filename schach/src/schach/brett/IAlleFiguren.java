@@ -42,5 +42,4 @@ public interface IAlleFiguren {
 	public void entferneFiguren() throws NegativeConditionException;
 
 	public void fuegeFigurAn(IFigur figur) throws NegativeConditionException;
-
 }

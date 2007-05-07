@@ -36,7 +36,10 @@ import schach.brett.Linie;
 import schach.brett.Reihe;
 import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
+import schach.partie.IPartie;
+import schach.partie.IPartiezustand;
 import schach.partie.internal.Partie;
+import schach.partie.internal.Partiezustand;
 import schach.spieler.ISpieler;
 import schach.system.IController;
 import schach.system.IView;
@@ -430,17 +433,18 @@ public class GuiView implements IView {
 	
 	public void update() {
 		besetzteFelder.clear();
+		IPartie partie = Partie.getInstance();
+		IPartiezustand partiezustand = Partiezustand.getInstance();
 		for(IFigur figur : allefiguren.gebeFiguren(listeFigurarten,listeFarben)){
 			besetzteFelder.put(figur.gebePosition(),figur);
 //			Logger.debug("View: "+figur+" steht auf "+figur.gebePosition());
 		}
 		
-		ISpieler aktSpieler = Partie.getInstance().aktuellerSpieler();
-		if(aktSpieler == null){
+		if(!partiezustand.inPartie()){
 			jLabelAktuellerSpieler.setText("Partie läuft nicht.");
 		}
 		else {
-			jLabelAktuellerSpieler.setText("Aktueller Spieler: "+aktSpieler.toString());
+			jLabelAktuellerSpieler.setText("Aktueller Spieler: "+(partie.aktuellerSpieler().toString()));
 		}
 		
 		

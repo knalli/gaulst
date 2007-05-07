@@ -4,6 +4,7 @@ package schach.partie;
 import java.util.List;
 
 import schach.brett.IFeld;
+import schach.brett.IFigur;
 import schach.system.NegativeConditionException;
 
 public interface IPartiehistorie {
@@ -17,5 +18,5 @@ public interface IPartiehistorie {
 	
 	public IStellung simuliereStellung(IFeld start, IFeld ziel) throws NegativeConditionException;
 	
-	public void protokolliereStellung();
+	public void protokolliereStellung(boolean schlagzug, IFigur ziehendeFigur);
 }

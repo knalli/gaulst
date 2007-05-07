@@ -15,4 +15,10 @@ public enum Farbe {
 	public static List<Farbe> getAll(){
 		return Arrays.asList(values());
 	}
+	
+	public Farbe andereFarbe() {
+		if(this.equals(WEISS))
+			return SCHWARZ;
+		return WEISS;
+	}
 }

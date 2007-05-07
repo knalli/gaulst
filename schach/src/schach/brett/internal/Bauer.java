@@ -74,8 +74,9 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
-		//if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
-		//	throw new NegativePreConditionException();
+//		@TODO Simuliere Stellung
+//		if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+//			throw new NegativePreConditionException();
 		
 		if(position.plusReihe(1).equals(ziel)){
 			if(ziel.istBesetzt())
@@ -92,15 +93,18 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		position = ziel;
 		if(!Brett.getInstance().istBauernUmwandlung()){
 			Partie.getInstance().wechsleSpieler();
-			Partiehistorie.getInstance().protokolliereStellung();
+			Partiehistorie.getInstance().protokolliereStellung(false, this);
 		}
 		
+//		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
 		
+//		dieser Bauer hat doch einen Doppelschritt gemacht?
 		doppelschritt = macheEinenDoppelschritt;
 		
+//		informiere die Beobachter, dass sich etwas geändert hat
 		setChanged();
 		notifyObservers();
 	}
@@ -113,6 +117,9 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		position.istBesetzt(false);
 		position = null;
 		grundposition = null;
+		
+//		keine Information an die Beobachter, da geschlagenWerden Bestandteil 
+//		eines elementaren Operators wie ziehen oder schlagen ist
 	}
 
 	public boolean sollEntferntWerden() {
@@ -120,9 +127,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 	}
 
 	public void letzteRundeDoppelschritt(boolean b) {
-		if(Partie.getInstance().aktuelleFarbe().equals(farbe)){
-			doppelschritt = b;
-		}
+		doppelschritt = b;
 	}
 
 	public boolean wurdeBewegt() {
