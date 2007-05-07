@@ -74,7 +74,10 @@ public class Dame extends AbstrakteFigur implements IDame {
 		
 		if(zugfelder == null) // bei 1-Feld-abstand gibts eine leereliste, kein null!
 			throw new NegativePreConditionException("Ungültiges Zielfeld");
-				
+		
+		if(position.equals(ziel))
+			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+		
 		if(!Brett.getInstance().sindAlleFelderFrei(zugfelder))
 			throw new NegativePreConditionException("Der Zugweg ist nicht frei.");
 		
@@ -143,7 +146,10 @@ public class Dame extends AbstrakteFigur implements IDame {
 		
 		if(zugfelder == null) // bei 1-Feld-abstand gibts eine leereliste, kein null!
 			throw new NegativePreConditionException("Ungültiges Zielfeld");
-				
+		
+		if(position.equals(ziel))
+			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+		
 		if(!Brett.getInstance().sindAlleFelderFrei(zugfelder))
 			throw new NegativePreConditionException("Der Zugweg ist nicht frei.");
 		
