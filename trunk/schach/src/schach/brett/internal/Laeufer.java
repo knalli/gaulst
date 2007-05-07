@@ -97,4 +97,8 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 	public boolean sollEntferntWerden() {
 		return sollentferntwerden;
 	}
+	
+	public void setzeSollEntferntWerden() {
+		sollentferntwerden = true;
+	}
 }

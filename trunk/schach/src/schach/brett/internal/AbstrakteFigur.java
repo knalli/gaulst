@@ -83,6 +83,8 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 		
 		position = feld;
 		AlleFiguren.getInstance().fuegeFigurAn(this);
+		
+//		informiere die Beobachter, dass sich etwas geändert hat
 		setChanged();
 		notifyObservers(); 
 	}

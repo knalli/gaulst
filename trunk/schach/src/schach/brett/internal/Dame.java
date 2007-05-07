@@ -140,4 +140,8 @@ public class Dame extends AbstrakteFigur implements IDame {
 	public boolean sollEntferntWerden() {
 		return sollentferntwerden;
 	}
+	
+	public void setzeSollEntferntWerden() {
+		sollentferntwerden = true;
+	}
 }
