@@ -62,6 +62,14 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
+//		simuliere Stellung
+		try {
+			if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
+		} catch (IndexOutOfBoundsException e) {
+			throw new NegativePreConditionException("Upps, kein König mehr da?!");
+		}
+		
 		if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel))
 			throw new NegativePreConditionException("Ungültiges Zielfeld");
 		
@@ -77,14 +85,16 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		
 		position.istBesetzt(false);
 		position = ziel;
-		if(!Brett.getInstance().istBauernUmwandlung()){
-			Partiehistorie.getInstance().protokolliereStellung(true, this);
-			Partie.getInstance().wechsleSpieler();
-		}
+		position.istBesetzt(true);
 		
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
+		}
+		
+		if(!Brett.getInstance().istBauernUmwandlung()){
+			Partiehistorie.getInstance().protokolliereStellung(true, this);
+			Partie.getInstance().wechsleSpieler();
 		}
 		
 //		informiere die Beobachter, dass sich etwas geändert hat
@@ -110,6 +120,14 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			if(koenig.istInEinerRochade())
 				throw new NegativePreConditionException("Koenig ist in einer Rochade");
 			
+//			simuliere Stellung
+			try {
+				if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+					throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
+			} catch (IndexOutOfBoundsException e) {
+				throw new NegativePreConditionException("Upps, kein König mehr da?!");
+			}
+			
 			if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel))
 				throw new NegativePreConditionException("Ungültiges Zielfeld");
 			
@@ -132,14 +150,14 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			position.istBesetzt(false);
 			position = ziel;
 			position.istBesetzt(true);
-			if(!Brett.getInstance().istBauernUmwandlung()){
-				Partiehistorie.getInstance().protokolliereStellung(true, this);
-				Partie.getInstance().wechsleSpieler();
-			}
-			
 //			per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
 			for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
 				((IBauer) fig).letzteRundeDoppelschritt(false);
+			}
+			
+			if(!Brett.getInstance().istBauernUmwandlung()){
+				Partiehistorie.getInstance().protokolliereStellung(true, this);
+				Partie.getInstance().wechsleSpieler();
 			}
 			
 //			informiere die Beobachter, dass sich etwas geändert hat
@@ -188,14 +206,14 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		position.istBesetzt(false);
 		position = ziel;
 		position.istBesetzt(true);
-		if(!Brett.getInstance().istBauernUmwandlung()){
-			Partiehistorie.getInstance().protokolliereStellung(false, this);
-			Partie.getInstance().wechsleSpieler();
-		}
-		
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
+		}
+		
+		if(!Brett.getInstance().istBauernUmwandlung()){
+			Partiehistorie.getInstance().protokolliereStellung(false, this);
+			Partie.getInstance().wechsleSpieler();
 		}
 		
 //		dieser Bauer hat doch einen Doppelschritt gemacht?
