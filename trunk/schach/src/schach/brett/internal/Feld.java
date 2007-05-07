@@ -5,6 +5,7 @@ import schach.brett.IFeld;
 import schach.brett.Linie;
 import schach.brett.Reihe;
 import schach.partie.internal.Partie;
+import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
@@ -33,11 +34,13 @@ public class Feld implements IFeld {
 
 	public IFeld minusLinie(int n) throws NegativeConditionException {
 //		wenn wei§ am zug, dann einfach "normal"
-		if(Partie.getInstance().aktuellerSpieler().gebeFarbe().equals(Farbe.WEISS)){
+		Farbe farbe = Partie.getInstance().aktuelleFarbe();
+		if(farbe.equals(Farbe.WEISS)){
 			if(linie.vorherige() == null)
 				throw new NegativePreConditionException();
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe, linie.vorherige());
+			Logger.debug(farbe + ": "+this+"->"+feld);
 			
 			if(n > 1)
 				return feld.minusLinie(n-1);
@@ -51,6 +54,7 @@ public class Feld implements IFeld {
 				throw new NegativePreConditionException();
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe, linie.naechste());
+			Logger.debug(farbe + ": "+this+"->"+feld);
 			
 			if(n > 1)
 				return feld.minusLinie(n-1);
@@ -61,11 +65,13 @@ public class Feld implements IFeld {
 
 	public IFeld minusReihe(int n) throws NegativeConditionException {
 //		wenn wei§ am zug, dann einfach "normal"
-		if(Partie.getInstance().aktuellerSpieler().gebeFarbe().equals(Farbe.WEISS)){
+		Farbe farbe = Partie.getInstance().aktuelleFarbe();
+		if(farbe.equals(Farbe.WEISS)){
 			if(reihe.vorherige() == null)
 				throw new NegativePreConditionException();
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe.vorherige(), linie);
+			Logger.debug(farbe + ": "+this+"->"+feld);
 			
 			if(n > 1)
 				return feld.minusReihe(n-1);
@@ -79,6 +85,7 @@ public class Feld implements IFeld {
 				throw new NegativePreConditionException();
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe.naechste(), linie);
+			Logger.debug(farbe + ": "+this+"->"+feld);
 			
 			if(n > 1)
 				return feld.minusReihe(n-1);
@@ -89,7 +96,8 @@ public class Feld implements IFeld {
 
 	public IFeld plusLinie(int n) throws NegativeConditionException {
 //		wenn wei§ am zug, dann einfach "normal"
-		if(Partie.getInstance().aktuellerSpieler().gebeFarbe().equals(Farbe.WEISS)){
+		Farbe farbe = Partie.getInstance().aktuelleFarbe();
+		if(farbe.equals(Farbe.WEISS)){
 			if(linie.naechste() == null)
 				throw new NegativePreConditionException();
 			
@@ -107,6 +115,7 @@ public class Feld implements IFeld {
 				throw new NegativePreConditionException();
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe, linie.vorherige());
+			Logger.debug(farbe + ": "+this+"->"+feld);
 			
 			if(n > 1)
 				return feld.plusLinie(n-1);
@@ -117,11 +126,13 @@ public class Feld implements IFeld {
 
 	public IFeld plusReihe(int n) throws NegativeConditionException {
 //		wenn wei§ am zug, dann einfach "normal"
-		if(Partie.getInstance().aktuellerSpieler().gebeFarbe().equals(Farbe.WEISS)){
+		Farbe farbe = Partie.getInstance().aktuelleFarbe();
+		if(farbe.equals(Farbe.WEISS)){
 			if(reihe.naechste() == null)
 				throw new NegativePreConditionException();
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe.naechste(), linie);
+			Logger.debug(farbe + ": "+this+"->"+feld);
 			
 			if(n > 1)
 				return feld.plusReihe(n-1);
@@ -135,6 +146,7 @@ public class Feld implements IFeld {
 				throw new NegativePreConditionException();
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe.vorherige(), linie);
+			Logger.debug(farbe + ": "+this+"->"+feld);
 			
 			if(n > 1)
 				return feld.plusReihe(n-1);
