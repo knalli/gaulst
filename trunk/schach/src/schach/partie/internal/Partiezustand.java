@@ -25,32 +25,32 @@ public class Partiezustand implements IPartiezustand {
 	}
 
 	public boolean istPatt() {
-		// TODO Auto-generated method stub
+		// TODO Zustand#istPatt
 		return false;
 	}
 
 	public boolean istRemis() {
-		// TODO Auto-generated method stub
+		// TODO Zustand#istRemis
 		return false;
 	}
 
 	public boolean istRemisAngenommenVon(ISpieler spieler) {
-		// TODO Auto-generated method stub
+		// TODO Zustand#istRemisAngenommen
 		return false;
 	}
 
 	public boolean istRemisMoeglich() {
-		// TODO Auto-generated method stub
+		// TODO Zustand#istRemisMoeglich
 		return false;
 	}
 
 	public boolean istRemisangebotVon(ISpieler spieler) {
-		// TODO Auto-generated method stub
+		// TODO Zustand#istRemisangebotVon
 		return false;
 	}
 
 	public boolean istSchachmatt() {
-		// TODO Auto-generated method stub
+		// TODO Zustand#istSchachmatt
 		return false;
 	}
 

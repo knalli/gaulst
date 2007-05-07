@@ -30,7 +30,7 @@ public class Turm extends AbstrakteFigur implements ITurm {
 	}
 	
 	public void rochiert(IFeld ziel) throws NegativeConditionException {
-		// TODO Auto-generated method stub
+		// TODO Turm#rochiert
 
 	}
 

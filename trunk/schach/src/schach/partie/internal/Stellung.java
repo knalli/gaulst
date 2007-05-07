@@ -19,6 +19,7 @@ public class Stellung implements IStellung {
 	}
 	
 	public Stellung(List<IFigur> figuren, boolean istSchlagzug, IFigur ziehendeFigur, int zug){
+		// @TODO Stellung#Stellung
 		this.figuren = figuren;
 		this.schlagzug = istSchlagzug;
 		this.ziehendeFigur = ziehendeFigur;
@@ -48,7 +49,7 @@ public class Stellung implements IStellung {
 	}
 
 	public boolean istKoenigBedroht(Farbe farbe) {
-		// TODO Auto-generated method stub
+		// TODO Stellung#KoenigBedroht
 		return false;
 	}
 

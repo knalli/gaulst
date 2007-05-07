@@ -29,15 +29,11 @@ public class Partiehistorie implements IPartiehistorie {
 	}
 
 	public IStellung gebeStellung() {
-		// TODO Auto-generated method stub
-		// return stellungen.remove(0);
+		// TODO Historie#gebeStellung
 		return new Stellung(new ArrayList<IFigur>(),false,null);
 	}
 
 	public List<IStellung> gebeStellungen(int n) {
-	
-		// TODO Auto-generated method stub
-	
 		return stellungen;
 		
 	}

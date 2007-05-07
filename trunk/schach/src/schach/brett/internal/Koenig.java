@@ -28,17 +28,17 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 	}
 	
 	public boolean istBedroht() {
-		// TODO Auto-generated method stub
+		// TODO Koenig#istBedroht
 		return false;
 	}
 
 	public boolean istInEinerRochade() {
-		// TODO Auto-generated method stub
+		// TODO Koenig#istInEinerRochade
 		return false;
 	}
 
 	public void rochiert(IFeld ziel) throws NegativeConditionException {
-		// TODO Auto-generated method stub
+		// TODO Koenig#rochiert
 
 	}
 
@@ -83,7 +83,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 	}
 
 	public boolean wurdeBewegt() throws NegativeConditionException {
-		// TODO Auto-generated method stub
+		// TODO Koenig#bewegt
 		return false;
 	}
 
