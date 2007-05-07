@@ -3,16 +3,18 @@ package schach.partie.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import schach.brett.Farbe;
+import schach.brett.Figurart;
 import schach.brett.IFeld;
 import schach.brett.IFigur;
+import schach.brett.internal.AlleFiguren;
+import schach.brett.internal.Brett;
 import schach.partie.IPartiehistorie;
 import schach.partie.IStellung;
 import schach.system.NegativeConditionException;
-import schach.system.NegativePreConditionException;
 
 public class Partiehistorie implements IPartiehistorie {
 	private static IPartiehistorie instance = null;
-	private boolean protokoll=false;
 	private List<IStellung> stellungen=new ArrayList<IStellung>();
 	private Partiehistorie() {}
 	
@@ -23,8 +25,6 @@ public class Partiehistorie implements IPartiehistorie {
 		return instance;
 	}
 	public List<IStellung> gebeAlleStellungen() {
-		// TODO Auto-generated method stub
-		
 		return stellungen;
 	}
 
@@ -43,23 +43,41 @@ public class Partiehistorie implements IPartiehistorie {
 	}
 
 	public boolean istZugProtokolliert() {
-		// TODO Auto-generated method stub
-		return protokoll;
+		return stellungen.get(stellungen.size()-1).equals(gebeStellung());
 	}
 
 	public IStellung simuliereStellung(IFeld start, IFeld ziel)
 			throws NegativeConditionException {
-		// TODO Auto-generated method stub
-		if (start.istBesetzt()){
-			return (new Stellung(new ArrayList<IFigur>(),false,null));
-		}else{
-			throw new NegativePreConditionException();
+		List<IFigur> neuefiguren = new ArrayList<IFigur>();
+		IFigur ziehendeFigur = Brett.getInstance().gebeFigurVonFeld(start);
+		IFigur neueziehendefigur = null;
+		
+		for(IFigur figur : AlleFiguren.getInstance().gebeFiguren(Figurart.getAll(), Farbe.getAll())){
+			IFeld neuesfeld = figur.gebePosition().clone();
+			IFigur neuefigur = figur.clone(neuesfeld);
+			neuefiguren.add(neuefigur);
+			
+			if(figur.equals(ziehendeFigur))
+				neueziehendefigur = neuefigur;
 		}
+		
+		return new Stellung(neuefiguren,ziel.istBesetzt(),neueziehendefigur);
 	}
 
-	public void protokolliereStellung() {
-		protokoll=true;
-		stellungen.add(new Stellung(new ArrayList<IFigur>(),false,null));
+	public void protokolliereStellung(boolean schlagzug, IFigur ziehendeFigur) {
+		List<IFigur> neuefiguren = new ArrayList<IFigur>();
+		IFigur neueziehendefigur = null;
+		
+		for(IFigur figur : AlleFiguren.getInstance().gebeFiguren(Figurart.getAll(), Farbe.getAll())){
+			IFeld neuesfeld = figur.gebePosition().clone();
+			IFigur neuefigur = figur.clone(neuesfeld);
+			neuefiguren.add(neuefigur);
+			
+			if(figur.equals(ziehendeFigur))
+				neueziehendefigur = neuefigur;
+		}
+		
+		stellungen.add(new Stellung(neuefiguren,schlagzug,neueziehendefigur, stellungen.size()+1));
 	}
 
 }

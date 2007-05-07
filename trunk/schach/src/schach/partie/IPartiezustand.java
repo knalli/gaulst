@@ -1,6 +1,7 @@
 package schach.partie;
 
 import schach.spieler.ISpieler;
+import schach.system.NegativeConditionException;
 
 public interface IPartiezustand {
 	public boolean inPartie();
@@ -16,6 +17,8 @@ public interface IPartiezustand {
 	public boolean istSchachmatt();
 	
 	public boolean istRemisMoeglich();
+
+	public void haltePartieAn() throws NegativeConditionException;
 	
 
 }

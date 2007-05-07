@@ -12,11 +12,19 @@ public class Stellung implements IStellung {
 	private List<IFigur> figuren = null;
 	private boolean schlagzug = false;
 	private IFigur ziehendeFigur = null;
+	private int zug = 0; 
 	
 	public Stellung(List<IFigur> figuren, boolean istSchlagzug, IFigur ziehendeFigur){
+		this(figuren, istSchlagzug, ziehendeFigur, 0);
+	}
+	
+	public Stellung(List<IFigur> figuren, boolean istSchlagzug, IFigur ziehendeFigur, int zug){
 		this.figuren = figuren;
 		this.schlagzug = istSchlagzug;
 		this.ziehendeFigur = ziehendeFigur;
+		this.zug = zug;
+		
+		// hier fehlt noch die berechnung von wei§bedroht/schwarzbedroht (K…NIG)
 	}
 	
 	public List<IFigur> gebeFiguren(List<Figurart> figurarten, List<Farbe> farben) {
@@ -52,4 +60,7 @@ public class Stellung implements IStellung {
 		return gebeFiguren(figurarten,farben);
 	}
 
+	public boolean equals(Stellung stellung){
+		return this.zug == stellung.zug;
+	}
 }

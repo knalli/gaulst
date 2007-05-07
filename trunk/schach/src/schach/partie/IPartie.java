@@ -1,7 +1,6 @@
 package schach.partie;
 
 import schach.brett.Farbe;
-import schach.brett.IFeld;
 import schach.spieler.ISpieler;
 import schach.system.NegativeConditionException;
 

@@ -18,6 +18,7 @@ import schach.system.NegativePreConditionException;
 public class Laeufer extends AbstrakteFigur implements ILaeufer {
 	
 	IBrett brett = Brett.getInstance();
+	private boolean sollentferntwerden;
 	
 	public Laeufer(Farbe farbe, IFeld feld) {
 		super(farbe, feld, Figurart.LAEUFER);
@@ -82,14 +83,18 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 			}
 		}	
 	}
-	public void geschlagenWerden() throws NegativeConditionException {
-		// TODO Auto-generated method stub
 
+	public void geschlagenWerden() throws NegativeConditionException {
+		if(!sollentferntwerden || !istAufDemSchachbrett()){
+			throw new NegativePreConditionException();
+		}
+		
+		position.istBesetzt(false);
+		position = null;
+		grundposition = null;
 	}
 
 	public boolean sollEntferntWerden() {
-		// TODO Auto-generated method stub
-		return false;
+		return sollentferntwerden;
 	}
-
 }

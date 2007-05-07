@@ -16,7 +16,10 @@ import schach.brett.Linie;
 import schach.brett.Reihe;
 import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
+import schach.partie.IPartie;
+import schach.partie.IPartiezustand;
 import schach.partie.internal.Partie;
+import schach.partie.internal.Partiezustand;
 import schach.spieler.ISpieler;
 import schach.system.IView;
 import schach.system.Logger;
@@ -38,19 +41,22 @@ public class TextView implements IView {
 
 	public void update() {
 		besetzteFelder.clear();
+		IPartie partie = Partie.getInstance();
+		IPartiezustand partiezustand = Partiezustand.getInstance();
+
 		for(IFigur figur : allefiguren.gebeFiguren(listeFigurarten,listeFarben)){
 			besetzteFelder.put(figur.gebePosition(),figur);
 //			Logger.debug("View: "+figur+" steht auf "+figur.gebePosition());
 		}
 		
 		// zeichne Brett
-		ISpieler aktSpieler = Partie.getInstance().aktuellerSpieler();
-		if(aktSpieler == null){
+		if(!partiezustand.inPartie()){
 			System.out.println("Partie läuft nicht.");
 		}
 		else {
-			System.out.println("Aktueller Spieler: "+aktSpieler.toString());
+			System.out.println("Aktueller Spieler: "+(partie.aktuellerSpieler().toString()));
 		}
+		
 		
 		System.out.println(" |AA|BB|CC|DD|EE|FF|GG|HH| ");
 		System.out.println(" +--+--+--+--+--+--+--+--+ ");

@@ -18,6 +18,8 @@ import schach.system.NegativePreConditionException;
 
 public class Springer extends AbstrakteFigur implements ISpringer {
 
+	private boolean sollentferntwerden;
+
 	public Springer(Farbe farbe, IFeld feld) {
 		super(farbe, feld, Figurart.SPRINGER);
 	}
@@ -123,12 +125,11 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 				
 		if(ziel.istBesetzt()){
 			throw new NegativePreConditionException();
-		} 
-		else {
-			position.istBesetzt(false);
-			position = ziel;
-			position.istBesetzt(true);
 		}
+		
+		position.istBesetzt(false);
+		position = ziel;
+		position.istBesetzt(true);
 		
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
@@ -136,13 +137,16 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 	}
 
 	public void geschlagenWerden() throws NegativeConditionException {
-		// TODO Auto-generated method stub
-
+		if(!sollentferntwerden || !istAufDemSchachbrett()){
+			throw new NegativePreConditionException();
+		}
+		
+		position.istBesetzt(false);
+		position = null;
+		grundposition = null;
 	}
 
 	public boolean sollEntferntWerden() {
-		// TODO Auto-generated method stub
-		return false;
+		return sollentferntwerden;
 	}
-
 }

@@ -2,6 +2,8 @@ package schach.partie.internal;
 
 import schach.partie.IPartiezustand;
 import schach.spieler.ISpieler;
+import schach.system.NegativeConditionException;
+import schach.system.NegativePreConditionException;
 
 public class Partiezustand implements IPartiezustand {
 	private static IPartiezustand instance = null;
@@ -52,4 +54,9 @@ public class Partiezustand implements IPartiezustand {
 		return false;
 	}
 
+	public void haltePartieAn() throws NegativeConditionException {
+		if(!inpartie)
+			throw new NegativePreConditionException("Partie kann nicht angehalten werden, da keine läuft.");
+		inpartie = false;
+	}
 }
