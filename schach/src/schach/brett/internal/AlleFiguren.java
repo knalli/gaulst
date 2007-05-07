@@ -34,7 +34,7 @@ public class AlleFiguren implements IAlleFiguren {
 	}
 	
 	public void aufstellen() {
-		// TODO Auto-generated method stub
+		// TODO AlleFiguren#aufstellen
 
 	}
 
