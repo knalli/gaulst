@@ -34,7 +34,12 @@ public class Partiehistorie implements IPartiehistorie {
 	}
 
 	public List<IStellung> gebeStellungen(int n) {
-		return stellungen;
+		List<IStellung> lastStellung=new ArrayList<IStellung>(); 
+		
+		for (int i=0;i<n;i++){
+			lastStellung.add(stellungen.get(i));
+		}
+		return lastStellung;
 		
 	}
 
