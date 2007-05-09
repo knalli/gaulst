@@ -1,6 +1,7 @@
 package schach.partie.internal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import schach.brett.Farbe;
@@ -35,8 +36,10 @@ public class Partiehistorie implements IPartiehistorie {
 
 	public List<IStellung> gebeStellungen(int n) {
 		List<IStellung> lastStellung=new ArrayList<IStellung>(); 
+		if(n > stellungen.size())
+			return gebeAlleStellungen();
 		
-		for (int i=0;i<n;i++){
+		for (int i=stellungen.size()-n;i<stellungen.size();i++){
 			lastStellung.add(stellungen.get(i));
 		}
 		return lastStellung;
