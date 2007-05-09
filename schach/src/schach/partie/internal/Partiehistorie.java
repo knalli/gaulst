@@ -35,10 +35,10 @@ public class Partiehistorie implements IPartiehistorie {
 	}
 
 	public List<IStellung> gebeStellungen(int n) {
-		List<IStellung> lastStellung=new ArrayList<IStellung>(); 
 		if(n > stellungen.size())
 			return gebeAlleStellungen();
 		
+		List<IStellung> lastStellung=new ArrayList<IStellung>(); 
 		for (int i=stellungen.size()-n;i<stellungen.size();i++){
 			lastStellung.add(stellungen.get(i));
 		}
