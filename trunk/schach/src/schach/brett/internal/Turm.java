@@ -30,7 +30,27 @@ public class Turm extends AbstrakteFigur implements ITurm {
 	}
 	
 	public void rochiert(IFeld ziel) throws NegativeConditionException {
-		// TODO Turm#rochiert
+		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
+		
+		if (koenig.istInEinerRochade()){
+			if (koenig.gebeGrundposition().plusLinie(2) == koenig.gebePosition()){
+				ziel = koenig.gebePosition().minusLinie(1);
+			}
+			else{
+				ziel = koenig.gebePosition().plusLinie(1);
+			}
+			Partie.getInstance().wechsleSpieler();
+			this.positionieren(ziel);
+			
+			Partiehistorie.getInstance().protokolliereStellung(false, this);
+			this.schonBewegt =true;
+			
+			for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
+				((IBauer) fig).letzteRundeDoppelschritt(false);
+			}
+			
+				
+		}
 
 	}
 
