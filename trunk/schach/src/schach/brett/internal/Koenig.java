@@ -117,10 +117,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 	}
 
 	public boolean wurdeBewegt() throws NegativeConditionException {
-		if (this.istAufDemSchachbrett() == false)
-			return false;
-		else
-			return this.schonBewegt;
+		return schonBewegt;
 	}
 
 	public void zieht(IFeld ziel) throws NegativeConditionException {
