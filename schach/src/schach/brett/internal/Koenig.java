@@ -19,6 +19,7 @@ import schach.system.NegativePreConditionException;
 public class Koenig extends AbstrakteFigur implements IKoenig {
 
 	IBrett brett = Brett.getInstance();
+	private boolean schonBewegt = false;
 
 	public Koenig(Farbe farbe, IFeld feld) {
 		super(farbe, feld, Figurart.KOENIG);
@@ -116,8 +117,10 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 	}
 
 	public boolean wurdeBewegt() throws NegativeConditionException {
-		// TODO Koenig#bewegt
-		return false;
+		if (this.istAufDemSchachbrett() == false)
+			return false;
+		else
+			return this.schonBewegt;
 	}
 
 	public void zieht(IFeld ziel) throws NegativeConditionException {
