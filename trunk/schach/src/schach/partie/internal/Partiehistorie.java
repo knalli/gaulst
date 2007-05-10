@@ -1,22 +1,20 @@
 package schach.partie.internal;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import schach.brett.Farbe;
-import schach.brett.Figurart;
 import schach.brett.IFeld;
 import schach.brett.IFigur;
-import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
 import schach.partie.IPartiehistorie;
 import schach.partie.IStellung;
 import schach.system.NegativeConditionException;
+import schach.system.NegativePreConditionException;
 
 public class Partiehistorie implements IPartiehistorie {
 	private static IPartiehistorie instance = null;
 	private List<IStellung> stellungen=new ArrayList<IStellung>();
+	private boolean simuliere = false;
 	private Partiehistorie() {}
 	
 	public static IPartiehistorie getInstance() {
@@ -31,7 +29,7 @@ public class Partiehistorie implements IPartiehistorie {
 
 	public IStellung gebeStellung() {
 		// TODO Historie#gebeStellung
-		return new Stellung(new ArrayList<IFigur>(),false,null);
+		return new Stellung(false,null,stellungen.size()+1);
 	}
 
 	public List<IStellung> gebeStellungen(int n) {
@@ -49,39 +47,50 @@ public class Partiehistorie implements IPartiehistorie {
 	public boolean istZugProtokolliert() {
 		return stellungen.get(stellungen.size()-1).equals(gebeStellung());
 	}
+	
+	public IStellung simuliereStellung(IFeld start, IFeld ziel) throws NegativeConditionException {
+		return simuliereStellung(start, ziel, null);
+	}
 
-	public IStellung simuliereStellung(IFeld start, IFeld ziel)
+	public IStellung simuliereStellung(IFeld start, IFeld ziel, IFigur zuschlagendeFigur)
 			throws NegativeConditionException {
-		List<IFigur> neuefiguren = new ArrayList<IFigur>();
 		IFigur ziehendeFigur = Brett.getInstance().gebeFigurVonFeld(start);
-		IFigur neueziehendefigur = null;
+		IFeld zuschlagendeFigurFeld = null;
 		
-		for(IFigur figur : AlleFiguren.getInstance().gebeFiguren(Figurart.getAll(), Farbe.getAll())){
-			IFeld neuesfeld = figur.gebePosition().clone();
-			IFigur neuefigur = figur.clone(neuesfeld);
-			neuefiguren.add(neuefigur);
-			
-			if(figur.equals(ziehendeFigur))
-				neueziehendefigur = neuefigur;
+		if(ziehendeFigur == null)
+			throw new NegativePreConditionException("Es wurde keine Figur ausgewählt.");
+		
+		simuliere  = true;
+		
+		start.istBesetzt(false);
+		ziehendeFigur.simuliereBrettzug(ziel);
+		
+		if(zuschlagendeFigur != null){
+			zuschlagendeFigurFeld = zuschlagendeFigur.gebePosition();
+			zuschlagendeFigur.simuliereBrettzug(null);
+			zuschlagendeFigurFeld.istBesetzt(false);
 		}
+		ziel.istBesetzt(true);
 		
-		return new Stellung(neuefiguren,ziel.istBesetzt(),neueziehendefigur);
+		Stellung simulation = new Stellung(ziel.istBesetzt(),ziehendeFigur);
+		
+		start.istBesetzt(true);
+		ziehendeFigur.simuliereBrettzug(start);
+		ziel.istBesetzt(false);
+		if(zuschlagendeFigur != null){
+			zuschlagendeFigur.simuliereBrettzug(zuschlagendeFigurFeld);
+			zuschlagendeFigurFeld.istBesetzt(true);
+		}
+
+		simuliere = false;
+		return simulation;
 	}
 
 	public void protokolliereStellung(boolean schlagzug, IFigur ziehendeFigur) {
-		List<IFigur> neuefiguren = new ArrayList<IFigur>();
-		IFigur neueziehendefigur = null;
-		
-		for(IFigur figur : AlleFiguren.getInstance().gebeFiguren(Figurart.getAll(), Farbe.getAll())){
-			IFeld neuesfeld = figur.gebePosition().clone();
-			IFigur neuefigur = figur.clone(neuesfeld);
-			neuefiguren.add(neuefigur);
-			
-			if(figur.equals(ziehendeFigur))
-				neueziehendefigur = neuefigur;
-		}
-		
-		stellungen.add(new Stellung(neuefiguren,schlagzug,neueziehendefigur, stellungen.size()+1));
+		stellungen.add(new Stellung(schlagzug,ziehendeFigur, stellungen.size()+1));
 	}
 
+	public boolean istEineSimulation() {
+		return simuliere;
+	}
 }

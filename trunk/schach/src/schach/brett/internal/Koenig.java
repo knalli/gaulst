@@ -2,7 +2,14 @@ package schach.brett.internal;
 
 import java.util.List;
 
-import schach.brett.*;
+import schach.brett.Farbe;
+import schach.brett.Figurart;
+import schach.brett.IBauer;
+import schach.brett.IBrett;
+import schach.brett.IFeld;
+import schach.brett.IFigur;
+import schach.brett.IKoenig;
+import schach.brett.ISchlagbareFigur;
 import schach.partie.internal.Partie;
 import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
@@ -13,6 +20,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 
 	IBrett brett = Brett.getInstance();
 	private boolean schonBewegt = false;
+	private boolean istineinerrochade = false;
 
 	public Koenig(Farbe farbe, IFeld feld) {
 		super(farbe, feld, Figurart.KOENIG);
@@ -23,20 +31,32 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 	}
 	
 	public boolean istBedroht() {
-		// TODO Koenig#istBedroht
+		for(IFigur figur : AlleFiguren.getInstance().gebeAlleFiguren()){
+			if(!figur.gebeFarbe().equals(farbe) && figur.istAufDemSchachbrett()){
+				try {
+					figur.testeZug(gebePosition());
+					
+					return true; // schade, wird bedroht
+					
+				} catch (NegativeConditionException e) { 
+					// wird nicht bedroht
+				}
+			}
+		}
 		return false;
 	}
 
 	public boolean istInEinerRochade() {
-		// TODO Koenig#istInEinerRochade
-		return false;
+		return istineinerrochade ;
 	}
 
 	public void rochiert(IFeld ziel) throws NegativeConditionException {
+		// TODO Koenig#rochiert
 		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
 
 		if (!koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig muss in einer Rochade stehen.");
+		// wtf.. in welcher methode sind wir? :P
 
 		if(!gehoertSpieler().istZugberechtigt() && 
 				Partiezustand.getInstance().istRemis() &&
@@ -51,11 +71,15 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		if (ziel!=this.position.minusLinie(2) || ziel!=this.position.plusLinie(2)){
 			throw new NegativePreConditionException();
 		}
-		if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht()){
-			throw new NegativePreConditionException();
+//		simuliere Stellung
+		try {
+			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
+				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
+		} catch (IndexOutOfBoundsException e) {
+			throw new NegativePreConditionException("Upps, kein König mehr da?!");
 		}
 		
-		if (ziel==this.position.minusLinie(2)) {
+		if (ziel.equals(this.position.minusLinie(2))) {
 			
 			// TODO Koenig rochiert -- irgendwie wissen wie nicht, wie wir auf istBedroht abfragen sollen...
 			
@@ -97,7 +121,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		
 //		simuliere Stellung
 		try {
-			if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -109,21 +133,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		if(!(gegner instanceof ISchlagbareFigur))
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
 
-		List<IFeld> zugfelder = null;
-		try {
-			if(position.gebeReihe().equals(ziel.gebeReihe()))
-				zugfelder = Brett.getInstance().gebeFelderInReihe(position, ziel);
-			else if(position.gebeLinie().equals(ziel.gebeLinie()))
-				zugfelder = Brett.getInstance().gebeFelderInLinie(position, ziel);
-			else
-				zugfelder = Brett.getInstance().gebeFelderInDiagonalen(position, ziel);
-		} catch (NegativePreConditionException e) { }
-		
-		if(zugfelder == null || zugfelder.size() != 0) // bei 1-Feld-abstand gibts eine leereliste, kein null!
-			throw new NegativePreConditionException("Ungültiges Zielfeld");
-		
-		if(position.equals(ziel))
-			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+		testeZug(ziel);
 		
 		if(!(gegner instanceof ISchlagbareFigur))
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
@@ -172,7 +182,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		
 //		simuliere Stellung
 		try {
-			if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -181,21 +191,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		if(!ziel.istBesetzt())
 			throw new NegativePreConditionException("Schlagzug: Zielfeld ist nicht besetzt.");
 
-		List<IFeld> zugfelder = null;
-		try {
-			if(position.gebeReihe().equals(ziel.gebeReihe()))
-				zugfelder = Brett.getInstance().gebeFelderInReihe(position, ziel);
-			else if(position.gebeLinie().equals(ziel.gebeLinie()))
-				zugfelder = Brett.getInstance().gebeFelderInLinie(position, ziel);
-			else
-				zugfelder = Brett.getInstance().gebeFelderInDiagonalen(position, ziel);
-		} catch (NegativePreConditionException e) { }
-		
-		if(zugfelder == null || zugfelder.size() != 0) // bei 1-Feld-abstand gibts eine leereliste, kein null!
-			throw new NegativePreConditionException("Ungültiges Zielfeld");
-		
-		if(position.equals(ziel))
-			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+		testeZug(ziel);
 		
 		position.istBesetzt(false);
 		position = ziel;
@@ -214,5 +210,21 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		notifyObservers();
 	}
 
-
+	public void testeZug(IFeld ziel) throws NegativePreConditionException {
+		List<IFeld> zugfelder = null;
+		try {
+			if(position.gebeReihe().equals(ziel.gebeReihe()))
+				zugfelder = Brett.getInstance().gebeFelderInReihe(position, ziel);
+			else if(position.gebeLinie().equals(ziel.gebeLinie()))
+				zugfelder = Brett.getInstance().gebeFelderInLinie(position, ziel);
+			else
+				zugfelder = Brett.getInstance().gebeFelderInDiagonalen(position, ziel);
+		} catch (NegativeConditionException e) { }
+		
+		if(zugfelder == null || zugfelder.size() != 0) // bei 1-Feld-abstand gibts eine leereliste, kein null!
+			throw new NegativePreConditionException("Ungültiges Zielfeld.");
+		
+		if(position.equals(ziel))
+			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+	}
 }

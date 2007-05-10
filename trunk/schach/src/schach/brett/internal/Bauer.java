@@ -1,5 +1,7 @@
 package schach.brett.internal;
 
+import java.util.List;
+
 import schach.brett.Farbe;
 import schach.brett.Figurart;
 import schach.brett.IBauer;
@@ -27,13 +29,13 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 
 	public void entnehmen() throws NegativeConditionException {
 		if(!position.gebeReihe().equals(Partie.getInstance().gegnerischerSpieler().gebeGrundreihe()))
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Bauer steht nicht auf der gegnerischen Grundreihe.");
 		
 		if(!Brett.getInstance().istBauernUmwandlung())
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Es besteht keine Bauerndumwandlung.");
 	
 		if(!istAufDemSchachbrett())
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Figur steht nicht auf Schachbrett.");
 		
 		grundposition = null;
 		position.istBesetzt(false);
@@ -64,17 +66,15 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		
 //		simuliere Stellung
 		try {
-			if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
 		}
 		
-		if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel))
-			throw new NegativePreConditionException("Ungültiges Zielfeld");
-		
-		if(position.equals(ziel))
-			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+//		if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel))
+//			throw new NegativePreConditionException("Ungültiges Zielfeld");
+		testeSchlagZug(ziel, AlleFiguren.getInstance().gebeAlleFiguren());
 		
 		if(!ziel.istBesetzt())
 			throw new NegativePreConditionException("Schlagzug: Zielfeld ist nicht besetzt.");
@@ -125,18 +125,16 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			
 //			simuliere Stellung
 			try {
-				if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+				if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
 					throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 			} catch (IndexOutOfBoundsException e) {
 				throw new NegativePreConditionException("Upps, kein König mehr da?!");
 			}
 			
-			if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel))
-				throw new NegativePreConditionException("Ungültiges Zielfeld");
-			
-			if(position.equals(ziel))
-				throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
-			
+//			if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel))
+//				throw new NegativePreConditionException("Ungültiges Zielfeld");
+			testeSchlagZug(ziel, AlleFiguren.getInstance().gebeAlleFiguren());
+
 			if(ziel.istBesetzt())
 				throw new NegativePreConditionException("Schlagzug: Zielfeld ist besetzt.");
 			
@@ -191,24 +189,21 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		
 //		simuliere Stellung
 		try {
-			if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
 		}
 		
-		if(!position.plusReihe(1).equals(ziel) && !(position.plusReihe(2).equals(ziel) && !doppelschritt))
-			throw new NegativePreConditionException("Ungültiges Ziel");
-		
-		if(position.equals(ziel))
-			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+//		if(!position.plusReihe(1).equals(ziel) && !(position.plusReihe(2).equals(ziel) && !doppelschritt))
+//			throw new NegativePreConditionException("Ungültiges Ziel");
+		testeZiehZug(ziel, AlleFiguren.getInstance().gebeAlleFiguren());
 		
 		if(ziel.istBesetzt())
 			throw new NegativePreConditionException("Ziel ist besetzt");
 			
 		if(position.plusReihe(2).equals(ziel) && istAufGrundposition()) {
-			if(position.plusReihe(1).istBesetzt() || ziel.istBesetzt())
-				throw new NegativePreConditionException("Ziel ist besetzt oder ungültig");
+			// rest in testeZug geprüft
 			macheEinenDoppelschritt = true;
 		}
 			
@@ -235,7 +230,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 
 	public void geschlagenWerden() throws NegativeConditionException {
 		if(!sollentferntwerden || !istAufDemSchachbrett()){
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Figur darf nicht entfernt werden.");
 		}
 		
 		position.istBesetzt(false);
@@ -260,5 +255,35 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 
 	public void setzeSollEntferntWerden() {
 		sollentferntwerden = true;
+	}
+
+	public void testeZug(IFeld ziel) throws NegativeConditionException  {
+		List<IFigur>  figuren = AlleFiguren.getInstance().gebeAlleFiguren();
+		try {
+			testeZiehZug(ziel, figuren);
+		} catch (NegativeConditionException e) {
+			testeSchlagZug(ziel, figuren);
+		}
+	}
+	
+	private void testeZiehZug(IFeld ziel, List<IFigur> figuren) throws NegativeConditionException{
+		if(!position.plusReihe(1).equals(ziel) && !(position.plusReihe(2).equals(ziel) && !doppelschritt))
+			throw new NegativePreConditionException("Ungültige Gangart.");
+		
+		if(position.equals(ziel))
+			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+		
+		if(position.plusReihe(2).equals(ziel) && istAufGrundposition()) {
+			if(position.plusReihe(1).istBesetzt() || ziel.istBesetzt())
+				throw new NegativePreConditionException("Ziel ist besetzt oder ungültig");
+		}
+	}
+	
+	private void testeSchlagZug(IFeld ziel, List<IFigur> figuren) throws NegativeConditionException{
+		if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel))
+			throw new NegativePreConditionException("Ungültige Gangart.");
+		
+		if(position.equals(ziel))
+			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
 	}
 }

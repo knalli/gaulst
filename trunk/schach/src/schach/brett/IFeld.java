@@ -71,7 +71,7 @@ public interface IFeld {
 	 * @param status
 	 * @throws NegativeConditionException 
 	 */
-	public void istBesetzt(boolean status) throws NegativeConditionException;
+	public void istBesetzt(boolean status);
 	
 	public IFeld clone();
 }

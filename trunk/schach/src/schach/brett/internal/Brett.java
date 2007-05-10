@@ -40,13 +40,13 @@ public class Brett implements IBrett {
 	public List<IFeld> gebeFelderInDiagonalen(IFeld start, IFeld ende)
 			throws NegativeConditionException {
 		if(start == null || ende == null){
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Diagonaleigenschaft stimmt nicht überein.");
 		}
 		
 		// wir müssen herausfinden, welcher weg es ist
 		// formel: für ein feld x,y gilt: für x' und y' muss gelten: abs(x-x') == abs(y-y')
 		if(!(Math.abs(start.gebeReihe().ordinal()-ende.gebeReihe().ordinal()) == (Math.abs(start.gebeLinie().ordinal()-ende.gebeLinie().ordinal())))){
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Diagonaleigenschaft stimmt nicht überein.");
 		}
 		IFeld i;		
 		List<IFeld> weg = new ArrayList<IFeld>(8);
@@ -81,7 +81,7 @@ public class Brett implements IBrett {
 			throw new NullPointerException();
 		
 		if(!start.gebeLinie().equals(ende.gebeLinie()))
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Felder sind nicht in einer Linie.");
 		
 		List<IFeld> weg = new ArrayList<IFeld>(8);
 		IBrett brett = Brett.getInstance();
@@ -107,7 +107,7 @@ public class Brett implements IBrett {
 			throw new NullPointerException();
 		
 		if(!start.gebeReihe().equals(ende.gebeReihe()))
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Felder sind nicht in einer Reihe.");
 		
 		List<IFeld> weg = new ArrayList<IFeld>(8);
 		IBrett brett = Brett.getInstance();
@@ -137,11 +137,11 @@ public class Brett implements IBrett {
 	}
 	
 	public IFigur gebeFigurVonFeld(Reihe reihe, Linie linie){
-		if(reihe == null || linie == null || !gebeFeld(reihe, linie).istBesetzt())
+		if(reihe == null || linie == null)
 			return null;
 		
 		IFeld feld;
-		for(IFigur figur : AlleFiguren.getInstance().gebeFiguren(Figurart.getAll(), Farbe.getAll())){
+		for(IFigur figur : AlleFiguren.getInstance().gebeAlleFiguren()){
 			
 			if(!figur.istAufDemSchachbrett())
 				continue;
@@ -149,6 +149,8 @@ public class Brett implements IBrett {
 			feld = figur.gebePosition();
 			if(feld != null){
 				if(feld.gebeLinie().equals(linie) && feld.gebeReihe().equals(reihe)){
+					if(!gebeFeld(reihe, linie).istBesetzt())
+						gebeFeld(reihe, linie).istBesetzt(true);
 					return figur;
 				}
 			}
@@ -200,29 +202,29 @@ public class Brett implements IBrett {
 			throws NegativeConditionException {
 		
 		if(!istBauernUmwandlung())
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Es besteht keine Bauernumwandlung.");
 		
 		if(bauer == null || figur == null)
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Mindestens eine Figur ist nicht vorhanden.");
 		
 		if(!bauer.gehoertSpieler().istZugberechtigt()){
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Der Spieler ist nciht zugberechtigt.");
 		}
 		
 		if(figur.istAufDemSchachbrett()){
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Die Figur steht nicht auf dem Schachbrett.");
 		}
 		
 		if(figur.gebeArt().equals(Figurart.KOENIG) || figur.gebeArt().equals(Figurart.BAUER)){
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Dieser Figurentyp steht nicht zur Auswahl und ist ungültig.");
 		}
 		
 		if(((IKoenig) (AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, Partie.getInstance().aktuelleFarbe()).get(0))).istInEinerRochade()) {
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Eigener König ist einer Rochade.");
 		}
 		
 		if(!bauer.gebeFarbe().equals(Partie.getInstance().aktuelleFarbe()) || !figur.gebeFarbe().equals(Partie.getInstance().aktuelleFarbe())) {
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Farben stimmen nicht überein.");
 		}
 		
 		IFeld feld = bauer.gebePosition();

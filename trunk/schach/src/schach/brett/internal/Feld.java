@@ -37,7 +37,7 @@ public class Feld implements IFeld {
 		Farbe farbe = Partie.getInstance().aktuelleFarbe();
 		if(farbe.equals(Farbe.WEISS)){
 			if(linie.vorherige() == null)
-				throw new NegativePreConditionException();
+				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe, linie.vorherige());
 			Logger.debug(farbe + ": "+this+"->"+feld);
@@ -51,7 +51,7 @@ public class Feld implements IFeld {
 		else
 		{
 			if(linie.naechste() == null)
-				throw new NegativePreConditionException();
+				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe, linie.naechste());
 			Logger.debug(farbe + ": "+this+"->"+feld);
@@ -68,7 +68,7 @@ public class Feld implements IFeld {
 		Farbe farbe = Partie.getInstance().aktuelleFarbe();
 		if(farbe.equals(Farbe.WEISS)){
 			if(reihe.vorherige() == null)
-				throw new NegativePreConditionException();
+				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe.vorherige(), linie);
 			Logger.debug(farbe + ": "+this+"->"+feld);
@@ -82,7 +82,7 @@ public class Feld implements IFeld {
 		else
 		{
 			if(reihe.naechste() == null)
-				throw new NegativePreConditionException();
+				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe.naechste(), linie);
 			Logger.debug(farbe + ": "+this+"->"+feld);
@@ -99,7 +99,7 @@ public class Feld implements IFeld {
 		Farbe farbe = Partie.getInstance().aktuelleFarbe();
 		if(farbe.equals(Farbe.WEISS)){
 			if(linie.naechste() == null)
-				throw new NegativePreConditionException();
+				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe, linie.naechste());
 			
@@ -112,7 +112,7 @@ public class Feld implements IFeld {
 		else
 		{
 			if(linie.vorherige() == null)
-				throw new NegativePreConditionException();
+				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe, linie.vorherige());
 			Logger.debug(farbe + ": "+this+"->"+feld);
@@ -129,7 +129,7 @@ public class Feld implements IFeld {
 		Farbe farbe = Partie.getInstance().aktuelleFarbe();
 		if(farbe.equals(Farbe.WEISS)){
 			if(reihe.naechste() == null)
-				throw new NegativePreConditionException();
+				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe.naechste(), linie);
 			Logger.debug(farbe + ": "+this+"->"+feld);
@@ -143,7 +143,7 @@ public class Feld implements IFeld {
 		else
 		{
 			if(reihe.vorherige() == null)
-				throw new NegativePreConditionException();
+				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe.vorherige(), linie);
 			Logger.debug(farbe + ": "+this+"->"+feld);
@@ -163,10 +163,7 @@ public class Feld implements IFeld {
 		return reihe.equals(feld.gebeReihe()) && linie.equals(feld.gebeLinie()) && (istBesetzt() == feld.istBesetzt());
 	}
 
-	public void istBesetzt(boolean status) throws NegativeConditionException{
-		if((besetzt && status) || (!besetzt && !status))
-			throw new NegativePreConditionException();
-		
+	public void istBesetzt(boolean status){
 		besetzt = status;
 	}
 	
@@ -176,9 +173,7 @@ public class Feld implements IFeld {
 	
 	public IFeld clone(){
 		IFeld feld = new Feld(reihe, linie);
-		try {
-			feld.istBesetzt(besetzt);
-		} catch (NegativeConditionException e) {}
+		feld.istBesetzt(besetzt);
 		return feld;
 	}
 }

@@ -6,6 +6,7 @@ import schach.brett.Farbe;
 import schach.brett.Figurart;
 import schach.brett.IFeld;
 import schach.brett.IFigur;
+import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
 import schach.spieler.ISpieler;
 import schach.spieler.internal.Spieler;
@@ -22,19 +23,15 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	
 	public AbstrakteFigur(Farbe farbe, IFeld feld, Figurart figurart) {
 		
-		try {
-			feld.istBesetzt(true);
-			this.farbe = farbe;
-			this.grundposition = feld;
-			this.position = feld;
-			this.figurart = figurart;
-			
-			addObserver(View.getView());
-			
-			Logger.debug(farbe+" "+figurart+" wurde auf "+position.gebeLinie()+position.gebeReihe()+" positioniert.");
-		} catch (NegativeConditionException e){
-			Logger.error("Wurde nicht erzeugt und aufgestellt: "+farbe+" "+figurart+" wurde auf "+position.gebeReihe()+","+position.gebeLinie());
-		}
+		feld.istBesetzt(true);
+		this.farbe = farbe;
+		this.grundposition = feld;
+		this.position = feld;
+		this.figurart = figurart;
+		
+		addObserver(View.getView());
+		
+		Logger.debug(farbe+" "+figurart+" wurde auf "+position.gebeLinie()+position.gebeReihe()+" positioniert.");
 		
 		
 	}
@@ -48,7 +45,7 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 
 	public void aufstellen(IFeld feld) throws NegativeConditionException {
 		if(!Partiezustand.getInstance().inPartie())
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Partie läuft nicht");
 		
 		// @TODO brauchen wir das überhaupt noch (siehe Knstruktor)
 	}
@@ -79,7 +76,7 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 
 	public void positionieren(IFeld feld) throws NegativeConditionException {
 		if(!Brett.getInstance().istBauernUmwandlung())
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Es besteht derzeit keine Bauenumwandlung.");
 		
 		position = feld;
 		AlleFiguren.getInstance().fuegeFigurAn(this);
@@ -110,5 +107,12 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 		}
 		
 		return figur;
+	}
+	
+	public void simuliereBrettzug(IFeld ziel) {
+		// @TODO Für Rochade muss verfeinert werden
+		if(Partiehistorie.getInstance().istEineSimulation()){
+			position = ziel;
+		}
 	}
 }
