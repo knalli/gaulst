@@ -2,14 +2,7 @@ package schach.brett.internal;
 
 import java.util.List;
 
-import schach.brett.Farbe;
-import schach.brett.Figurart;
-import schach.brett.IBauer;
-import schach.brett.IBrett;
-import schach.brett.IFeld;
-import schach.brett.IFigur;
-import schach.brett.IKoenig;
-import schach.brett.ISchlagbareFigur;
+import schach.brett.*;
 import schach.partie.internal.Partie;
 import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
@@ -40,6 +33,42 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 	}
 
 	public void rochiert(IFeld ziel) throws NegativeConditionException {
+		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
+
+		if (!koenig.istInEinerRochade())
+			throw new NegativePreConditionException("Koenig muss in einer Rochade stehen.");
+
+		if(!gehoertSpieler().istZugberechtigt() && 
+				Partiezustand.getInstance().istRemis() &&
+				Partiezustand.getInstance().istPatt() &&
+				Partiezustand.getInstance().istSchachmatt() &&
+				koenig.wurdeBewegt()){
+			
+			throw new NegativePreConditionException();
+			
+		}
+		
+		if (ziel!=this.position.minusLinie(2) || ziel!=this.position.plusLinie(2)){
+			throw new NegativePreConditionException();
+		}
+		if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht()){
+			throw new NegativePreConditionException();
+		}
+		
+		if (ziel==this.position.minusLinie(2)) {
+			
+			// TODO Koenig rochiert -- irgendwie wissen wie nicht, wie wir auf istBedroht abfragen sollen...
+			
+			
+//			if(!Brett.getInstance().sindAlleFelderFrei(Brett.getInstance().gebeFelderInReihe(Brett.getInstance().gebeFeld(Reihe.R2, Linie.A), this.position.minusLinie(1)))&&
+//					this.position.minusLinie(1).){
+//				
+//			}
+		}
+		else if(ziel==this.position.plusLinie(2)) {
+			
+		}
+		
 		// TODO Koenig#rochiert
 
 	}
