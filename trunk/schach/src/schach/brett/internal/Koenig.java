@@ -69,8 +69,13 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 			
 		}
 		
-		// TODO Koenig#rochiert
-
+		Partie.getInstance().wechsleSpieler();
+		this.position=ziel;
+		Partiehistorie.getInstance().protokolliereStellung(true, this);
+		
+		// TODO  post Partie.istZugProtokolliert()		=  false  <-- laut OCL...
+		
+		this.schonBewegt =true;
 	}
 
 	public void schlaegt(IFeld ziel, ISchlagbareFigur gegner)
