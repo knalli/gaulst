@@ -113,10 +113,14 @@ public class AlleFiguren implements IAlleFiguren {
 		farben.add(farbe);
 		return gebeFiguren(figurarten,farben);
 	}
-
+	
+	public List<IFigur> gebeAlleFiguren(){
+		return figuren;
+	}
+	
 	public void entferneFiguren() throws NegativeConditionException {
 		if(Partiezustand.getInstance().inPartie())
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Derzeit läuft keine Partie.");
 		
 		figuren.clear();
 	}
@@ -126,17 +130,17 @@ public class AlleFiguren implements IAlleFiguren {
 		// wie soll man das sonst testen?
 		if(Partie.getInstance().aktuelleFarbe().equals(Farbe.WEISS)){
 			if(!figur.gebePosition().gebeReihe().equals(Reihe.R8)){
-				throw new NegativePreConditionException();
+				throw new NegativePreConditionException("Figur darf nicht erstellt werden.");
 			}
 		}
 		else {
 			if(!figur.gebePosition().gebeReihe().equals(Reihe.R1)){
-				throw new NegativePreConditionException();
+				throw new NegativePreConditionException("Figur darf nicht erstellt werden.");
 			}
 		}
 		
 		if(!figur.istAufGrundposition()){
-			throw new NegativePreConditionException();
+			throw new NegativePreConditionException("Figur darf nicht erstellt werden.");
 		}
 		
 		figuren.add(figur);

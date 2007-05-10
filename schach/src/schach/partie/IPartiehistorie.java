@@ -19,4 +19,6 @@ public interface IPartiehistorie {
 	public IStellung simuliereStellung(IFeld start, IFeld ziel) throws NegativeConditionException;
 	
 	public void protokolliereStellung(boolean schlagzug, IFigur ziehendeFigur);
+
+	public boolean istEineSimulation();
 }

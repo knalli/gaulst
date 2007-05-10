@@ -50,7 +50,7 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 		
 //		simuliere Stellung
 		try {
-			if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -62,19 +62,7 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 		if(!(gegner instanceof ISchlagbareFigur))
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
 
-		List<IFeld> zugfelder = null;
-		try {
-			zugfelder = Brett.getInstance().gebeFelderInDiagonalen(position, ziel);
-		} catch (NegativePreConditionException e) { }
-		
-		if(zugfelder == null) // bei 1-Feld-abstand gibts eine leereliste, kein null!
-			throw new NegativePreConditionException("Ungültiges Zielfeld");
-		
-		if(position.equals(ziel))
-			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
-		
-		if(!Brett.getInstance().sindAlleFelderFrei(zugfelder))
-			throw new NegativePreConditionException("Der Zugweg ist nicht frei.");
+		testeZug(ziel);
 		
 		if(!(gegner instanceof ISchlagbareFigur))
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
@@ -120,7 +108,7 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 		
 //		simuliere Stellung
 		try {
-			if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -129,19 +117,7 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 		if(!ziel.istBesetzt())
 			throw new NegativePreConditionException("Schlagzug: Zielfeld ist nicht besetzt.");
 		
-		List<IFeld> zugfelder = null;
-		try {
-			zugfelder = Brett.getInstance().gebeFelderInDiagonalen(position, ziel);
-		} catch (NegativePreConditionException e) { }
-		
-		if(zugfelder == null) // bei 1-Feld-abstand gibts eine leereliste, kein null!
-			throw new NegativePreConditionException("Ungültiges Zielfeld");
-		
-		if(position.equals(ziel))
-			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
-		
-		if(!Brett.getInstance().sindAlleFelderFrei(zugfelder))
-			throw new NegativePreConditionException("Der Zugweg ist nicht frei.");
+		testeZug(ziel);
 
 		position.istBesetzt(false);
 		position = ziel;
@@ -176,5 +152,21 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 	
 	public void setzeSollEntferntWerden() {
 		sollentferntwerden = true;
+	}
+
+	public void testeZug(IFeld ziel) throws NegativeConditionException {
+		List<IFeld> zugfelder = null;
+		try {
+			zugfelder = Brett.getInstance().gebeFelderInDiagonalen(position, ziel);
+		} catch (NegativePreConditionException e) { }
+		
+		if(zugfelder == null) // bei 1-Feld-abstand gibts eine leereliste, kein null!
+			throw new NegativePreConditionException("Ungültiges Zielfeld");
+		
+		if(!Brett.getInstance().sindAlleFelderFrei(zugfelder))
+			throw new NegativePreConditionException("Der Zugweg ist nicht frei.");
+		
+		if(position.equals(ziel))
+			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
 	}
 }

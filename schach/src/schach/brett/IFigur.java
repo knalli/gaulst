@@ -89,4 +89,8 @@ public interface IFigur {
 	 * @return
 	 */
 	public IFigur clone(IFeld neuesfeld);
+
+	public void testeZug(IFeld ziel) throws NegativeConditionException;
+
+	public void simuliereBrettzug(IFeld start);
 }

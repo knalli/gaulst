@@ -119,7 +119,7 @@ public class GuiView implements IView {
 			jFrame.setJMenuBar(getJJMenuBar());
 			jFrame.setSize(300, 200);
 			jFrame.setContentPane(getJContentPane());
-			jFrame.setTitle("Application");
+			jFrame.setTitle("Die Schachpartie - Denn Schach ist einfach Pferd.");
 		}
 		return jFrame;
 	}
@@ -131,6 +131,10 @@ public class GuiView implements IView {
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
+			GridLayout gridLayout = new GridLayout(1, 2);
+			gridLayout.setRows(2);
+			jLabel = new JLabel();
+			jLabel.setText("Status: Die Partie ist gestartet.");
 			jContentPane = new JPanel();
 			jContentPane1 = new JPanel();
 			jContentPane2 = new JPanel();
@@ -139,8 +143,7 @@ public class GuiView implements IView {
 			
 			jContentPane.setLayout(new GridLayout(2,1));
 			jContentPane2.setLayout(new GridLayout(8,8));
-			jContentPane3.setLayout(new GridLayout(1,2));
-			jContentPane4.setLayout(new GridLayout(2,1));
+			jContentPane4.setLayout(new GridLayout(3,1));
 			
 			jLabelAktuellerSpieler = new JLabel("Partie wird gestartet..");
 			jContentPane1.add(jLabelAktuellerSpieler);
@@ -171,51 +174,24 @@ public class GuiView implements IView {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					IController controller = Controller.getInstance();
 					IBrett brett = Brett.getInstance();
-					switch(debugcount){
-					case 0:
-						Logger.info("A2 => A3 (sollte geht)");
-						controller.setzeFigur(brett.gebeFeld(Reihe.R2, Linie.A));
-						controller.setzeZielFeld(brett.gebeFeld(Reihe.R3, Linie.A));
-						break;
-					case 1:
-						Logger.info("C2 => C3 (sollte nicht gehen)");
-						controller.setzeFigur(brett.gebeFeld(Reihe.R2, Linie.C));
-						controller.setzeZielFeld(brett.gebeFeld(Reihe.R3, Linie.C));
-						break;
-					case 2:
-						Logger.info("B7 => B5 (sollte gehen)");
-						controller.setzeFigur(brett.gebeFeld(Reihe.R7, Linie.B));
-						controller.setzeZielFeld(brett.gebeFeld(Reihe.R5, Linie.B));
-						break;
-					case 3:
-						Logger.info("A3 => A5 (sollte nicht gehen)");
-						controller.setzeFigur(brett.gebeFeld(Reihe.R3, Linie.A));
-						controller.setzeZielFeld(brett.gebeFeld(Reihe.R5, Linie.A));
-						break;
-					case 4:
-						Logger.info("A3 => A4 (sollte gehen)");
-						controller.setzeZielFeld(brett.gebeFeld(Reihe.R4, Linie.A));
-						break;
-					case 5:
-						Logger.info("H2 => H3 (sollte nicht gehen)");
-						controller.setzeFigur(brett.gebeFeld(Reihe.R2, Linie.H));
-						controller.setzeZielFeld(brett.gebeFeld(Reihe.R3, Linie.H));
-						break;
-					case 6:
-						Logger.info("H7 => H5 (sollte gehen)");
-						controller.setzeFigur(brett.gebeFeld(Reihe.R7, Linie.H));
-						controller.setzeZielFeld(brett.gebeFeld(Reihe.R5, Linie.H));
-						break;
+					
+					if(!controller.parseInputString(jInputField.getText())) {
+						jLabel.setText("Koordinaten waren falsch.");
 					}
-					debugcount++;
+					else {
+						jLabel.setText(controller.getMessage());
+					}
+					
 					jInputField.setText("");
 				}
 			});
 			jInputField.setText("");
+			jContentPane3.setLayout(gridLayout);
 			jContentPane3.add(jInputField);
 			jContentPane3.add(jContentPane4);
 			jContentPane4.add(jLabelAktuellerSpieler);
 			jContentPane4.add(jSendButton);
+			jContentPane4.add(jLabel, null);
 			jContentPane.add(jContentPane3);
 		}
 		return jContentPane;
@@ -430,6 +406,8 @@ public class GuiView implements IView {
 	private static IAlleFiguren allefiguren = null;
 	private static List<Figurart> listeFigurarten = Arrays.asList(Figurart.values());
 	private static List<Farbe> listeFarben = Arrays.asList(Farbe.values());
+
+	private JLabel jLabel = null;
 	
 	public void update() {
 		besetzteFelder.clear();

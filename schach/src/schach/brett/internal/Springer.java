@@ -46,7 +46,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		
 //		simuliere Stellung
 		try {
-			if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -57,26 +57,11 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		
 		if(!(gegner instanceof ISchlagbareFigur))
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
-
-		if(		!position.plusReihe(1).plusLinie(2).equals(ziel)&&
-				!position.plusReihe(1).minusLinie(2).equals(ziel) &&
-				
-				!position.minusReihe(1).plusLinie(2).equals(ziel) &&
-				!position.minusReihe(1).minusLinie(2).equals(ziel) &&
-				
-				!position.plusReihe(2).plusLinie(2).equals(ziel) &&
-				!position.plusReihe(2).minusLinie(1).equals(ziel) &&
-				
-				!position.minusReihe(2).plusLinie(1).equals(ziel) &&
-				!position.minusReihe(2).minusLinie(1).equals(ziel)){
-			throw new NegativePreConditionException();
-		}
 		
 		if(!(gegner instanceof ISchlagbareFigur))
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
 		
-		if(position.equals(ziel))
-			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+		testeZug(ziel);
 		
 		ISchlagbareFigur gegner2 = (ISchlagbareFigur) gegner;
 		gegner2.setzeSollEntferntWerden();
@@ -119,7 +104,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		
 //		simuliere Stellung
 		try {
-			if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -128,22 +113,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		if(ziel.istBesetzt())
 			throw new NegativePreConditionException("Schlagzug: Zielfeld ist besetzt.");
 		
-		if(position.equals(ziel))
-			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
-		
-		if(		!position.plusReihe(1).plusLinie(2).equals(ziel)&&
-				!position.plusReihe(1).minusLinie(2).equals(ziel) &&
-				
-				!position.minusReihe(1).plusLinie(2).equals(ziel) &&
-				!position.minusReihe(1).minusLinie(2).equals(ziel) &&
-				
-				!position.plusReihe(2).plusLinie(2).equals(ziel) &&
-				!position.plusReihe(2).minusLinie(1).equals(ziel) &&
-				
-				!position.minusReihe(2).plusLinie(1).equals(ziel) &&
-				!position.minusReihe(2).minusLinie(1).equals(ziel)){
-			throw new NegativePreConditionException();
-		}
+		testeZug(ziel);
 		
 		position.istBesetzt(false);
 		position = ziel;
@@ -178,5 +148,24 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 	
 	public void setzeSollEntferntWerden() {
 		sollentferntwerden = true;
+	}
+
+	public void testeZug(IFeld ziel) throws NegativeConditionException {
+		if(		!position.plusReihe(1).plusLinie(2).equals(ziel)&&
+				!position.plusReihe(1).minusLinie(2).equals(ziel) &&
+				
+				!position.minusReihe(1).plusLinie(2).equals(ziel) &&
+				!position.minusReihe(1).minusLinie(2).equals(ziel) &&
+				
+				!position.plusReihe(2).plusLinie(2).equals(ziel) &&
+				!position.plusReihe(2).minusLinie(1).equals(ziel) &&
+				
+				!position.minusReihe(2).plusLinie(1).equals(ziel) &&
+				!position.minusReihe(2).minusLinie(1).equals(ziel)){
+			throw new NegativePreConditionException("Ungültiges Zielfeld.");
+		}
+		
+		if(position.equals(ziel))
+			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
 	}
 }

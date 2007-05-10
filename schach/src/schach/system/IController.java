@@ -14,4 +14,6 @@ public interface IController {
 	public void setzeFigur(Reihe reihe, Linie linie);
 	public void setzeZielFeld(IFeld feld);
 	public void setzeZielFeld(Reihe reihe, Linie linie);
+	public boolean parseInputString(String text);
+	public String getMessage();
 }

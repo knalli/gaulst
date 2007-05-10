@@ -28,6 +28,8 @@ public interface IAlleFiguren {
 	 */
 	public List<IFigur> gebeFiguren(Figurart figurart, Farbe farbe);
 	
+	public List<IFigur> gebeAlleFiguren();
+	
 	/**
 	 * Stellt alle Figuren auf dem Brett auf.
 	 * 

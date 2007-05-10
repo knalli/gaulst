@@ -76,7 +76,7 @@ public class Turm extends AbstrakteFigur implements ITurm {
 		
 //		simuliere Stellung
 		try {
-			if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -88,22 +88,7 @@ public class Turm extends AbstrakteFigur implements ITurm {
 		if(!(gegner instanceof ISchlagbareFigur))
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
 
-		List<IFeld> zugfelder = null;
-		try {
-			if(position.gebeReihe().equals(ziel.gebeReihe()))
-				zugfelder = Brett.getInstance().gebeFelderInReihe(position, ziel);
-			else if(position.gebeLinie().equals(ziel.gebeLinie()))
-				zugfelder = Brett.getInstance().gebeFelderInLinie(position, ziel);
-		} catch (NegativePreConditionException e) { }
-		
-		if(zugfelder == null) // bei 1-Feld-abstand gibts eine leereliste, kein null!
-			throw new NegativePreConditionException("Ungültiges Zielfeld");
-		
-		if(position.equals(ziel))
-			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
-		
-		if(!Brett.getInstance().sindAlleFelderFrei(zugfelder))
-			throw new NegativePreConditionException("Der Zugweg ist nicht frei.");
+		testeZug(ziel);
 		
 		if(!(gegner instanceof ISchlagbareFigur))
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
@@ -153,7 +138,7 @@ public class Turm extends AbstrakteFigur implements ITurm {
 		
 //		simuliere Stellung
 		try {
-			if(((IKoenig)(Partiehistorie.getInstance().simuliereStellung(position, ziel).gebeFiguren(Figurart.KOENIG, farbe).get(0))).istBedroht())
+			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -162,22 +147,7 @@ public class Turm extends AbstrakteFigur implements ITurm {
 		if(ziel.istBesetzt())
 			throw new NegativePreConditionException("Schlagzug: Zielfeld ist besetzt.");
 		
-		List<IFeld> zugfelder = null;
-		try {
-			if(position.gebeReihe().equals(ziel.gebeReihe()))
-				zugfelder = Brett.getInstance().gebeFelderInReihe(position, ziel);
-			else if(position.gebeLinie().equals(ziel.gebeLinie()))
-				zugfelder = Brett.getInstance().gebeFelderInLinie(position, ziel);
-		} catch (NegativePreConditionException e) { }
-		
-		if(zugfelder == null) // bei 1-Feld-abstand gibts eine leereliste, kein null!
-			throw new NegativePreConditionException("Ungültiges Zielfeld");
-		
-		if(position.equals(ziel))
-			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
-		
-		if(!Brett.getInstance().sindAlleFelderFrei(zugfelder))
-			throw new NegativePreConditionException("Der Zugweg ist nicht frei.");
+		testeZug(ziel);
 		
 		position.istBesetzt(false);
 		position = ziel;
@@ -212,5 +182,24 @@ public class Turm extends AbstrakteFigur implements ITurm {
 	
 	public void setzeSollEntferntWerden() {
 		sollentferntwerden = true;
+	}
+
+	public void testeZug(IFeld ziel) throws NegativeConditionException {
+		List<IFeld> zugfelder = null;
+		try {
+			if(position.gebeReihe().equals(ziel.gebeReihe()))
+				zugfelder = Brett.getInstance().gebeFelderInReihe(position, ziel);
+			else if(position.gebeLinie().equals(ziel.gebeLinie()))
+				zugfelder = Brett.getInstance().gebeFelderInLinie(position, ziel);
+		} catch (NegativePreConditionException e) { }
+		
+		if(zugfelder == null) // bei 1-Feld-abstand gibts eine leereliste, kein null!
+			throw new NegativePreConditionException("Ungültiges Zielfeld");
+		
+		if(position.equals(ziel))
+			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+		
+		if(!Brett.getInstance().sindAlleFelderFrei(zugfelder))
+			throw new NegativePreConditionException("Der Zugweg ist nicht frei.");
 	}
 }
