@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
@@ -36,10 +37,13 @@ import schach.brett.internal.Brett;
 import schach.partie.IPartie;
 import schach.partie.IPartiezustand;
 import schach.partie.internal.Partie;
+import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
 import schach.system.IController;
 import schach.system.IView;
 import schach.system.Logger;
+import java.awt.BorderLayout;
+import javax.swing.JList;
 
 public class GuiView implements IView {
 	private static GuiView instance = null;  //  @jve:decl-index=0:
@@ -278,6 +282,10 @@ public class GuiView implements IView {
 			jLabelAktuellerSpieler.setText("<html><b>Aktueller Spieler: "+(partie.aktuellerSpieler().toString()));
 		}
 		
+		dlm.clear();
+		for(String notation : Partiehistorie.getInstance().gebeBisherigeNotationen()){
+			dlm.addElement(notation);
+		}
 		
 		// zeichne Brett
 		IFeld feld;
@@ -365,6 +373,16 @@ public class GuiView implements IView {
 	private JPanel jpEingabe = null;
 
 	private JEditorPane jepSystemantwort = null;
+
+	private JButton jbLog = null;
+
+	private JFrame jFrame1 = null;  //  @jve:decl-index=0:visual-constraint="458,18"
+
+	private JPanel jContentPane1 = null;
+
+	private JList jList = null;
+
+	private DefaultListModel dlm = new DefaultListModel();
 	/**
 	 * This method initializes jpControllereinheiten	
 	 * 	
@@ -415,6 +433,7 @@ public class GuiView implements IView {
 			jpEingabe.setLayout(new GridBagLayout());
 			jpEingabe.add(jInputField, gridBagConstraints);
 			jpEingabe.add(jSendButton, new GridBagConstraints());
+			jpEingabe.add(getJbLog(), new GridBagConstraints());
 		}
 		return jpEingabe;
 	}
@@ -427,7 +446,66 @@ public class GuiView implements IView {
 	private JEditorPane getJepSystemantwort() {
 		if (jepSystemantwort == null) {
 			jepSystemantwort = new JEditorPane();
+			jepSystemantwort.setEditable(false);
 		}
 		return jepSystemantwort;
+	}
+
+	/**
+	 * This method initializes jbLog	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getJbLog() {
+		if (jbLog == null) {
+			jbLog = new JButton("Historie");
+			jbLog.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					getJFrame1().setVisible(true);
+				}
+			});
+		}
+		return jbLog;
+	}
+
+	/**
+	 * This method initializes jFrame1	
+	 * 	
+	 * @return javax.swing.JFrame	
+	 */
+	private JFrame getJFrame1() {
+		if (jFrame1 == null) {
+			jFrame1 = new JFrame();
+			jFrame1.setSize(new Dimension(223, 169));
+			jFrame1.setTitle("Bisherige Spielzüge");
+			jFrame1.setContentPane(getJContentPane1());
+		}
+		return jFrame1;
+	}
+
+	/**
+	 * This method initializes jContentPane1	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getJContentPane1() {
+		if (jContentPane1 == null) {
+			jContentPane1 = new JPanel();
+			jContentPane1.setLayout(new BorderLayout());
+			jContentPane1.add(getJList(), BorderLayout.NORTH);
+		}
+		return jContentPane1;
+	}
+
+	/**
+	 * This method initializes jList	
+	 * 	
+	 * @return javax.swing.JList	
+	 */
+	private JList getJList() {
+		if (jList == null) {
+			jList = new JList(dlm);
+		}
+		return jList;
 	}
 }
