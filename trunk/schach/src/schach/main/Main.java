@@ -10,7 +10,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		View.setView(View.MULTI);
+		View.setView(View.GUI);
 		Logger.appendLogger("console");
 		Logger.debug("Main gestartet..");
 		
