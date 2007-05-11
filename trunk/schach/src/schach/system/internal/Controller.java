@@ -44,12 +44,14 @@ public class Controller implements IController {
 			
 			// Ziehzug? (ohne spezialfälle)
 			if(zielfigur == null){
+				Logger.info(figur + " zieht nach "+ ziel);
 				figur.zieht(ziel);
 			}
 			// Schlagzug? (ohne spezialfälle)
 			else {
 				// gegnerische Figur schlagbar
 				if(zielfigur instanceof ISchlagbareFigur){
+					Logger.info(figur + " schlägt "+ zielfigur);
 					figur.schlaegt(ziel, (ISchlagbareFigur)zielfigur);
 				}
 				// gegnerische Figur nicht schlagbar
@@ -59,12 +61,13 @@ public class Controller implements IController {
 			}
 		} catch (NegativeConditionException e) {
 			Logger.error("Fehler: "+e.getMessage());
-			message  = e.getMessage();e.printStackTrace();
+			message  = e.getMessage();
+//			e.printStackTrace();
 			return false;
 		} catch (Exception e) {
 			Logger.error("Fehler: "+e.getMessage());
 			message  = e.getMessage();
-			e.printStackTrace();
+//			e.printStackTrace();
 			return false;
 		}
 		

@@ -40,7 +40,7 @@ public class Feld implements IFeld {
 				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe, linie.vorherige());
-			Logger.debug(farbe + ": "+this+"->"+feld);
+//			Logger.debug(farbe + ": "+this+" -L -> "+feld);
 			
 			if(n > 1)
 				return feld.minusLinie(n-1);
@@ -54,7 +54,7 @@ public class Feld implements IFeld {
 				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe, linie.naechste());
-			Logger.debug(farbe + ": "+this+"->"+feld);
+//			Logger.debug(farbe + ": "+this+" -L+ -> "+feld);
 			
 			if(n > 1)
 				return feld.minusLinie(n-1);
@@ -71,7 +71,7 @@ public class Feld implements IFeld {
 				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe.vorherige(), linie);
-			Logger.debug(farbe + ": "+this+"->"+feld);
+//			Logger.debug(farbe + ": "+this+" -R -> "+feld);
 			
 			if(n > 1)
 				return feld.minusReihe(n-1);
@@ -85,7 +85,7 @@ public class Feld implements IFeld {
 				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe.naechste(), linie);
-			Logger.debug(farbe + ": "+this+"->"+feld);
+//			Logger.debug(farbe + ": "+this+" -R+ -> "+feld);
 			
 			if(n > 1)
 				return feld.minusReihe(n-1);
@@ -102,6 +102,7 @@ public class Feld implements IFeld {
 				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe, linie.naechste());
+//			Logger.debug(farbe + ": "+this+" +L -> "+feld);
 			
 			if(n > 1)
 				return feld.plusLinie(n-1);
@@ -115,7 +116,7 @@ public class Feld implements IFeld {
 				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe, linie.vorherige());
-			Logger.debug(farbe + ": "+this+"->"+feld);
+//			Logger.debug(farbe + ": "+this+" +L- -> "+feld);
 			
 			if(n > 1)
 				return feld.plusLinie(n-1);
@@ -132,7 +133,7 @@ public class Feld implements IFeld {
 				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe.naechste(), linie);
-			Logger.debug(farbe + ": "+this+"->"+feld);
+//			Logger.debug(farbe + ": "+this+" +R -> "+feld);
 			
 			if(n > 1)
 				return feld.plusReihe(n-1);
@@ -146,7 +147,7 @@ public class Feld implements IFeld {
 				throw new NegativePreConditionException("UngŸltiges Feld wurde berechnet.");
 			
 			IFeld feld = Brett.getInstance().gebeFeld(reihe.vorherige(), linie);
-			Logger.debug(farbe + ": "+this+"->"+feld);
+//			Logger.debug(farbe + ": "+this+" +R- -> "+feld);
 			
 			if(n > 1)
 				return feld.plusReihe(n-1);
@@ -160,10 +161,11 @@ public class Feld implements IFeld {
 	}
 
 	public boolean equals(IFeld feld){
-		return reihe.equals(feld.gebeReihe()) && linie.equals(feld.gebeLinie()) && (istBesetzt() == feld.istBesetzt());
+		return reihe.equals(feld.gebeReihe()) && linie.equals(feld.gebeLinie());
 	}
 
 	public void istBesetzt(boolean status){
+		Logger.debug("Markiert "+this+" ist besetzt: "+status);
 		besetzt = status;
 	}
 	

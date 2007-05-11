@@ -17,8 +17,11 @@ public interface IPartiehistorie {
 	public IStellung gebeStellung();
 	
 	public IStellung simuliereStellung(IFeld start, IFeld ziel) throws NegativeConditionException;
+	public IStellung simuliereStellung(IFeld start, IFeld ziel, IFigur zuSchlagendeFigur) throws NegativeConditionException;
 	
 	public void protokolliereStellung(boolean schlagzug, IFigur ziehendeFigur);
 
 	public boolean istEineSimulation();
+
+	public void setzeSimulation(boolean b);
 }

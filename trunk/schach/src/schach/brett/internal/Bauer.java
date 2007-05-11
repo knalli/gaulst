@@ -1,7 +1,5 @@
 package schach.brett.internal;
 
-import java.util.List;
-
 import schach.brett.Farbe;
 import schach.brett.Figurart;
 import schach.brett.IBauer;
@@ -66,7 +64,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		
 //		simuliere Stellung
 		try {
-			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
+			if(Partiehistorie.getInstance().simuliereStellung(position, ziel, gegner).istKoenigBedroht(farbe))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -74,7 +72,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		
 //		if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel))
 //			throw new NegativePreConditionException("Ungültiges Zielfeld");
-		testeSchlagZug(ziel, AlleFiguren.getInstance().gebeAlleFiguren());
+		testeSchlagZug(ziel);
 		
 		if(!ziel.istBesetzt())
 			throw new NegativePreConditionException("Schlagzug: Zielfeld ist nicht besetzt.");
@@ -123,9 +121,16 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			if(koenig.istInEinerRochade())
 				throw new NegativePreConditionException("Koenig ist in einer Rochade");
 			
+			IFigur gegner = Brett.getInstance().gebeFigurVonFeld(ziel.minusReihe(1));
+			
+			if(!(gegner instanceof IBauer))
+				throw new NegativePreConditionException("Zu schlagende Figur ist kein Bauer.");
+
+			IBauer gegner2 = (IBauer) gegner;
+			
 //			simuliere Stellung
 			try {
-				if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
+				if(Partiehistorie.getInstance().simuliereStellung(position, ziel, gegner).istKoenigBedroht(farbe))
 					throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 			} catch (IndexOutOfBoundsException e) {
 				throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -133,17 +138,11 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			
 //			if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel))
 //				throw new NegativePreConditionException("Ungültiges Zielfeld");
-			testeSchlagZug(ziel, AlleFiguren.getInstance().gebeAlleFiguren());
+			testeSchlagZug(ziel);
 
 			if(ziel.istBesetzt())
 				throw new NegativePreConditionException("Schlagzug: Zielfeld ist besetzt.");
-			
-			IFigur gegner = Brett.getInstance().gebeFigurVonFeld(ziel.minusReihe(1));
-			
-			if(!(gegner instanceof IBauer))
-				throw new NegativePreConditionException("Zu schlagende Figur ist kein Bauer.");
 
-			IBauer gegner2 = (IBauer) gegner;
 			
 			if(!gegner2.letzteRundeDoppelschritt())
 				throw new NegativePreConditionException("Zu schlagender Bauer hat in der letzten Runde keinen Doppelschritt gemacht.");
@@ -197,12 +196,12 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		
 //		if(!position.plusReihe(1).equals(ziel) && !(position.plusReihe(2).equals(ziel) && !doppelschritt))
 //			throw new NegativePreConditionException("Ungültiges Ziel");
-		testeZiehZug(ziel, AlleFiguren.getInstance().gebeAlleFiguren());
+		testeZiehZug(ziel);
 		
 		if(ziel.istBesetzt())
 			throw new NegativePreConditionException("Ziel ist besetzt");
 			
-		if(position.plusReihe(2).equals(ziel) && istAufGrundposition()) {
+		if(position.plusReihe(2).equals(ziel) && wurdeBewegt()) {
 			// rest in testeZug geprüft
 			macheEinenDoppelschritt = true;
 		}
@@ -258,16 +257,15 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 	}
 
 	public void testeZug(IFeld ziel) throws NegativeConditionException  {
-		List<IFigur>  figuren = AlleFiguren.getInstance().gebeAlleFiguren();
 		try {
-			testeZiehZug(ziel, figuren);
+			testeZiehZug(ziel);
 		} catch (NegativeConditionException e) {
-			testeSchlagZug(ziel, figuren);
+			testeSchlagZug(ziel);
 		}
 	}
 	
-	private void testeZiehZug(IFeld ziel, List<IFigur> figuren) throws NegativeConditionException{
-		if(!position.plusReihe(1).equals(ziel) && !(position.plusReihe(2).equals(ziel) && !doppelschritt))
+	private void testeZiehZug(IFeld ziel) throws NegativeConditionException{
+		if(!position.plusReihe(1).equals(ziel) && !(position.plusReihe(2).equals(ziel) && wurdeBewegt()))
 			throw new NegativePreConditionException("Ungültige Gangart.");
 		
 		if(position.equals(ziel))
@@ -279,7 +277,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		}
 	}
 	
-	private void testeSchlagZug(IFeld ziel, List<IFigur> figuren) throws NegativeConditionException{
+	private void testeSchlagZug(IFeld ziel) throws NegativeConditionException{
 		if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel))
 			throw new NegativePreConditionException("Ungültige Gangart.");
 		

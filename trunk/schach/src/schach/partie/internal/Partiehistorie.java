@@ -8,6 +8,7 @@ import schach.brett.IFigur;
 import schach.brett.internal.Brett;
 import schach.partie.IPartiehistorie;
 import schach.partie.IStellung;
+import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
@@ -61,6 +62,7 @@ public class Partiehistorie implements IPartiehistorie {
 			throw new NegativePreConditionException("Es wurde keine Figur ausgewählt.");
 		
 		simuliere  = true;
+		Logger.debug("Simulation Start..");
 		
 		start.istBesetzt(false);
 		ziehendeFigur.simuliereBrettzug(ziel);
@@ -83,6 +85,7 @@ public class Partiehistorie implements IPartiehistorie {
 		}
 
 		simuliere = false;
+		Logger.debug("Simulation Ende..");
 		return simulation;
 	}
 
@@ -92,5 +95,9 @@ public class Partiehistorie implements IPartiehistorie {
 
 	public boolean istEineSimulation() {
 		return simuliere;
+	}
+
+	public void setzeSimulation(boolean b) {
+		simuliere = b;
 	}
 }

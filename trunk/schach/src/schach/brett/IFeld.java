@@ -69,7 +69,6 @@ public interface IFeld {
 	/**
 	 * Setzt das Feld (un)besetzt.
 	 * @param status
-	 * @throws NegativeConditionException 
 	 */
 	public void istBesetzt(boolean status);
 	

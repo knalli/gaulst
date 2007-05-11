@@ -2,12 +2,11 @@ package schach.system.internal;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Event;
 import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -18,12 +17,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
 import schach.brett.Farbe;
@@ -40,7 +35,6 @@ import schach.partie.IPartie;
 import schach.partie.IPartiezustand;
 import schach.partie.internal.Partie;
 import schach.partie.internal.Partiezustand;
-import schach.spieler.ISpieler;
 import schach.system.IController;
 import schach.system.IView;
 import schach.system.Logger;
@@ -64,26 +58,6 @@ public class GuiView implements IView {
 	private JFrame jFrame = null;
 
 	private JPanel jContentPane = null;
-
-	private JMenuBar jJMenuBar = null;
-
-	private JMenu fileMenu = null;
-
-	private JMenu editMenu = null;
-
-	private JMenu helpMenu = null;
-
-	private JMenuItem exitMenuItem = null;
-
-	private JMenuItem aboutMenuItem = null;
-
-	private JMenuItem cutMenuItem = null;
-
-	private JMenuItem copyMenuItem = null;
-
-	private JMenuItem pasteMenuItem = null;
-
-	private JMenuItem saveMenuItem = null;
 
 	private JDialog aboutDialog = null;
 
@@ -116,7 +90,6 @@ public class GuiView implements IView {
 		if (jFrame == null) {
 			jFrame = new JFrame();
 			jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			jFrame.setJMenuBar(getJJMenuBar());
 			jFrame.setSize(300, 200);
 			jFrame.setContentPane(getJContentPane());
 			jFrame.setTitle("Die Schachpartie - Denn Schach ist einfach Pferd.");
@@ -131,8 +104,13 @@ public class GuiView implements IView {
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
+			GridLayout gridLayout1 = new GridLayout(2, 1);
+			gridLayout1.setHgap(7);
+			gridLayout1.setVgap(7);
 			GridLayout gridLayout = new GridLayout(1, 2);
 			gridLayout.setRows(2);
+			gridLayout.setVgap(5);
+			gridLayout.setHgap(5);
 			jLabel = new JLabel();
 			jLabel.setText("Status: Die Partie ist gestartet.");
 			jContentPane = new JPanel();
@@ -141,19 +119,53 @@ public class GuiView implements IView {
 			jContentPane3 = new JPanel();
 			jContentPane4 = new JPanel();
 			
-			jContentPane.setLayout(new GridLayout(2,1));
-			jContentPane2.setLayout(new GridLayout(8,8));
+			jContentPane2.setLayout(new GridLayout(10,10));
 			jContentPane4.setLayout(new GridLayout(3,1));
 			
 			jLabelAktuellerSpieler = new JLabel("Partie wird gestartet..");
 			jContentPane1.add(jLabelAktuellerSpieler);
+			jContentPane.setLayout(gridLayout1);
 			
+			char[] abcdefgh = {' ','A','B','C','D','E','F','G','H',' '};
+			boolean blank = false;
+			for(char l : abcdefgh){
+				JPanel panel = new JPanel();
+				feld1 = new JLabel();
+				feld1.setText(Character.toString(l));
+				if((l == ' ' && !blank) || l == 'B' || l == 'D' || l == 'F' || l == 'H'){
+					panel.setBackground(Color.DARK_GRAY);
+					feld1.setForeground(Color.LIGHT_GRAY);
+					if(l == ' ')
+						blank = true;
+				} 
+				else {
+					panel.setBackground(Color.LIGHT_GRAY);
+					feld1.setForeground(Color.DARK_GRAY);
+
+				}
+				panel.add(feld1,null);
+				jContentPane2.add(panel, null);
+			}
 			for(int r=8; r>=1; r--){
+				JPanel panel = new JPanel();
+				feld1 = new JLabel();
+				feld1.setText(Integer.toString(r));
+				if(r % 2 == 1){
+					panel.setBackground(Color.DARK_GRAY);
+					feld1.setForeground(Color.LIGHT_GRAY);
+				} 
+				else {
+					panel.setBackground(Color.LIGHT_GRAY);
+					feld1.setForeground(Color.DARK_GRAY);
+				}
+				panel.add(feld1,null);
+				jContentPane2.add(panel, null);
+				
 				for(int l=1; l<=8; l++){
-					JPanel panel = new JPanel();
+					panel = new JPanel();
 					feld1 = new JLabel();
 					besetzteFelder2.put(Brett.getInstance().gebeFeld(Reihe.values()[r-1],Linie.values()[l-1]), feld1);
-					feld1.setText("L"+l+"R"+r);
+					feld1.setText(""+abcdefgh[l]+r);
 					if(r%2==1 && l%2==0 || r%2==0 && l%2==1){
 						panel.setBackground(Color.BLACK);
 						feld1.setForeground(Color.WHITE);
@@ -164,28 +176,49 @@ public class GuiView implements IView {
 					}
 					panel.add(feld1,null);
 					jContentPane2.add(panel, null);
+					
+					panel.addMouseListener(newMouseAdapter(r,abcdefgh[l]));
 				}
+				
+				panel = new JPanel();
+				feld1 = new JLabel();
+				feld1.setText(Integer.toString(r));
+				if(r % 2 == 0){
+					panel.setBackground(Color.DARK_GRAY);
+					feld1.setForeground(Color.LIGHT_GRAY);
+				} 
+				else {
+					panel.setBackground(Color.LIGHT_GRAY);
+					feld1.setForeground(Color.DARK_GRAY);
+				}
+				panel.add(feld1,null);
+				jContentPane2.add(panel, null);
+			}
+			blank = false;
+			for(char l : abcdefgh){
+				JPanel panel = new JPanel();
+				feld1 = new JLabel();
+				feld1.setText(Character.toString(l));
+				if((l == ' ' && blank) || l == 'A' || l == 'C' || l == 'E' || l == 'G'){
+					panel.setBackground(Color.DARK_GRAY);
+					feld1.setForeground(Color.LIGHT_GRAY);
+				} 
+				else {
+					panel.setBackground(Color.LIGHT_GRAY);
+					feld1.setForeground(Color.DARK_GRAY);
+					if(l == ' ')
+						blank = true;
+				}
+				panel.add(feld1,null);
+				jContentPane2.add(panel, null);
 			}
 			jContentPane.add(jContentPane2);
 			jSendButton = new JButton();
 			jInputField = new JTextField();
 			jSendButton.setText("Absenden");
-			jSendButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					IController controller = Controller.getInstance();
-					IBrett brett = Brett.getInstance();
-					
-					if(!controller.parseInputString(jInputField.getText())) {
-						jLabel.setText("Koordinaten waren falsch.");
-					}
-					else {
-						jLabel.setText(controller.getMessage());
-					}
-					
-					jInputField.setText("");
-				}
-			});
+			jSendButton.addActionListener(parseCommand);
 			jInputField.setText("");
+			jInputField.addActionListener(parseCommand);
 			jContentPane3.setLayout(gridLayout);
 			jContentPane3.add(jInputField);
 			jContentPane3.add(jContentPane4);
@@ -196,108 +229,35 @@ public class GuiView implements IView {
 		}
 		return jContentPane;
 	}
+	
+	protected String klickfeld = "";  //  @jve:decl-index=0:
+	private MouseListener newMouseAdapter(final int r, final char l) {
+		return new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				System.out.println("klick auf "+l+r);
+				if(klickfeld.length() == 0){
+					klickfeld = ""+l+r;
+				}
+				else {
+					klickfeld = klickfeld + l+r;
+					IController controller = Controller.getInstance();
+					
+					if(!controller.parseInputString(klickfeld)) {
+						jLabel.setText("Koordinaten waren falsch.");
+					}
+					else {
+						jLabel.setText(controller.getMessage());
+					}
+					klickfeld = "";
+				}
+				
+			}
+		};
+	}
+
 	private int debugcount = 0;
-
-	/**
-	 * This method initializes jJMenuBar	
-	 * 	
-	 * @return javax.swing.JMenuBar	
-	 */
-	private JMenuBar getJJMenuBar() {
-		if (jJMenuBar == null) {
-			jJMenuBar = new JMenuBar();
-			jJMenuBar.add(getFileMenu());
-			jJMenuBar.add(getEditMenu());
-			jJMenuBar.add(getHelpMenu());
-		}
-		return jJMenuBar;
-	}
-
-	/**
-	 * This method initializes jMenu	
-	 * 	
-	 * @return javax.swing.JMenu	
-	 */
-	private JMenu getFileMenu() {
-		if (fileMenu == null) {
-			fileMenu = new JMenu();
-			fileMenu.setText("File");
-			fileMenu.add(getSaveMenuItem());
-			fileMenu.add(getExitMenuItem());
-		}
-		return fileMenu;
-	}
-
-	/**
-	 * This method initializes jMenu	
-	 * 	
-	 * @return javax.swing.JMenu	
-	 */
-	private JMenu getEditMenu() {
-		if (editMenu == null) {
-			editMenu = new JMenu();
-			editMenu.setText("Edit");
-			editMenu.add(getCutMenuItem());
-			editMenu.add(getCopyMenuItem());
-			editMenu.add(getPasteMenuItem());
-		}
-		return editMenu;
-	}
-
-	/**
-	 * This method initializes jMenu	
-	 * 	
-	 * @return javax.swing.JMenu	
-	 */
-	private JMenu getHelpMenu() {
-		if (helpMenu == null) {
-			helpMenu = new JMenu();
-			helpMenu.setText("Help");
-			helpMenu.add(getAboutMenuItem());
-		}
-		return helpMenu;
-	}
-
-	/**
-	 * This method initializes jMenuItem	
-	 * 	
-	 * @return javax.swing.JMenuItem	
-	 */
-	private JMenuItem getExitMenuItem() {
-		if (exitMenuItem == null) {
-			exitMenuItem = new JMenuItem();
-			exitMenuItem.setText("Exit");
-			exitMenuItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					System.exit(0);
-				}
-			});
-		}
-		return exitMenuItem;
-	}
-
-	/**
-	 * This method initializes jMenuItem	
-	 * 	
-	 * @return javax.swing.JMenuItem	
-	 */
-	private JMenuItem getAboutMenuItem() {
-		if (aboutMenuItem == null) {
-			aboutMenuItem = new JMenuItem();
-			aboutMenuItem.setText("About");
-			aboutMenuItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					JDialog aboutDialog = getAboutDialog();
-					aboutDialog.pack();
-					Point loc = getJFrame().getLocation();
-					loc.translate(20, 20);
-					aboutDialog.setLocation(loc);
-					aboutDialog.setVisible(true);
-				}
-			});
-		}
-		return aboutMenuItem;
-	}
 
 	/**
 	 * This method initializes aboutDialog	
@@ -339,66 +299,6 @@ public class GuiView implements IView {
 			aboutVersionLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		}
 		return aboutVersionLabel;
-	}
-
-	/**
-	 * This method initializes jMenuItem	
-	 * 	
-	 * @return javax.swing.JMenuItem	
-	 */
-	private JMenuItem getCutMenuItem() {
-		if (cutMenuItem == null) {
-			cutMenuItem = new JMenuItem();
-			cutMenuItem.setText("Cut");
-			cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-					Event.CTRL_MASK, true));
-		}
-		return cutMenuItem;
-	}
-
-	/**
-	 * This method initializes jMenuItem	
-	 * 	
-	 * @return javax.swing.JMenuItem	
-	 */
-	private JMenuItem getCopyMenuItem() {
-		if (copyMenuItem == null) {
-			copyMenuItem = new JMenuItem();
-			copyMenuItem.setText("Copy");
-			copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-					Event.CTRL_MASK, true));
-		}
-		return copyMenuItem;
-	}
-
-	/**
-	 * This method initializes jMenuItem	
-	 * 	
-	 * @return javax.swing.JMenuItem	
-	 */
-	private JMenuItem getPasteMenuItem() {
-		if (pasteMenuItem == null) {
-			pasteMenuItem = new JMenuItem();
-			pasteMenuItem.setText("Paste");
-			pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
-					Event.CTRL_MASK, true));
-		}
-		return pasteMenuItem;
-	}
-
-	/**
-	 * This method initializes jMenuItem	
-	 * 	
-	 * @return javax.swing.JMenuItem	
-	 */
-	private JMenuItem getSaveMenuItem() {
-		if (saveMenuItem == null) {
-			saveMenuItem = new JMenuItem();
-			saveMenuItem.setText("Save");
-			saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-					Event.CTRL_MASK, true));
-		}
-		return saveMenuItem;
 	}
 
 	private Map<IFeld,IFigur> besetzteFelder = new HashMap<IFeld,IFigur>();
@@ -485,4 +385,19 @@ public class GuiView implements IView {
 		update();
 	}
 
+	private ActionListener parseCommand = new java.awt.event.ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			IController controller = Controller.getInstance();  //  @jve:decl-index=0:
+			
+			if(!controller.parseInputString(jInputField.getText())) {
+				jLabel.setText("Koordinaten waren falsch.");
+			}
+			else {
+				jLabel.setText(controller.getMessage());
+			}
+			
+			jInputField.setText("");
+			jInputField.setFocusable(true);
+		}
+	};
 }
