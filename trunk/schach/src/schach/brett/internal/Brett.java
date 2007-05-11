@@ -16,6 +16,7 @@ import schach.brett.IKoenig;
 import schach.brett.Linie;
 import schach.brett.Reihe;
 import schach.partie.internal.Partie;
+import schach.partie.internal.Partiehistorie;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
@@ -208,7 +209,7 @@ public class Brett implements IBrett {
 			throw new NegativePreConditionException("Mindestens eine Figur ist nicht vorhanden.");
 		
 		if(!bauer.gehoertSpieler().istZugberechtigt()){
-			throw new NegativePreConditionException("Der Spieler ist nciht zugberechtigt.");
+			throw new NegativePreConditionException("Der Spieler ist nicht zugberechtigt.");
 		}
 		
 		if(figur.istAufDemSchachbrett()){
@@ -227,9 +228,17 @@ public class Brett implements IBrett {
 			throw new NegativePreConditionException("Farben stimmen nicht Ÿberein.");
 		}
 		
+//		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschlie§en)
+		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, bauer.gebeFarbe())) {
+			((IBauer) fig).letzteRundeDoppelschritt(false);
+		}
+		
 		IFeld feld = bauer.gebePosition();
 		bauer.entnehmen();
 		figur.positionieren(feld);
+		
+		Partiehistorie.getInstance().protokolliereStellung(false, bauer, figur);
+		Partie.getInstance().wechsleSpieler();
 	}
 
 	public IFeld gebeFeld(Reihe reihe, Linie linie) {

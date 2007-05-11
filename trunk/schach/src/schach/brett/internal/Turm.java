@@ -36,6 +36,7 @@ public class Turm extends AbstrakteFigur implements ITurm {
 			throw new NegativePreConditionException("Kšnig muss in einer Rochade stehen.");
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
 		
@@ -88,6 +89,7 @@ public class Turm extends AbstrakteFigur implements ITurm {
 		
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
 

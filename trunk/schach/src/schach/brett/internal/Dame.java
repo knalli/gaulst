@@ -76,6 +76,7 @@ public class Dame extends AbstrakteFigur implements IDame {
 		
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
 
@@ -126,6 +127,7 @@ public class Dame extends AbstrakteFigur implements IDame {
 		testeZug(ziel);
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
 

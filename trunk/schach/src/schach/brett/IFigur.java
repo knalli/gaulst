@@ -93,4 +93,6 @@ public interface IFigur {
 	public void testeZug(IFeld ziel) throws NegativeConditionException;
 
 	public void simuliereBrettzug(IFeld start);
+	
+	public IFeld gebeVorPosition();
 }

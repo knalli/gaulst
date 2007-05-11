@@ -10,7 +10,6 @@ import schach.brett.ISchlagbareFigur;
 import schach.partie.internal.Partie;
 import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
-import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
@@ -38,6 +37,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		
 		grundposition = null;
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = null;
 	}
 
@@ -89,6 +89,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		gegner2.geschlagenWerden();
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
 		
@@ -158,6 +159,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			gegner2.geschlagenWerden();
 			
 			position.istBesetzt(false);
+			speichereVorPosition();
 			position = ziel;
 			position.istBesetzt(true);
 //			per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschlie§en)
@@ -217,6 +219,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		}
 			
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschlie§en)

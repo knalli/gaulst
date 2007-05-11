@@ -131,6 +131,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
 		schonBewegt = true;
@@ -196,6 +197,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
 		schonBewegt = true;
@@ -250,6 +252,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		testeZug(ziel);
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
 		schonBewegt = true;

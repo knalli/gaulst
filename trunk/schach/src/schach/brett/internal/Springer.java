@@ -73,6 +73,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
 
@@ -123,6 +124,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		testeZug(ziel);
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
 
