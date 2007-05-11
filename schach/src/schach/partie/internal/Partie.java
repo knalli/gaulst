@@ -116,7 +116,11 @@ public class Partie implements IPartie {
 		return istRemisAngebot;
 	}
 
-
-
-
+	public void setzeFarbe(Farbe farbe) {
+		if(historie.istEineSimulation()){
+			aktuelleFarbe = farbe;
+			aktuellerSpieler = Spieler.getInstance(farbe);
+			gegnerischerSpieler = Spieler.getInstance(farbe.andereFarbe());
+		}
+	}
 }

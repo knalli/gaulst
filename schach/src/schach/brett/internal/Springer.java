@@ -11,6 +11,7 @@ import schach.brett.ISpringer;
 import schach.partie.internal.Partie;
 import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
+import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
@@ -46,14 +47,14 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		
 //		simuliere Stellung
 		try {
-			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
+			if(Partiehistorie.getInstance().simuliereStellung(position, ziel, gegner).istKoenigBedroht(farbe))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
 		}
 		
 		if(!ziel.istBesetzt())
-			throw new NegativePreConditionException("Schlagzug: Zielfeld ist nicht besetzt.");
+			throw new NegativePreConditionException("Schlagzug: Zielfeld "+ziel+" ist nicht besetzt.");
 		
 		if(!(gegner instanceof ISchlagbareFigur))
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
@@ -151,21 +152,45 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 	}
 
 	public void testeZug(IFeld ziel) throws NegativeConditionException {
-		if(		!position.plusReihe(1).plusLinie(2).equals(ziel)&&
-				!position.plusReihe(1).minusLinie(2).equals(ziel) &&
-				
-				!position.minusReihe(1).plusLinie(2).equals(ziel) &&
-				!position.minusReihe(1).minusLinie(2).equals(ziel) &&
-				
-				!position.plusReihe(2).plusLinie(2).equals(ziel) &&
-				!position.plusReihe(2).minusLinie(1).equals(ziel) &&
-				
-				!position.minusReihe(2).plusLinie(1).equals(ziel) &&
-				!position.minusReihe(2).minusLinie(1).equals(ziel)){
-			throw new NegativePreConditionException("Ungültiges Zielfeld.");
-		}
+		Logger.debug("Teste Zugart für "+Partie.getInstance().aktuelleFarbe()+": "+this+" nach "+ziel);
 		
 		if(position.equals(ziel))
 			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+		
+		boolean gueltigerZug = false;
+		
+		try {
+			gueltigerZug = position.plusReihe(1).plusLinie(2).equals(ziel);
+		} catch(NegativeConditionException e){}
+		try {
+			gueltigerZug = gueltigerZug || position.plusReihe(1).minusLinie(2).equals(ziel);
+		} catch(NegativeConditionException e){}
+		
+		try {
+			gueltigerZug = gueltigerZug || position.minusReihe(1).plusLinie(2).equals(ziel);
+		} catch(NegativeConditionException e){}
+		try {
+			gueltigerZug = gueltigerZug || position.minusReihe(1).minusLinie(2).equals(ziel);
+		} catch(NegativeConditionException e){}
+		
+		try {
+			gueltigerZug = gueltigerZug || position.plusReihe(2).plusLinie(1).equals(ziel);
+		} catch(NegativeConditionException e){}
+		try {
+			gueltigerZug = gueltigerZug || position.plusReihe(2).minusLinie(1).equals(ziel);
+		} catch(NegativeConditionException e){}
+		
+		try {
+			gueltigerZug = gueltigerZug || position.minusReihe(2).plusLinie(1).equals(ziel);
+		} catch(NegativeConditionException e){}
+		try {
+			gueltigerZug = gueltigerZug || position.minusReihe(2).minusLinie(1).equals(ziel);
+		} catch(NegativeConditionException e){}
+				
+		if(!gueltigerZug){
+			Logger.debug("Zugart ungültig.");
+			throw new NegativePreConditionException("Ungültiges Zielfeld.");
+		}
+		Logger.debug("Zugart gültig.");
 	}
 }

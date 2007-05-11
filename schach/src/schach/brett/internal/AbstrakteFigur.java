@@ -67,7 +67,7 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	}
 
 	public boolean istAufDemSchachbrett() {
-		return grundposition != null;
+		return position != null;
 	}
 
 	public boolean istAufGrundposition() {
@@ -91,7 +91,7 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	}
 
 	public String toString(){
-		return figurart+" "+farbe;
+		return figurart+" "+farbe+" ["+(position==null?"weg":position)+"]";
 	}
 	
 	public IFigur clone(IFeld neuesfeld) {
