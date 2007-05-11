@@ -76,6 +76,7 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 		
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
 
@@ -126,6 +127,7 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 		testeZug(ziel);
 
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
 

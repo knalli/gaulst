@@ -17,6 +17,7 @@ import schach.system.View;
 
 public abstract class AbstrakteFigur extends Observable implements IFigur {
 	protected IFeld position;
+	protected IFeld vorposition;
 	protected IFeld grundposition;
 	protected Farbe farbe;
 	protected Figurart figurart;
@@ -27,6 +28,7 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 		this.farbe = farbe;
 		this.grundposition = feld;
 		this.position = feld;
+		this.vorposition = null;
 		this.figurart = figurart;
 		
 		addObserver(View.getView());
@@ -76,7 +78,7 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 
 	public void positionieren(IFeld feld) throws NegativeConditionException {
 		if(!Brett.getInstance().istBauernUmwandlung())
-			throw new NegativePreConditionException("Es besteht derzeit keine Bauenumwandlung.");
+			throw new NegativePreConditionException("Es besteht derzeit keine Bauernumwandlung.");
 		
 		position = feld;
 		AlleFiguren.getInstance().fuegeFigurAn(this);
@@ -114,5 +116,13 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 		if(Partiehistorie.getInstance().istEineSimulation()){
 			position = ziel;
 		}
+	}
+	
+	public IFeld gebeVorPosition() {
+		return vorposition;
+	}
+	
+	protected void speichereVorPosition() {
+		vorposition = position;
 	}
 }

@@ -20,6 +20,7 @@ public interface IPartiehistorie {
 	public IStellung simuliereStellung(IFeld start, IFeld ziel, IFigur zuSchlagendeFigur) throws NegativeConditionException;
 	
 	public void protokolliereStellung(boolean schlagzug, IFigur ziehendeFigur);
+	public void protokolliereStellung(boolean schlagzug, IFigur ziehendeFigur, IFigur neueFigur);
 
 	public boolean istEineSimulation();
 

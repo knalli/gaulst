@@ -5,6 +5,8 @@ import java.util.List;
 
 import schach.brett.IFeld;
 import schach.brett.IFigur;
+import schach.brett.IKoenig;
+import schach.brett.Linie;
 import schach.brett.internal.Brett;
 import schach.partie.IPartiehistorie;
 import schach.partie.IStellung;
@@ -17,6 +19,7 @@ public class Partiehistorie implements IPartiehistorie {
 	private List<IStellung> stellungen=new ArrayList<IStellung>();
 	private boolean simuliere = false;
 	private Partiehistorie() {}
+	private List<String> algebraischeNotation = new ArrayList<String>();
 	
 	public static IPartiehistorie getInstance() {
 		if(instance == null)
@@ -90,7 +93,12 @@ public class Partiehistorie implements IPartiehistorie {
 	}
 
 	public void protokolliereStellung(boolean schlagzug, IFigur ziehendeFigur) {
+		protokolliereStellung(schlagzug, ziehendeFigur, null);
+	}
+	public void protokolliereStellung(boolean schlagzug, IFigur ziehendeFigur, IFigur neueFigur) {
 		stellungen.add(new Stellung(schlagzug,ziehendeFigur, stellungen.size()+1));
+		algebraischeNotation.add(bildeAlgebraischeNotation(ziehendeFigur, schlagzug, neueFigur));
+		Logger.info(algebraischeNotation.get(algebraischeNotation.size()-1));
 	}
 
 	public boolean istEineSimulation() {
@@ -99,5 +107,58 @@ public class Partiehistorie implements IPartiehistorie {
 
 	public void setzeSimulation(boolean b) {
 		simuliere = b;
+	}
+	
+	private String bildeAlgebraischeNotation(IFigur figur, boolean istSchlagzug, IFigur alteFigur){
+		if(figur instanceof IKoenig){
+			if(figur.gebeVorPosition().equals(figur.gebeGrundposition())){
+				if(figur.gebePosition().gebeLinie().equals(Linie.G)){
+					return "0-0";
+				}
+				if(figur.gebePosition().gebeLinie().equals(Linie.C)){
+					return "0-0-0";
+				}
+			}
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		switch(figur.gebeArt()){
+		case DAME: sb.append('D'); break;
+		case KOENIG: sb.append('K'); break;
+		case LAEUFER: sb.append('L'); break;
+		case SPRINGER: sb.append('S'); break;
+		case TURM: sb.append('T'); break;
+		}
+		sb.append(figur.gebeVorPosition().toString().toLowerCase());
+		
+		if(istSchlagzug)
+			sb.append('x');
+		else 
+			sb.append('-');
+		
+		sb.append(figur.gebePosition().toString().toLowerCase());
+		
+		if(alteFigur != null){
+			switch(alteFigur.gebeArt()){
+			case DAME: sb.append('D'); break;
+			case LAEUFER: sb.append('L'); break;
+			case SPRINGER: sb.append('S'); break;
+			case TURM: sb.append('T'); break;
+			}
+		}
+		
+		if(Partiehistorie.getInstance().gebeStellungen(1).get(0).istKoenigBedroht(figur.gebeFarbe()))
+			sb.append('+');
+		
+		if(Partiezustand.getInstance().istPatt())
+			sb.append('+');
+		
+		if(!figur.gebePosition().gebeLinie().equals(figur.gebeVorPosition().gebeLinie()) && istSchlagzug)
+			sb.append(" e.p.");
+		
+		// @TODO bildeAlgebraiischeNotation
+		// Bauernumwandlung Buchstabe hintendran
+		
+		return sb.toString();
 	}
 }
