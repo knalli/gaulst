@@ -45,6 +45,9 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
+		if(Brett.getInstance().istBauernUmwandlung())
+			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
+		
 //		simuliere Stellung
 		try {
 			if(Partiehistorie.getInstance().simuliereStellung(position, ziel, gegner).istKoenigBedroht(farbe))
@@ -102,6 +105,9 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
+		
+		if(Brett.getInstance().istBauernUmwandlung())
+			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
 		
 //		simuliere Stellung
 		try {

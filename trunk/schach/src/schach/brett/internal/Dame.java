@@ -48,6 +48,9 @@ public class Dame extends AbstrakteFigur implements IDame {
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
+		if(Brett.getInstance().istBauernUmwandlung())
+			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
+		
 //		simuliere Stellung
 		try {
 			if(Partiehistorie.getInstance().simuliereStellung(position, ziel, gegner).istKoenigBedroht(farbe))
@@ -105,6 +108,9 @@ public class Dame extends AbstrakteFigur implements IDame {
 		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
+		
+		if(Brett.getInstance().istBauernUmwandlung())
+			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
 		
 //		simuliere Stellung
 		try {
