@@ -1,7 +1,9 @@
 package schach.system.internal;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -13,13 +15,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 import schach.brett.Farbe;
 import schach.brett.Figurart;
@@ -59,27 +61,23 @@ public class GuiView implements IView {
 
 	private JPanel jContentPane = null;
 
-	private JDialog aboutDialog = null;
-
 	private JPanel aboutContentPane = null;
 
 	private JLabel aboutVersionLabel = null;
 
 	private JLabel feld1 = null;
 
-	private JPanel jContentPane2;
+	private JPanel jcpSchachbrett;
 
-	private JPanel jContentPane3;
+	private JPanel jcpController;
 
 	private JTextField jInputField;
 
 	private JButton jSendButton;
 
-	private JPanel jContentPane1;
 
 	private JLabel jLabelAktuellerSpieler;
 
-	private JPanel jContentPane4;
 
 	/**
 	 * This method initializes jFrame
@@ -104,26 +102,29 @@ public class GuiView implements IView {
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
+			GridLayout gridLayout = new GridLayout();
+			gridLayout.setRows(2);
+			gridLayout.setColumns(1);
+			jlBild = new JLabel();
+			jlBild.setIcon(new ImageIcon("images/gaul.png",""));
+			jlBild.setPreferredSize(new Dimension(81, 150));
+			Aufforderung = new JLabel();
+			Aufforderung.setText("<html>Bitte geben Sie Ihren gewünschten Zugweg in <br>" +
+										"Kurznotation ein oder klicken mit der Maus die <br>" +
+										"entsprechenden Felder an.");
+			Aufforderung.setPreferredSize(new Dimension(300, 48));
 			GridLayout gridLayout1 = new GridLayout(2, 1);
 			gridLayout1.setHgap(7);
 			gridLayout1.setVgap(7);
-			GridLayout gridLayout = new GridLayout(1, 2);
-			gridLayout.setRows(2);
-			gridLayout.setVgap(5);
-			gridLayout.setHgap(5);
-			jLabel = new JLabel();
-			jLabel.setText("Status: Die Partie ist gestartet.");
 			jContentPane = new JPanel();
-			jContentPane1 = new JPanel();
-			jContentPane2 = new JPanel();
-			jContentPane3 = new JPanel();
-			jContentPane4 = new JPanel();
+			jContentPane.setPreferredSize(new Dimension(1051, 447));
+			jcpSchachbrett = new JPanel();
+			jcpController = new JPanel();
 			
-			jContentPane2.setLayout(new GridLayout(10,10));
-			jContentPane4.setLayout(new GridLayout(3,1));
+			jcpSchachbrett.setLayout(new GridLayout(10,10));
 			
 			jLabelAktuellerSpieler = new JLabel("Partie wird gestartet..");
-			jContentPane1.add(jLabelAktuellerSpieler);
+			jLabelAktuellerSpieler.setPreferredSize(new Dimension(300, 16));
 			jContentPane.setLayout(gridLayout1);
 			
 			char[] abcdefgh = {' ','A','B','C','D','E','F','G','H',' '};
@@ -133,54 +134,20 @@ public class GuiView implements IView {
 				feld1 = new JLabel();
 				feld1.setText(Character.toString(l));
 				if((l == ' ' && !blank) || l == 'B' || l == 'D' || l == 'F' || l == 'H'){
-					panel.setBackground(Color.DARK_GRAY);
-					feld1.setForeground(Color.LIGHT_GRAY);
+					panel.setBackground(Color.LIGHT_GRAY);
+					feld1.setForeground(Color.DARK_GRAY);
 					if(l == ' ')
 						blank = true;
 				} 
 				else {
-					panel.setBackground(Color.LIGHT_GRAY);
-					feld1.setForeground(Color.DARK_GRAY);
-
+					panel.setBackground(Color.DARK_GRAY);
+					feld1.setForeground(Color.LIGHT_GRAY);
 				}
 				panel.add(feld1,null);
-				jContentPane2.add(panel, null);
+				jcpSchachbrett.add(panel, null);
 			}
 			for(int r=8; r>=1; r--){
 				JPanel panel = new JPanel();
-				feld1 = new JLabel();
-				feld1.setText(Integer.toString(r));
-				if(r % 2 == 1){
-					panel.setBackground(Color.DARK_GRAY);
-					feld1.setForeground(Color.LIGHT_GRAY);
-				} 
-				else {
-					panel.setBackground(Color.LIGHT_GRAY);
-					feld1.setForeground(Color.DARK_GRAY);
-				}
-				panel.add(feld1,null);
-				jContentPane2.add(panel, null);
-				
-				for(int l=1; l<=8; l++){
-					panel = new JPanel();
-					feld1 = new JLabel();
-					besetzteFelder2.put(Brett.getInstance().gebeFeld(Reihe.values()[r-1],Linie.values()[l-1]), feld1);
-					feld1.setText(""+abcdefgh[l]+r);
-					if(r%2==1 && l%2==0 || r%2==0 && l%2==1){
-						panel.setBackground(Color.BLACK);
-						feld1.setForeground(Color.WHITE);
-					} 
-					else {
-						panel.setBackground(Color.WHITE);
-						feld1.setForeground(Color.BLACK);
-					}
-					panel.add(feld1,null);
-					jContentPane2.add(panel, null);
-					
-					panel.addMouseListener(newMouseAdapter(r,abcdefgh[l]));
-				}
-				
-				panel = new JPanel();
 				feld1 = new JLabel();
 				feld1.setText(Integer.toString(r));
 				if(r % 2 == 0){
@@ -192,7 +159,40 @@ public class GuiView implements IView {
 					feld1.setForeground(Color.DARK_GRAY);
 				}
 				panel.add(feld1,null);
-				jContentPane2.add(panel, null);
+				jcpSchachbrett.add(panel, null);
+				
+				for(int l=1; l<=8; l++){
+					panel = new JPanel();
+					feld1 = new JLabel();
+					besetzteFelder2.put(Brett.getInstance().gebeFeld(Reihe.values()[r-1],Linie.values()[l-1]), feld1);
+					feld1.setText(""+abcdefgh[l]+r);
+					if(r%2==1 && l%2==0 || r%2==0 && l%2==1){
+						panel.setBackground(Color.WHITE);
+						feld1.setForeground(Color.BLACK);
+					} 
+					else {
+						panel.setBackground(Color.BLACK);
+						feld1.setForeground(Color.WHITE);
+					}
+					panel.add(feld1,null);
+					jcpSchachbrett.add(panel, null);
+					
+					panel.addMouseListener(newMouseAdapter(r,abcdefgh[l]));
+				}
+				
+				panel = new JPanel();
+				feld1 = new JLabel();
+				feld1.setText(Integer.toString(r));
+				if(r % 2 == 1){
+					panel.setBackground(Color.DARK_GRAY);
+					feld1.setForeground(Color.LIGHT_GRAY);
+				} 
+				else {
+					panel.setBackground(Color.LIGHT_GRAY);
+					feld1.setForeground(Color.DARK_GRAY);
+				}
+				panel.add(feld1,null);
+				jcpSchachbrett.add(panel, null);
 			}
 			blank = false;
 			for(char l : abcdefgh){
@@ -200,32 +200,30 @@ public class GuiView implements IView {
 				feld1 = new JLabel();
 				feld1.setText(Character.toString(l));
 				if((l == ' ' && blank) || l == 'A' || l == 'C' || l == 'E' || l == 'G'){
-					panel.setBackground(Color.DARK_GRAY);
-					feld1.setForeground(Color.LIGHT_GRAY);
-				} 
-				else {
 					panel.setBackground(Color.LIGHT_GRAY);
 					feld1.setForeground(Color.DARK_GRAY);
+				} 
+				else {
+					panel.setBackground(Color.DARK_GRAY);
+					feld1.setForeground(Color.LIGHT_GRAY);
 					if(l == ' ')
 						blank = true;
 				}
 				panel.add(feld1,null);
-				jContentPane2.add(panel, null);
+				jcpSchachbrett.add(panel, null);
 			}
-			jContentPane.add(jContentPane2);
+			jContentPane.add(jcpSchachbrett);
 			jSendButton = new JButton();
 			jInputField = new JTextField();
 			jSendButton.setText("Absenden");
 			jSendButton.addActionListener(parseCommand);
 			jInputField.setText("");
+			jInputField.setPreferredSize(new Dimension(140, 22));
+			jcpController.setLayout(gridLayout);
+			jcpController.add(getJpBildtrenner(), null);
+			jcpController.add(getJepSystemantwort(), null);
 			jInputField.addActionListener(parseCommand);
-			jContentPane3.setLayout(gridLayout);
-			jContentPane3.add(jInputField);
-			jContentPane3.add(jContentPane4);
-			jContentPane4.add(jLabelAktuellerSpieler);
-			jContentPane4.add(jSendButton);
-			jContentPane4.add(jLabel, null);
-			jContentPane.add(jContentPane3);
+			jContentPane.add(jcpController);
 		}
 		return jContentPane;
 	}
@@ -245,10 +243,10 @@ public class GuiView implements IView {
 					IController controller = Controller.getInstance();
 					
 					if(!controller.parseInputString(klickfeld)) {
-						jLabel.setText("Koordinaten waren falsch.");
+						jepSystemantwort.setText("Fehler: Koordinaten waren falsch.");
 					}
 					else {
-						jLabel.setText(controller.getMessage());
+						jepSystemantwort.setText(controller.getMessage());
 					}
 					klickfeld = "";
 				}
@@ -257,49 +255,6 @@ public class GuiView implements IView {
 		};
 	}
 
-	private int debugcount = 0;
-
-	/**
-	 * This method initializes aboutDialog	
-	 * 	
-	 * @return javax.swing.JDialog
-	 */
-	private JDialog getAboutDialog() {
-		if (aboutDialog == null) {
-			aboutDialog = new JDialog(getJFrame(), true);
-			aboutDialog.setTitle("About");
-			aboutDialog.setContentPane(getAboutContentPane());
-		}
-		return aboutDialog;
-	}
-
-	/**
-	 * This method initializes aboutContentPane
-	 * 
-	 * @return javax.swing.JPanel
-	 */
-	private JPanel getAboutContentPane() {
-		if (aboutContentPane == null) {
-			aboutContentPane = new JPanel();
-			aboutContentPane.setLayout(new BorderLayout());
-			aboutContentPane.add(getAboutVersionLabel(), BorderLayout.CENTER);
-		}
-		return aboutContentPane;
-	}
-
-	/**
-	 * This method initializes aboutVersionLabel	
-	 * 	
-	 * @return javax.swing.JLabel	
-	 */
-	private JLabel getAboutVersionLabel() {
-		if (aboutVersionLabel == null) {
-			aboutVersionLabel = new JLabel();
-			aboutVersionLabel.setText("Version 1.0");
-			aboutVersionLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		}
-		return aboutVersionLabel;
-	}
 
 	private Map<IFeld,IFigur> besetzteFelder = new HashMap<IFeld,IFigur>();
 	private Map<IFeld,JLabel> besetzteFelder2 = new HashMap<IFeld,JLabel>();
@@ -307,8 +262,6 @@ public class GuiView implements IView {
 	private static List<Figurart> listeFigurarten = Arrays.asList(Figurart.values());
 	private static List<Farbe> listeFarben = Arrays.asList(Farbe.values());
 
-	private JLabel jLabel = null;
-	
 	public void update() {
 		besetzteFelder.clear();
 		IPartie partie = Partie.getInstance();
@@ -319,10 +272,10 @@ public class GuiView implements IView {
 		}
 		
 		if(!partiezustand.inPartie()){
-			jLabelAktuellerSpieler.setText("Partie läuft nicht.");
+			jLabelAktuellerSpieler.setText("<html><b>Partie läuft nicht.");
 		}
 		else {
-			jLabelAktuellerSpieler.setText("Aktueller Spieler: "+(partie.aktuellerSpieler().toString()));
+			jLabelAktuellerSpieler.setText("<html><b>Aktueller Spieler: "+(partie.aktuellerSpieler().toString()));
 		}
 		
 		
@@ -390,14 +343,91 @@ public class GuiView implements IView {
 			IController controller = Controller.getInstance();  //  @jve:decl-index=0:
 			
 			if(!controller.parseInputString(jInputField.getText())) {
-				jLabel.setText("Koordinaten waren falsch.");
+				jepSystemantwort.setText("Fehler: Koordinaten waren falsch.");
 			}
 			else {
-				jLabel.setText(controller.getMessage());
+				jepSystemantwort.setText(controller.getMessage());
 			}
 			
 			jInputField.setText("");
 			jInputField.setFocusable(true);
 		}
 	};
+
+	private JLabel Aufforderung = null;
+
+	private JLabel jlBild = null;
+
+	private JPanel jpControllereinheiten = null;
+
+	private JPanel jpBildtrenner = null;
+
+	private JPanel jpEingabe = null;
+
+	private JEditorPane jepSystemantwort = null;
+	/**
+	 * This method initializes jpControllereinheiten	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getJpControllereinheiten() {
+		if (jpControllereinheiten == null) {
+			GridLayout gridLayout2 = new GridLayout();
+			gridLayout2.setRows(3);
+			gridLayout2.setHgap(2);
+			gridLayout2.setVgap(2);
+			gridLayout2.setColumns(1);
+			jpControllereinheiten = new JPanel();
+			jpControllereinheiten.setLayout(gridLayout2);
+			jpControllereinheiten.setSize(new Dimension(300, 58));
+			jpControllereinheiten.add(jLabelAktuellerSpieler, null);
+			jpControllereinheiten.add(Aufforderung, null);
+			jpControllereinheiten.add(getJpEingabe(), null);
+		}
+		return jpControllereinheiten;
+	}
+
+	/**
+	 * This method initializes jpBildtrenner	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getJpBildtrenner() {
+		if (jpBildtrenner == null) {
+			jpBildtrenner = new JPanel();
+			jpBildtrenner.add(getJpControllereinheiten(), null);
+			jpBildtrenner.add(jlBild, null);
+		}
+		return jpBildtrenner;
+	}
+
+	/**
+	 * This method initializes jpEingabe	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getJpEingabe() {
+		if (jpEingabe == null) {
+			GridBagConstraints gridBagConstraints = new GridBagConstraints();
+			gridBagConstraints.fill = GridBagConstraints.VERTICAL;
+			gridBagConstraints.weightx = 1.0;
+			jpEingabe = new JPanel();
+			jpEingabe.setLayout(new GridBagLayout());
+			jpEingabe.add(jInputField, gridBagConstraints);
+			jpEingabe.add(jSendButton, new GridBagConstraints());
+		}
+		return jpEingabe;
+	}
+
+	/**
+	 * This method initializes jepSystemantwort	
+	 * 	
+	 * @return javax.swing.JEditorPane	
+	 */
+	private JEditorPane getJepSystemantwort() {
+		if (jepSystemantwort == null) {
+			jepSystemantwort = new JEditorPane();
+		}
+		return jepSystemantwort;
+	}
 }
