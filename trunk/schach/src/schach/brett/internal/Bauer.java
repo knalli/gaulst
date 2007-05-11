@@ -10,6 +10,7 @@ import schach.brett.ISchlagbareFigur;
 import schach.partie.internal.Partie;
 import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
+import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
@@ -249,7 +250,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 	}
 
 	public boolean wurdeBewegt() {
-		return istAufGrundposition();
+		return !istAufGrundposition();
 	}
 
 	public void setzeSollEntferntWerden() {
@@ -265,23 +266,47 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 	}
 	
 	private void testeZiehZug(IFeld ziel) throws NegativeConditionException{
-		if(!position.plusReihe(1).equals(ziel) && !(position.plusReihe(2).equals(ziel) && wurdeBewegt()))
-			throw new NegativePreConditionException("Ungültige Gangart.");
-		
 		if(position.equals(ziel))
 			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
 		
-		if(position.plusReihe(2).equals(ziel) && istAufGrundposition()) {
+		boolean gueltig = false;
+		try {
+			gueltig = position.plusReihe(1).equals(ziel);
+		} catch(NegativeConditionException e){}
+		try {
+			gueltig = gueltig || (position.plusReihe(2).equals(ziel) && !wurdeBewegt());
+		} catch(NegativeConditionException e){}
+		
+		if(!gueltig)
+			throw new NegativePreConditionException("Ungültige Gangart (Ziehen).");
+		
+		if(position.plusReihe(2).equals(ziel) && !wurdeBewegt()) {
 			if(position.plusReihe(1).istBesetzt() || ziel.istBesetzt())
-				throw new NegativePreConditionException("Ziel ist besetzt oder ungültig");
+				throw new NegativePreConditionException("Ziel oder Zugweg ist besetzt.");
 		}
 	}
 	
 	private void testeSchlagZug(IFeld ziel) throws NegativeConditionException{
-		if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel))
-			throw new NegativePreConditionException("Ungültige Gangart.");
-		
 		if(position.equals(ziel))
 			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+		
+		boolean gueltig = false;
+		try {
+			gueltig = gebePosition().plusReihe(1).minusLinie(1).equals(ziel);
+		} catch(NegativeConditionException e){}
+		try {
+			gueltig = gueltig || gebePosition().plusReihe(1).plusLinie(1).equals(ziel);
+		} catch(NegativeConditionException e){}
+		
+		if(!gueltig)
+			throw new NegativePreConditionException("Ungültige Gangart (schlagen).");
+		
+		if(!ziel.istBesetzt()){
+			if(ziel.minusReihe(1).istBesetzt() && (Brett.getInstance().gebeFigurVonFeld(ziel.minusReihe(1))) instanceof IBauer){
+				// alles okay
+			}
+			else 
+				throw new NegativePreConditionException("Erkannter Enpassent Schlagzug: Kein Bauer auf ep-Feld.");
+		}
 	}
 }
