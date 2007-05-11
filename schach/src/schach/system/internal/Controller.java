@@ -1,8 +1,10 @@
 package schach.system.internal;
 
+import schach.brett.IBauer;
 import schach.brett.IBrett;
 import schach.brett.IFeld;
 import schach.brett.IFigur;
+import schach.brett.IKoenig;
 import schach.brett.ISchlagbareFigur;
 import schach.brett.Linie;
 import schach.brett.Reihe;
@@ -44,8 +46,23 @@ public class Controller implements IController {
 			
 			// Ziehzug? (ohne spezialfälle)
 			if(zielfigur == null){
-				Logger.info(figur + " zieht nach "+ ziel);
-				figur.zieht(ziel);
+				if(figur instanceof IKoenig){
+					if(figur.istAufGrundposition() && (ziel.gebeLinie().equals(Linie.C) || ziel.gebeLinie().equals(Linie.G))){
+						((IKoenig)figur).rochiert(ziel);
+					}
+					else {
+						Logger.info(figur + " zieht nach "+ ziel);
+						figur.zieht(ziel);
+					}
+				}
+				else if(!figur.gebePosition().gebeLinie().equals(ziel.gebeLinie()) && ziel.minusReihe(1).istBesetzt() && figur instanceof IBauer) {
+					Logger.info(figur + " schlägt en passent "+ ziel);
+					((IBauer)figur).schlaegtEnPassant(ziel);
+				}
+				else {
+					Logger.info(figur + " zieht nach "+ ziel);
+					figur.zieht(ziel);
+				}
 			}
 			// Schlagzug? (ohne spezialfälle)
 			else {
@@ -71,7 +88,7 @@ public class Controller implements IController {
 			return false;
 		}
 		
-		message = "Erfolgreicht ausgeführt. Nächster Spieler.";
+		message = "Erfolgreich ausgeführt.";
 		return true;
 	}
 	
