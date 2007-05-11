@@ -150,6 +150,7 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 		}
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = null;
 		grundposition = null;
 	}

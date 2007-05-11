@@ -3,10 +3,13 @@ package schach.partie.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import schach.brett.Figurart;
+import schach.brett.IBauer;
 import schach.brett.IFeld;
 import schach.brett.IFigur;
 import schach.brett.IKoenig;
 import schach.brett.Linie;
+import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
 import schach.partie.IPartiehistorie;
 import schach.partie.IStellung;
@@ -20,6 +23,10 @@ public class Partiehistorie implements IPartiehistorie {
 	private boolean simuliere = false;
 	private Partiehistorie() {}
 	private List<String> algebraischeNotation = new ArrayList<String>();
+	
+	public List<String> gebeBisherigeNotationen() {
+		return algebraischeNotation;
+	}
 	
 	public static IPartiehistorie getInstance() {
 		if(instance == null)
@@ -109,7 +116,7 @@ public class Partiehistorie implements IPartiehistorie {
 		simuliere = b;
 	}
 	
-	private String bildeAlgebraischeNotation(IFigur figur, boolean istSchlagzug, IFigur alteFigur){
+	private String bildeAlgebraischeNotation(IFigur figur, boolean istSchlagzug, IFigur neueFigur){
 		if(figur instanceof IKoenig){
 			if(figur.gebeVorPosition().equals(figur.gebeGrundposition())){
 				if(figur.gebePosition().gebeLinie().equals(Linie.G)){
@@ -138,8 +145,8 @@ public class Partiehistorie implements IPartiehistorie {
 		
 		sb.append(figur.gebePosition().toString().toLowerCase());
 		
-		if(alteFigur != null){
-			switch(alteFigur.gebeArt()){
+		if(neueFigur != null){
+			switch(neueFigur.gebeArt()){
 			case DAME: sb.append('D'); break;
 			case LAEUFER: sb.append('L'); break;
 			case SPRINGER: sb.append('S'); break;
@@ -153,8 +160,15 @@ public class Partiehistorie implements IPartiehistorie {
 		if(Partiezustand.getInstance().istPatt())
 			sb.append('+');
 		
-		if(!figur.gebePosition().gebeLinie().equals(figur.gebeVorPosition().gebeLinie()) && istSchlagzug)
-			sb.append(" e.p.");
+		if(figur instanceof IBauer && !figur.gebePosition().gebeLinie().equals(figur.gebeVorPosition().gebeLinie()) && istSchlagzug){
+			for(IFigur suchfigur : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, figur.gebeFarbe().andereFarbe())){
+				try {
+					if(!suchfigur.istAufDemSchachbrett() && ((IBauer)figur).letzteRundeDoppelschritt() && suchfigur.gebeVorPosition().equals(figur.gebePosition().minusReihe(1))){
+						sb.append(" e.p.");
+					}
+				} catch (NegativeConditionException e) {}
+			}
+		}
 		
 		// @TODO bildeAlgebraiischeNotation
 		// Bauernumwandlung Buchstabe hintendran

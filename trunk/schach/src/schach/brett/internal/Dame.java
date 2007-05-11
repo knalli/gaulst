@@ -150,6 +150,7 @@ public class Dame extends AbstrakteFigur implements IDame {
 		}
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = null;
 		grundposition = null;
 	}

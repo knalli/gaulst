@@ -166,6 +166,7 @@ public class Turm extends AbstrakteFigur implements ITurm {
 		}
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = null;
 		grundposition = null;
 	}

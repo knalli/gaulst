@@ -25,4 +25,6 @@ public interface IPartiehistorie {
 	public boolean istEineSimulation();
 
 	public void setzeSimulation(boolean b);
+	
+	public List<String> gebeBisherigeNotationen();
 }

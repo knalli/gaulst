@@ -246,6 +246,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		}
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = null;
 		grundposition = null;
 		

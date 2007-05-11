@@ -133,7 +133,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
 		
-		Partiehistorie.getInstance().protokolliereStellung(true, this);
+		Partiehistorie.getInstance().protokolliereStellung(false, this);
 		Partie.getInstance().wechsleSpieler();
 		
 //		informiere die Beobachter, dass sich etwas geändert hat
@@ -147,6 +147,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		}
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = null;
 		grundposition = null;
 	}
