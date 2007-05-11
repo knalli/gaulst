@@ -48,6 +48,9 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
+		if(Brett.getInstance().istBauernUmwandlung())
+			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
+		
 //		simuliere Stellung
 		try {
 			if(Partiehistorie.getInstance().simuliereStellung(position, ziel, gegner).istKoenigBedroht(farbe))
@@ -106,6 +109,9 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
+		if(Brett.getInstance().istBauernUmwandlung())
+			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
+		
 //		simuliere Stellung
 		try {
 			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
@@ -114,8 +120,8 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 			throw new NegativePreConditionException("Upps, kein Kšnig mehr da?!");
 		}
 		
-		if(!ziel.istBesetzt())
-			throw new NegativePreConditionException("Schlagzug: Zielfeld ist nicht besetzt.");
+		if(ziel.istBesetzt())
+			throw new NegativePreConditionException("Zielfeld ist besetzt.");
 		
 		testeZug(ziel);
 

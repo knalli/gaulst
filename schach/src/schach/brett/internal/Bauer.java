@@ -63,6 +63,9 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
+		if(Brett.getInstance().istBauernUmwandlung())
+			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
+		
 //		simuliere Stellung
 		try {
 			if(Partiehistorie.getInstance().simuliereStellung(position, ziel, gegner).istKoenigBedroht(farbe))
@@ -121,6 +124,9 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
 			if(koenig.istInEinerRochade())
 				throw new NegativePreConditionException("Koenig ist in einer Rochade");
+			
+			if(Brett.getInstance().istBauernUmwandlung())
+				throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
 			
 			IFigur gegner = Brett.getInstance().gebeFigurVonFeld(ziel.minusReihe(1));
 			
@@ -187,6 +193,9 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
+		if(Brett.getInstance().istBauernUmwandlung())
+			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
+		
 //		simuliere Stellung
 		try {
 			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
@@ -202,7 +211,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		if(ziel.istBesetzt())
 			throw new NegativePreConditionException("Ziel ist besetzt");
 			
-		if(position.plusReihe(2).equals(ziel) && wurdeBewegt()) {
+		if(position.plusReihe(2).equals(ziel) && !wurdeBewegt()) {
 			// rest in testeZug geprüft
 			macheEinenDoppelschritt = true;
 		}

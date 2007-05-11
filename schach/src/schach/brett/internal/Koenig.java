@@ -10,6 +10,8 @@ import schach.brett.IFeld;
 import schach.brett.IFigur;
 import schach.brett.IKoenig;
 import schach.brett.ISchlagbareFigur;
+import schach.brett.ITurm;
+import schach.brett.Linie;
 import schach.partie.internal.Partie;
 import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
@@ -51,26 +53,27 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 	}
 
 	public void rochiert(IFeld ziel) throws NegativeConditionException {
-		// TODO Koenig#rochiert
-		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
-
-		if (!koenig.istInEinerRochade())
-			throw new NegativePreConditionException("Koenig muss in einer Rochade stehen.");
-		// wtf.. in welcher methode sind wir? :P
-
-		if(!gehoertSpieler().istZugberechtigt() && 
-				Partiezustand.getInstance().istRemis() &&
-				Partiezustand.getInstance().istPatt() &&
-				Partiezustand.getInstance().istSchachmatt() &&
-				koenig.wurdeBewegt()){
-			
-			throw new NegativePreConditionException();
-			
-		}
+		if(!gehoertSpieler().istZugberechtigt())
+			throw new NegativePreConditionException("Spieler dieser Figur ist nicht zugberechtigt.");
 		
-		if (ziel!=this.position.minusLinie(2) || ziel!=this.position.plusLinie(2)){
-			throw new NegativePreConditionException();
-		}
+		if(Partiezustand.getInstance().istRemis())
+			throw new NegativePreConditionException("Partie ist Remis");
+		
+		if(Partiezustand.getInstance().istPatt())
+			throw new NegativePreConditionException("Partie ist Patt");
+		
+		if(Partiezustand.getInstance().istSchachmatt())
+			throw new NegativePreConditionException("Partie ist Schachmatt");
+		
+		if(istInEinerRochade())
+			throw new NegativePreConditionException("Koenig ist in einer Rochade");
+		
+		if(Brett.getInstance().istBauernUmwandlung())
+			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
+		
+		if(wurdeBewegt())
+			throw new NegativePreConditionException("Rochade nicht erlaubt, da Köenig bewegt wurde.");
+		
 //		simuliere Stellung
 		try {
 			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
@@ -79,27 +82,73 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
 		}
 		
-		if (ziel.equals(this.position.minusLinie(2))) {
-			
-			// TODO Koenig rochiert -- irgendwie wissen wie nicht, wie wir auf istBedroht abfragen sollen...
-			
-			
-//			if(!Brett.getInstance().sindAlleFelderFrei(Brett.getInstance().gebeFelderInReihe(Brett.getInstance().gebeFeld(Reihe.R2, Linie.A), this.position.minusLinie(1)))&&
-//					this.position.minusLinie(1).){
-//				
-//			}
+		boolean gueltig = false;
+		try {
+			gueltig = position.minusLinie(2).equals(ziel);
+		} catch(NegativeConditionException e){}
+		try {
+			gueltig = gueltig || position.plusLinie(2).equals(ziel);
+		} catch(NegativeConditionException e){}
+		
+		if(!gueltig)
+			throw new NegativePreConditionException("Ungültiges Zielfeld (Rochade).");
+		
+		IFeld turmfeld = null;
+		IFeld turmzielfeld = null;
+		if(ziel.gebeLinie().equals(Linie.G)){
+			turmfeld = Brett.getInstance().gebeFeld(gebePosition().gebeReihe(), Linie.H);
 		}
-		else if(ziel==this.position.plusLinie(2)) {
-			
+		else {
+			turmfeld = Brett.getInstance().gebeFeld(gebePosition().gebeReihe(), Linie.A);
+		}
+		if(position.minusLinie(2).equals(ziel)){
+			turmzielfeld = position.minusLinie(1);
+		}
+		else {
+			turmzielfeld = position.plusLinie(1);
+		}
+		
+		ITurm turm = (ITurm) Brett.getInstance().gebeFigurVonFeld(turmfeld);
+		if(turm == null)
+			throw new NegativePreConditionException("Rochade nicht erlaubt, da Turm nicht mehr vorhanden.");
+		if(turm.wurdeBewegt())
+			throw new NegativePreConditionException("Rochade nicht erlaubt, da Turm bewegt wurde.");
+		
+		List<IFeld> zugweg = Brett.getInstance().gebeFelderInReihe(gebePosition(), turmfeld);
+		if(!Brett.getInstance().sindAlleFelderFrei(zugweg))
+			throw new NegativePreConditionException("Die Felder zwischen König und Turm sind nicht frei.");
+		
+		zugweg.remove(ziel);
+//		simuliere Stellung
+		for(IFeld feld : zugweg){
+			try {
+				if(Partiehistorie.getInstance().simuliereStellung(position, feld).istKoenigBedroht(farbe))
+					throw new NegativePreConditionException("König würde während der Roachde im Schach stehen.");
+			} catch (IndexOutOfBoundsException e) {
+				throw new NegativePreConditionException("Upps, kein König mehr da?!");
+			}
+		}
+		
+		
+		position.istBesetzt(false);
+		position = ziel;
+		position.istBesetzt(true);
+		schonBewegt = true;
+		istineinerrochade = true;
+		
+		turm.rochiert(turmzielfeld);
+		istineinerrochade = false;
+		
+		Partiehistorie.getInstance().protokolliereStellung(false, this); //rochade!
+		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
+			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
 		
 		Partie.getInstance().wechsleSpieler();
-		this.position=ziel;
-		Partiehistorie.getInstance().protokolliereStellung(true, this);
 		
-		// TODO  post Partie.istZugProtokolliert()		=  false  <-- laut OCL...
-		
-		this.schonBewegt =true;
+//		informiere die Beobachter, dass sich etwas geändert hat
+		setChanged();
+		notifyObservers();
 	}
 
 	public void schlaegt(IFeld ziel, ISchlagbareFigur gegner)
@@ -118,6 +167,9 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		
 		if(istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
+		
+		if(Brett.getInstance().istBauernUmwandlung())
+			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
 		
 //		simuliere Stellung
 		try {
@@ -146,6 +198,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		position.istBesetzt(false);
 		position = ziel;
 		position.istBesetzt(true);
+		schonBewegt = true;
 
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
@@ -180,6 +233,9 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		if(istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
+		if(Brett.getInstance().istBauernUmwandlung())
+			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
+		
 //		simuliere Stellung
 		try {
 			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
@@ -188,14 +244,15 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
 		}
 		
-		if(!ziel.istBesetzt())
-			throw new NegativePreConditionException("Schlagzug: Zielfeld ist nicht besetzt.");
+		if(ziel.istBesetzt())
+			throw new NegativePreConditionException("Zielfeld ist besetzt.");
 
 		testeZug(ziel);
 		
 		position.istBesetzt(false);
 		position = ziel;
 		position.istBesetzt(true);
+		schonBewegt = true;
 
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {

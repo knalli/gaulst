@@ -35,25 +35,11 @@ public class Turm extends AbstrakteFigur implements ITurm {
 		if (!koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Kšnig muss in einer Rochade stehen.");
 		
-		if (koenig.gebeGrundposition().plusLinie(2).equals(koenig.gebePosition())){
-			ziel = koenig.gebePosition().minusLinie(1);
-		}
-		else{
-			ziel = koenig.gebePosition().plusLinie(1);
-		}
-		
 		position.istBesetzt(false);
 		position = ziel;
 		position.istBesetzt(true);
 		
-		Partiehistorie.getInstance().protokolliereStellung(false, koenig); //rochade!
 		schonBewegt = true;
-		
-		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
-			((IBauer) fig).letzteRundeDoppelschritt(false);
-		}
-		
-		Partie.getInstance().wechsleSpieler();
 	}
 
 	public void schlaegt(IFeld ziel, ISchlagbareFigur gegner)
@@ -73,6 +59,9 @@ public class Turm extends AbstrakteFigur implements ITurm {
 		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
+		
+		if(Brett.getInstance().istBauernUmwandlung())
+			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
 		
 //		simuliere Stellung
 		try {
@@ -135,6 +124,9 @@ public class Turm extends AbstrakteFigur implements ITurm {
 		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
+		
+		if(Brett.getInstance().istBauernUmwandlung())
+			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
 		
 //		simuliere Stellung
 		try {
