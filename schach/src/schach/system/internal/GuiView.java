@@ -1,5 +1,6 @@
 package schach.system.internal;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Vector;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -21,8 +23,12 @@ import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 import schach.brett.Farbe;
 import schach.brett.Figurart;
@@ -42,8 +48,6 @@ import schach.partie.internal.Partiezustand;
 import schach.system.IController;
 import schach.system.IView;
 import schach.system.Logger;
-import java.awt.BorderLayout;
-import javax.swing.JList;
 
 public class GuiView implements IView {
 	private static GuiView instance = null;  //  @jve:decl-index=0:
@@ -296,11 +300,26 @@ public class GuiView implements IView {
 			jLabelAktuellerSpieler.setText("<html><b>Aktueller Spieler: "+(partie.aktuellerSpieler().toString())+" "+(partiezustand.istSchach(partie.aktuelleFarbe())?"(Ihr Kšnig wird bedroht!)":""));
 		}
 		
-		dlm.clear();
-		for(String notation : Partiehistorie.getInstance().gebeBisherigeNotationen()){
-			dlm.addElement(notation);
+		getJTable();
+		if(partie.aktuelleFarbe().equals(Farbe.WEISS) && tblmNotationen.getRowCount() > 0)
+			tblmNotationen.removeRow(tblmNotationen.getRowCount()-1);
+		
+		List<String> notationen = Partiehistorie.getInstance().gebeBisherigeNotationen();
+		Vector<String> item = new Vector<String>(3);
+		int bereitsvorhanden = 2*tblmNotationen.getRowCount();
+		int neue = notationen.size() - bereitsvorhanden;
+		if(neue > 0){
+			item.add((tblmNotationen.getRowCount()+1)+".");
+			item.add(notationen.get(bereitsvorhanden));
+			if(neue > 1)
+				item.add(notationen.get(bereitsvorhanden+1));
+			else
+				item.add("");
+			
+			tblmNotationen.addRow(item);
 		}
 		
+
 		// zeichne Brett
 		IFeld feld;
 		IFigur figur;
@@ -397,6 +416,12 @@ public class GuiView implements IView {
 	private JList jList = null;
 
 	private DefaultListModel dlm = new DefaultListModel();
+
+	private JScrollPane jScrollPane = null;
+
+	private JTable jTable = null;
+
+	private DefaultTableModel tblmNotationen;
 	/**
 	 * This method initializes jpControllereinheiten	
 	 * 	
@@ -507,6 +532,7 @@ public class GuiView implements IView {
 			jContentPane1 = new JPanel();
 			jContentPane1.setLayout(new BorderLayout());
 			jContentPane1.add(getJList(), BorderLayout.NORTH);
+			jContentPane1.add(getJScrollPane(), BorderLayout.CENTER);
 		}
 		return jContentPane1;
 	}
@@ -521,5 +547,34 @@ public class GuiView implements IView {
 			jList = new JList(dlm);
 		}
 		return jList;
+	}
+
+	/**
+	 * This method initializes jScrollPane	
+	 * 	
+	 * @return javax.swing.JScrollPane	
+	 */
+	private JScrollPane getJScrollPane() {
+		if (jScrollPane == null) {
+			jScrollPane = new JScrollPane();
+			jScrollPane.setViewportView(getJTable());
+		}
+		return jScrollPane;
+	}
+
+	/**
+	 * This method initializes jTable	
+	 * 	
+	 * @return javax.swing.JTable	
+	 */
+	private JTable getJTable() {
+		if (jTable == null) {
+			tblmNotationen = new DefaultTableModel();
+			tblmNotationen.addColumn("Zug");
+			tblmNotationen.addColumn("Halbzug Wei§");
+			tblmNotationen.addColumn("Halbzug Schwarz");
+			jTable = new JTable(tblmNotationen);
+		}
+		return jTable;
 	}
 }
