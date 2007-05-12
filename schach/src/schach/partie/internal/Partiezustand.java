@@ -1,5 +1,6 @@
 package schach.partie.internal;
 
+import schach.brett.Farbe;
 import schach.partie.IPartiezustand;
 import schach.spieler.ISpieler;
 import schach.system.NegativeConditionException;
@@ -58,5 +59,13 @@ public class Partiezustand implements IPartiezustand {
 		if(!inpartie)
 			throw new NegativePreConditionException("Partie kann nicht angehalten werden, da keine läuft.");
 		inpartie = false;
+	}
+
+	public boolean istSchach(Farbe farbe) {
+		try {
+			return Partiehistorie.getInstance().gebeStellungen(1).get(0).istKoenigBedroht(farbe);
+		}
+		catch(IndexOutOfBoundsException e){}
+		return false;
 	}
 }
