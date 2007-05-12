@@ -233,9 +233,8 @@ public class Brett implements IBrett {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
 		
-		IFeld feld = bauer.gebePosition();
+		figur.positionieren(bauer.gebePosition());
 		bauer.entnehmen();
-		figur.positionieren(feld);
 		
 		Partiehistorie.getInstance().protokolliereStellung(false, bauer, figur);
 		Partie.getInstance().wechsleSpieler();

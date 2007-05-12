@@ -145,8 +145,21 @@ public class Partiehistorie implements IPartiehistorie {
 		else 
 			sb.append('-');
 		
-		sb.append(figur.gebePosition().toString().toLowerCase());
+		if(neueFigur == null)
+			sb.append(figur.gebePosition().toString().toLowerCase());
+		else 
+			sb.append(neueFigur.gebePosition().toString().toLowerCase());
 		
+		if(figur instanceof IBauer && neueFigur != null){
+			if((figur.gebeFarbe().equals(Farbe.WEISS) && neueFigur.gebePosition().gebeReihe().equals(Reihe.R8)) || (figur.gebeFarbe().equals(Farbe.SCHWARZ) && neueFigur.gebePosition().gebeReihe().equals(Reihe.R1))){
+				switch(neueFigur.gebeArt()){
+				case DAME: sb.append('D'); break;
+				case LAEUFER: sb.append('L'); break;
+				case SPRINGER: sb.append('S'); break;
+				case TURM: sb.append('T'); break; 
+				}
+			}
+		}
 	
 		
 		if(Partiehistorie.getInstance().gebeStellungen(1).get(0).istKoenigBedroht(figur.gebeFarbe()))
@@ -155,36 +168,20 @@ public class Partiehistorie implements IPartiehistorie {
 		if(Partiezustand.getInstance().istPatt())
 			sb.append('+');
 		
-		if(figur instanceof IBauer && !figur.gebePosition().gebeLinie().equals(figur.gebeVorPosition().gebeLinie()) && istSchlagzug){
-			for(IFigur suchfigur : AlleFiguren.getInstance().gebeAlleFiguren()){
-				try {
-					if(suchfigur.gebeArt().equals(Figurart.BAUER) && suchfigur.gebeFarbe().equals(figur.gebeFarbe().andereFarbe())){
-						Logger.debug("en passent check: "+suchfigur+" auf Schachbrett: "+suchfigur.istAufDemSchachbrett()+" mit Grundposition "+suchfigur.gebeGrundposition()+" was mit -R "+suchfigur.gebeGrundposition().minusReihe(1)+" gleich "+figur.gebePosition()+" ist und die Vorposition "+suchfigur.gebeVorPosition()+" gleich "+figur.gebePosition()+" mit -R "+figur.gebePosition().minusReihe(1)+" ist");
-						if(!suchfigur.istAufDemSchachbrett() && suchfigur.gebeGrundposition().minusReihe(1).equals(figur.gebePosition()) && suchfigur.gebeVorPosition().equals(figur.gebePosition().minusReihe(1))){
-							sb.append(" e.p.");
+		try {
+			if(figur instanceof IBauer && !figur.gebePosition().gebeLinie().equals(figur.gebeVorPosition().gebeLinie()) && istSchlagzug){
+				for(IFigur suchfigur : AlleFiguren.getInstance().gebeAlleFiguren()){
+					try {
+						if(suchfigur.gebeArt().equals(Figurart.BAUER) && suchfigur.gebeFarbe().equals(figur.gebeFarbe().andereFarbe())){
+							Logger.debug("en passent check: "+suchfigur+" auf Schachbrett: "+suchfigur.istAufDemSchachbrett()+" mit Grundposition "+suchfigur.gebeGrundposition()+" was mit -R "+suchfigur.gebeGrundposition().minusReihe(1)+" gleich "+figur.gebePosition()+" ist und die Vorposition "+suchfigur.gebeVorPosition()+" gleich "+figur.gebePosition()+" mit -R "+figur.gebePosition().minusReihe(1)+" ist");
+							if(!suchfigur.istAufDemSchachbrett() && suchfigur.gebeGrundposition().minusReihe(1).equals(figur.gebePosition()) && suchfigur.gebeVorPosition().equals(figur.gebePosition().minusReihe(1))){
+								sb.append(" e.p.");
+							}
 						}
-					}
-				} catch (NegativeConditionException e) {}
-			}
-		}
-		
-		// @TODO bildeAlgebraiischeNotation
-		// Bauernumwandlung Buchstabe hin<tendran
-		if(figur instanceof IBauer){
-			if((figur.gebeFarbe().equals(Farbe.WEISS) && figur.gebePosition().gebeReihe().equals(Reihe.R8)) || (figur.gebeFarbe().equals(Farbe.SCHWARZ) && figur.gebePosition().gebeReihe().equals(Reihe.R1))){
-				if(neueFigur != null){
-					switch(neueFigur.gebeArt()){
-					case DAME: sb.append('D'); break;
-					case LAEUFER: sb.append('L'); break;
-					case SPRINGER: sb.append('S'); break;
-					case TURM: sb.append('T'); break; 
-					}
+					} catch (NegativeConditionException e) {}
 				}
-			 }
 			}
-		
+		} catch (NullPointerException e) {} // keine figurposi bei umwandlung
 		return sb.toString();
 	}
-	
-	
 }

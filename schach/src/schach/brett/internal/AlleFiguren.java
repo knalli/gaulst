@@ -146,4 +146,8 @@ public class AlleFiguren implements IAlleFiguren {
 		figuren.add(figur);
 		figur.gebePosition().istBesetzt(true);
 	}
+
+	public IFigur erstelleFigur(Figurart art, Farbe farbe) {
+		return erzeugeFigur(farbe, art, null);
+	}
 }

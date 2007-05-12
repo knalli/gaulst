@@ -10,7 +10,6 @@ import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
 import schach.spieler.ISpieler;
 import schach.spieler.internal.Spieler;
-import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 import schach.system.View;
@@ -24,7 +23,9 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	
 	public AbstrakteFigur(Farbe farbe, IFeld feld, Figurart figurart) {
 		
-		feld.istBesetzt(true);
+		if(feld != null)
+			feld.istBesetzt(true);
+		
 		this.farbe = farbe;
 		this.grundposition = feld;
 		this.position = feld;
@@ -32,10 +33,6 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 		this.figurart = figurart;
 		
 		addObserver(View.getView());
-		
-		Logger.debug(farbe+" "+figurart+" wurde auf "+position.gebeLinie()+position.gebeReihe()+" positioniert.");
-		
-		
 	}
 	
 	protected AbstrakteFigur(IFigur figur){
@@ -81,6 +78,7 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 			throw new NegativePreConditionException("Es besteht derzeit keine Bauernumwandlung.");
 		
 		position = feld;
+		grundposition = position;
 		AlleFiguren.getInstance().fuegeFigurAn(this);
 		
 //		informiere die Beobachter, dass sich etwas geändert hat
