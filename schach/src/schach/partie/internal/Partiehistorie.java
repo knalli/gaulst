@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import schach.brett.Figurart;
+import schach.brett.Farbe;
 import schach.brett.IBauer;
 import schach.brett.IFeld;
 import schach.brett.IFigur;
 import schach.brett.IKoenig;
 import schach.brett.Linie;
+import schach.brett.Reihe;
 import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
 import schach.partie.IPartiehistorie;
@@ -145,14 +147,7 @@ public class Partiehistorie implements IPartiehistorie {
 		
 		sb.append(figur.gebePosition().toString().toLowerCase());
 		
-		if(neueFigur != null){
-			switch(neueFigur.gebeArt()){
-			case DAME: sb.append('D'); break;
-			case LAEUFER: sb.append('L'); break;
-			case SPRINGER: sb.append('S'); break;
-			case TURM: sb.append('T'); break;
-			}
-		}
+	
 		
 		if(Partiehistorie.getInstance().gebeStellungen(1).get(0).istKoenigBedroht(figur.gebeFarbe()))
 			sb.append('+');
@@ -174,8 +169,22 @@ public class Partiehistorie implements IPartiehistorie {
 		}
 		
 		// @TODO bildeAlgebraiischeNotation
-		// Bauernumwandlung Buchstabe hintendran
+		// Bauernumwandlung Buchstabe hin<tendran
+		if(figur instanceof IBauer){
+			if((figur.gebeFarbe().equals(Farbe.WEISS) && figur.gebePosition().gebeReihe().equals(Reihe.R8)) || (figur.gebeFarbe().equals(Farbe.SCHWARZ) && figur.gebePosition().gebeReihe().equals(Reihe.R1))){
+				if(neueFigur != null){
+					switch(neueFigur.gebeArt()){
+					case DAME: sb.append('D'); break;
+					case LAEUFER: sb.append('L'); break;
+					case SPRINGER: sb.append('S'); break;
+					case TURM: sb.append('T'); break; 
+					}
+				}
+			 }
+			}
 		
 		return sb.toString();
 	}
+	
+	
 }
