@@ -233,6 +233,8 @@ public class GuiView implements IView {
 	}
 	
 	protected String klickfeld = "";  //  @jve:decl-index=0:
+	protected boolean altesFeldSchwarz = false;
+	protected JPanel altesFeld = null;
 	private MouseListener newMouseAdapter(final int r, final char l) {
 		return new MouseAdapter() {
 			@Override
@@ -241,6 +243,11 @@ public class GuiView implements IView {
 				System.out.println("klick auf "+l+r);
 				if(klickfeld.length() == 0){
 					klickfeld = ""+l+r;
+					JPanel panel = ((JPanel)e.getComponent());
+					panel.setBackground(Color.ORANGE);
+//					panel.setForeground(Color.BLACK);
+					altesFeldSchwarz = !(r%2==1 && l%2==0 || r%2==0 && l%2==1);
+					altesFeld = panel;
 				}
 				else {
 					klickfeld = klickfeld + l+r;
@@ -253,6 +260,13 @@ public class GuiView implements IView {
 						jepSystemantwort.setText(controller.getMessage());
 					}
 					klickfeld = "";
+					
+					if(altesFeldSchwarz){
+						altesFeld.setBackground(Color.BLACK);
+					}
+					else {
+						altesFeld.setBackground(Color.WHITE);
+					}
 				}
 				
 			}
@@ -260,7 +274,7 @@ public class GuiView implements IView {
 	}
 
 
-	private Map<IFeld,IFigur> besetzteFelder = new HashMap<IFeld,IFigur>();
+	private Map<IFeld,IFigur> besetzteFelder = new HashMap<IFeld,IFigur>();  //  @jve:decl-index=0:
 	private Map<IFeld,JLabel> besetzteFelder2 = new HashMap<IFeld,JLabel>();
 	private static IAlleFiguren allefiguren = null;
 	private static List<Figurart> listeFigurarten = Arrays.asList(Figurart.values());
@@ -279,7 +293,7 @@ public class GuiView implements IView {
 			jLabelAktuellerSpieler.setText("<html><b>Partie läuft nicht.");
 		}
 		else {
-			jLabelAktuellerSpieler.setText("<html><b>Aktueller Spieler: "+(partie.aktuellerSpieler().toString()));
+			jLabelAktuellerSpieler.setText("<html><b>Aktueller Spieler: "+(partie.aktuellerSpieler().toString())+" "+(partiezustand.istSchach(partie.aktuelleFarbe())?"(Ihr König wird bedroht!)":""));
 		}
 		
 		dlm.clear();
@@ -476,7 +490,7 @@ public class GuiView implements IView {
 	private JFrame getJFrame1() {
 		if (jFrame1 == null) {
 			jFrame1 = new JFrame();
-			jFrame1.setSize(new Dimension(223, 169));
+			jFrame1.setSize(new Dimension(220, 300));
 			jFrame1.setTitle("Bisherige Spielzüge");
 			jFrame1.setContentPane(getJContentPane1());
 		}
