@@ -105,7 +105,7 @@ public class Partiehistorie implements IPartiehistorie {
 	public void protokolliereStellung(boolean schlagzug, IFigur ziehendeFigur, IFigur neueFigur) {
 		stellungen.add(new Stellung(schlagzug,ziehendeFigur, stellungen.size()+1));
 		algebraischeNotation.add(bildeAlgebraischeNotation(ziehendeFigur, schlagzug, neueFigur));
-		Logger.info(algebraischeNotation.get(algebraischeNotation.size()-1));
+//		Logger.info(algebraischeNotation.get(algebraischeNotation.size()-1));
 	}
 
 	public boolean istEineSimulation() {
@@ -161,10 +161,13 @@ public class Partiehistorie implements IPartiehistorie {
 			sb.append('+');
 		
 		if(figur instanceof IBauer && !figur.gebePosition().gebeLinie().equals(figur.gebeVorPosition().gebeLinie()) && istSchlagzug){
-			for(IFigur suchfigur : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, figur.gebeFarbe().andereFarbe())){
+			for(IFigur suchfigur : AlleFiguren.getInstance().gebeAlleFiguren()){
 				try {
-					if(!suchfigur.istAufDemSchachbrett() && ((IBauer)figur).letzteRundeDoppelschritt() && suchfigur.gebeVorPosition().equals(figur.gebePosition().minusReihe(1))){
-						sb.append(" e.p.");
+					if(suchfigur.gebeArt().equals(Figurart.BAUER) && suchfigur.gebeFarbe().equals(figur.gebeFarbe().andereFarbe())){
+						Logger.debug("en passent check: "+suchfigur+" auf Schachbrett: "+suchfigur.istAufDemSchachbrett()+" mit Grundposition "+suchfigur.gebeGrundposition()+" was mit -R "+suchfigur.gebeGrundposition().minusReihe(1)+" gleich "+figur.gebePosition()+" ist und die Vorposition "+suchfigur.gebeVorPosition()+" gleich "+figur.gebePosition()+" mit -R "+figur.gebePosition().minusReihe(1)+" ist");
+						if(!suchfigur.istAufDemSchachbrett() && suchfigur.gebeGrundposition().minusReihe(1).equals(figur.gebePosition()) && suchfigur.gebeVorPosition().equals(figur.gebePosition().minusReihe(1))){
+							sb.append(" e.p.");
+						}
 					}
 				} catch (NegativeConditionException e) {}
 			}
