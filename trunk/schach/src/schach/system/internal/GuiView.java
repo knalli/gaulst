@@ -69,10 +69,6 @@ public class GuiView implements IView {
 
 	private JPanel jContentPane = null;
 
-	private JPanel aboutContentPane = null;
-
-	private JLabel aboutVersionLabel = null;
-
 	private JLabel feld1 = null;
 
 	private JPanel jcpSchachbrett;
@@ -373,6 +369,10 @@ public class GuiView implements IView {
 				}
 			}
 		}
+		
+		if(brett.istBauernUmwandlung()){
+			getJfBauernumwandlungAuswahl().setVisible(true);
+		}
 	}
 
 	public void update(Observable o, Object arg) {
@@ -422,6 +422,22 @@ public class GuiView implements IView {
 	private JTable jTable = null;
 
 	private DefaultTableModel tblmNotationen;
+
+	private JFrame jfBauernumwandlungAuswahl = null;  //  @jve:decl-index=0:visual-constraint="93,253"
+
+	private JPanel jContentPane2 = null;
+
+	private JLabel jlUmwandlungsinformation = null;
+
+	private JPanel jPanel = null;
+
+	private JButton jButton = null;
+
+	private JButton jButton1 = null;
+
+	private JButton jButton2 = null;
+
+	private JButton jButton3 = null;
 	/**
 	 * This method initializes jpControllereinheiten	
 	 * 	
@@ -576,5 +592,134 @@ public class GuiView implements IView {
 			jTable = new JTable(tblmNotationen);
 		}
 		return jTable;
+	}
+
+	/**
+	 * This method initializes jfBauernumwandlungAuswahl	
+	 * 	
+	 * @return javax.swing.JFrame	
+	 */
+	private JFrame getJfBauernumwandlungAuswahl() {
+		if (jfBauernumwandlungAuswahl == null) {
+			jfBauernumwandlungAuswahl = new JFrame();
+			jfBauernumwandlungAuswahl.setSize(new Dimension(303, 75));
+			jfBauernumwandlungAuswahl.setTitle("Bauernumwandlung");
+			jfBauernumwandlungAuswahl.setContentPane(getJContentPane2());
+		}
+		return jfBauernumwandlungAuswahl;
+	}
+
+	/**
+	 * This method initializes jContentPane2	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getJContentPane2() {
+		if (jContentPane2 == null) {
+			jlUmwandlungsinformation = new JLabel();
+			jlUmwandlungsinformation.setText("<html>Es steht eine Umwandlung eines Bauern an. Bitte wählen Sie eine neue Spielfigur:");
+			jContentPane2 = new JPanel();
+			jContentPane2.setLayout(new BorderLayout());
+			jContentPane2.add(jlUmwandlungsinformation, BorderLayout.NORTH);
+			jContentPane2.add(getJPanel(), BorderLayout.CENTER);
+		}
+		return jContentPane2;
+	}
+
+	/**
+	 * This method initializes jPanel	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getJPanel() {
+		if (jPanel == null) {
+			jPanel = new JPanel();
+			jPanel.setLayout(new GridBagLayout());
+			jPanel.add(getJButton(), new GridBagConstraints());
+			jPanel.add(getJButton1(), new GridBagConstraints());
+			jPanel.add(getJButton2(), new GridBagConstraints());
+			jPanel.add(getJButton3(), new GridBagConstraints());
+		}
+		return jPanel;
+	}
+
+	/**
+	 * This method initializes jButton	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getJButton() {
+		if (jButton == null) {
+			jButton = new JButton();
+			jButton.setText("Dame");
+			jButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					Controller.getInstance().neueFigur(Figurart.DAME, Partie.getInstance().aktuelleFarbe());
+					jepSystemantwort.setText(Controller.getInstance().getMessage());
+					jfBauernumwandlungAuswahl.setVisible(false);
+				}
+			});
+		}
+		return jButton;
+	}
+
+	/**
+	 * This method initializes jButton1	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getJButton1() {
+		if (jButton1 == null) {
+			jButton1 = new JButton();
+			jButton1.setText("Läufer");
+			jButton1.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					Controller.getInstance().neueFigur(Figurart.LAEUFER, Partie.getInstance().aktuelleFarbe());
+					jepSystemantwort.setText(Controller.getInstance().getMessage());
+					jfBauernumwandlungAuswahl.setVisible(false);
+				}
+			});
+		}
+		return jButton1;
+	}
+
+	/**
+	 * This method initializes jButton2	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getJButton2() {
+		if (jButton2 == null) {
+			jButton2 = new JButton();
+			jButton2.setText("Springer");
+			jButton2.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					Controller.getInstance().neueFigur(Figurart.SPRINGER, Partie.getInstance().aktuelleFarbe());
+					jepSystemantwort.setText(Controller.getInstance().getMessage());
+					jfBauernumwandlungAuswahl.setVisible(false);
+				}
+			});
+		}
+		return jButton2;
+	}
+
+	/**
+	 * This method initializes jButton3	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getJButton3() {
+		if (jButton3 == null) {
+			jButton3 = new JButton();
+			jButton3.setText("Turm");
+			jButton3.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					Controller.getInstance().neueFigur(Figurart.TURM, Partie.getInstance().aktuelleFarbe());
+					jepSystemantwort.setText(Controller.getInstance().getMessage());
+					jfBauernumwandlungAuswahl.setVisible(false);
+				}
+			});
+		}
+		return jButton3;
 	}
 }

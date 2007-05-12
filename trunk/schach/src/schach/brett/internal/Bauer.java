@@ -290,10 +290,10 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		
 		boolean gueltig = false;
 		try {
-			gueltig = position.plusReihe(1).equals(ziel);
+			gueltig = position.plusReihe(1).equals(ziel) && !ziel.istBesetzt();
 		} catch(NegativeConditionException e){}
 		try {
-			gueltig = gueltig || (position.plusReihe(2).equals(ziel) && !wurdeBewegt());
+			gueltig = gueltig || (position.plusReihe(2).equals(ziel) && !wurdeBewegt() && !ziel.istBesetzt());
 		} catch(NegativeConditionException e){}
 		
 		if(!gueltig)

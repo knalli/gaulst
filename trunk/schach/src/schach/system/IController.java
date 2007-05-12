@@ -1,5 +1,7 @@
 package schach.system;
 
+import schach.brett.Farbe;
+import schach.brett.Figurart;
 import schach.brett.IFeld;
 import schach.brett.Linie;
 import schach.brett.Reihe;
@@ -14,6 +16,7 @@ public interface IController {
 	public void setzeFigur(Reihe reihe, Linie linie);
 	public void setzeZielFeld(IFeld feld);
 	public void setzeZielFeld(Reihe reihe, Linie linie);
+	public void neueFigur(Figurart art, Farbe farbe);
 	public boolean parseInputString(String text);
 	public String getMessage();
 }

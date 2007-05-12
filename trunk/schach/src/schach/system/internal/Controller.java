@@ -1,5 +1,7 @@
 package schach.system.internal;
 
+import schach.brett.Farbe;
+import schach.brett.Figurart;
 import schach.brett.IBauer;
 import schach.brett.IBrett;
 import schach.brett.IFeld;
@@ -8,7 +10,9 @@ import schach.brett.IKoenig;
 import schach.brett.ISchlagbareFigur;
 import schach.brett.Linie;
 import schach.brett.Reihe;
+import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
+import schach.partie.internal.Partie;
 import schach.system.IController;
 import schach.system.Logger;
 import schach.system.NegativeConditionException;
@@ -129,6 +133,23 @@ public class Controller implements IController {
 		
 		Logger.debug("Parse nun "+text);
 		
+		if(text.equals("DAME")){
+			neueFigur(Figurart.DAME, Partie.getInstance().aktuelleFarbe());
+			return true;
+		}
+		if(text.equals("LAEUFER")){
+			neueFigur(Figurart.LAEUFER, Partie.getInstance().aktuelleFarbe());
+			return true;
+		}
+		if(text.equals("SPRINGER")){
+			neueFigur(Figurart.SPRINGER, Partie.getInstance().aktuelleFarbe());
+			return true;
+		}
+		if(text.equals("TURM")){
+			neueFigur(Figurart.TURM, Partie.getInstance().aktuelleFarbe());
+			return true;
+		}
+		
 		String e1,e2,e3,e4;
 		e1 = text.substring(0, 1);
 		e2 = text.substring(1, 2);
@@ -181,5 +202,21 @@ public class Controller implements IController {
 		case 'H': return Linie.H;
 	}
 	return null;
+	}
+
+	public void neueFigur(Figurart art, Farbe farbe) {
+		IFigur figur = AlleFiguren.getInstance().erstelleFigur(art, farbe);
+		IBauer bauer = null;
+		for(IFigur suchfigur : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)){
+			if(suchfigur.gebePosition().gebeReihe().equals( farbe.equals(Farbe.WEISS)?Reihe.R8:Reihe.R1 )){
+				bauer = (IBauer) suchfigur;
+			}
+		}
+		try {
+			Brett.getInstance().wandleBauernUm(bauer, figur);
+			message = "Erfolgreich ausgeführt.";
+		} catch (NegativeConditionException e) {
+			message = e.getMessage();
+		}
 	}
 }
