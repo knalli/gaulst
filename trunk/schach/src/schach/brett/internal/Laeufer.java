@@ -69,6 +69,9 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 		
 		if(!(gegner instanceof ISchlagbareFigur))
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
+		
+		if(gegner.gebeFarbe().equals(farbe))
+			throw new NegativePreConditionException("Zu schlagende Figur gehšrt nicht dem gegnerischen Spieler.");
 
 		ISchlagbareFigur gegner2 = (ISchlagbareFigur) gegner;
 		gegner2.setzeSollEntferntWerden();
