@@ -83,6 +83,9 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		
 		if(!(gegner instanceof ISchlagbareFigur))
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
+		
+		if(gegner.gebeFarbe().equals(farbe))
+			throw new NegativePreConditionException("Zu schlagende Figur gehšrt nicht dem gegnerischen Spieler.");
 
 		ISchlagbareFigur gegner2 = (ISchlagbareFigur) gegner;
 		gegner2.setzeSollEntferntWerden();
@@ -133,6 +136,9 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			
 			if(!(gegner instanceof IBauer))
 				throw new NegativePreConditionException("Zu schlagende Figur ist kein Bauer.");
+			
+			if(gegner.gebeFarbe().equals(farbe))
+				throw new NegativePreConditionException("Zu schlagende Figur gehšrt nicht dem gegnerischen Spieler.");
 
 			IBauer gegner2 = (IBauer) gegner;
 			
@@ -248,7 +254,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		position.istBesetzt(false);
 		speichereVorPosition();
 		position = null;
-		grundposition = null;
+//		grundposition = null;
 		
 //		keine Information an die Beobachter, da geschlagenWerden Bestandteil 
 //		eines elementaren Operators wie ziehen oder schlagen ist

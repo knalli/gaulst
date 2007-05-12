@@ -67,6 +67,9 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		
 		testeZug(ziel);
 		
+		if(gegner.gebeFarbe().equals(farbe))
+			throw new NegativePreConditionException("Zu schlagende Figur gehšrt nicht dem gegnerischen Spieler.");
+
 		ISchlagbareFigur gegner2 = (ISchlagbareFigur) gegner;
 		gegner2.setzeSollEntferntWerden();
 		gegner2.geschlagenWerden();

@@ -80,6 +80,9 @@ public class Turm extends AbstrakteFigur implements ITurm {
 
 		testeZug(ziel);
 		
+		if(gegner.gebeFarbe().equals(farbe))
+			throw new NegativePreConditionException("Zu schlagende Figur gehšrt nicht dem gegnerischen Spieler.");
+
 		if(!(gegner instanceof ISchlagbareFigur))
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
 

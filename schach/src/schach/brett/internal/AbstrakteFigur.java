@@ -73,7 +73,7 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	}
 
 	public boolean istAufGrundposition() {
-		return position.equals(grundposition);
+		return istAufDemSchachbrett() && position.equals(grundposition);
 	}
 
 	public void positionieren(IFeld feld) throws NegativeConditionException {
