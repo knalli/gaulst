@@ -32,5 +32,5 @@ public interface IPartiehistorie {
 	
 	public boolean istPatt();
 	
-	public boolean istRemis();
+	public boolean istRemis(); 
 }
