@@ -25,6 +25,9 @@ public class Partiehistorie implements IPartiehistorie {
 	private boolean simuliere = false;
 	private Partiehistorie() {}
 	private List<String> algebraischeNotation = new ArrayList<String>();
+	private boolean istSchachmatt=false;
+	private boolean istRemis=false;
+	private boolean istPatt=false;
 	
 	public List<String> gebeBisherigeNotationen() {
 		return algebraischeNotation;
@@ -184,4 +187,20 @@ public class Partiehistorie implements IPartiehistorie {
 		} catch (NullPointerException e) {} // keine figurposi bei umwandlung
 		return sb.toString();
 	}
+	
+
+	public boolean istPatt() {
+		// TODO Auto-generated method stub
+		return istPatt;
+	}
+
+	public boolean istRemis() {
+		// TODO Auto-generated method stub
+		return istRemis;
+	}
+
+	public boolean istSchachmatt() {
+		// TODO Auto-generated method stub
+		return istSchachmatt;
+	}	
 }
