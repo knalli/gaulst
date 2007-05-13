@@ -12,6 +12,7 @@ import schach.system.Logger;
 public class MultiView implements IView {
 	private List<IView> views = new ArrayList<IView>();
 	public MultiView(){
+		Logger.error("Multiview");
 		views.add(new TextView());
 		
 		try {
