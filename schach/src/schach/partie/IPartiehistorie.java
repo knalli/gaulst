@@ -12,7 +12,7 @@ public interface IPartiehistorie {
 	
 	public List<IStellung> gebeStellungen(int n);
 	
-	public List<IStellung> gebeAlleStellungen();
+	public List<IStellung> gebeAlleStellungen(); 
 	
 	public IStellung gebeStellung();
 	
