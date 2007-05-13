@@ -27,4 +27,10 @@ public interface IPartiehistorie {
 	public void setzeSimulation(boolean b);
 	
 	public List<String> gebeBisherigeNotationen();
+	
+	public boolean istSchachmatt();
+	
+	public boolean istPatt();
+	
+	public boolean istRemis();
 }
