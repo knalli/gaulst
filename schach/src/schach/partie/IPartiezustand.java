@@ -7,7 +7,7 @@ import schach.system.NegativeConditionException;
 public interface IPartiezustand {
 	public boolean inPartie();
 	
-	public boolean istRemisangebotVon(ISpieler spieler);
+	public boolean istRemisangebotVon(ISpieler spieler) throws NegativeConditionException;
 	
 	public boolean istRemisAngenommenVon(ISpieler spieler);
 	
@@ -17,7 +17,7 @@ public interface IPartiezustand {
 	
 	public boolean istSchachmatt();
 	
-	public boolean istRemisMoeglich();
+	public boolean istRemisMoeglich() throws NegativeConditionException;
 
 	public void haltePartieAn() throws NegativeConditionException;
 
