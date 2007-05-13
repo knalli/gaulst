@@ -139,7 +139,7 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
 		
-		Partiehistorie.getInstance().protokolliereStellung(true, this);
+		Partiehistorie.getInstance().protokolliereStellung(false, this);
 		Partie.getInstance().wechsleSpieler();
 		
 //		informiere die Beobachter, dass sich etwas geändert hat
