@@ -11,6 +11,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		View.setView(View.GUI);
+		
 		Logger.appendLogger("console");
 		Logger.debug("Main gestartet..");
 		

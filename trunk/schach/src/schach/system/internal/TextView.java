@@ -20,7 +20,6 @@ import schach.partie.IPartie;
 import schach.partie.IPartiezustand;
 import schach.partie.internal.Partie;
 import schach.partie.internal.Partiezustand;
-import schach.spieler.ISpieler;
 import schach.system.IView;
 import schach.system.Logger;
 
@@ -31,7 +30,7 @@ public class TextView implements IView {
 	private static List<Farbe> listeFarben = Arrays.asList(Farbe.values());
 	
 	public TextView() {
-		Logger.debug("TextView Konstruktor");
+		Logger.error("TextView Konstruktor");
 		allefiguren = AlleFiguren.getInstance();
 	}
 

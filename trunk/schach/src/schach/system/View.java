@@ -30,12 +30,13 @@ public class View {
 					public void run() {
 						GuiView.getInstance();					
 					}
-				});
+				});	
 			} catch (Exception e) {
 				Logger.error("Fehler beim Starten der grafischen Oberfläche - nutze stattdessen die einfache TextView!");
 				setView(TEXT);
+				return;
 			}
-			viewer = GuiView.getInstance();		
+			viewer = GuiView.getInstance();	
 		}
 		else if(type==TEXT) {
 			viewer = new TextView();
@@ -47,6 +48,7 @@ public class View {
 	}
 	
 	public static void setView() {
+		Logger.error("Nutze Text, da nichts angegeben.");
 		setView(TEXT);
 	}
 	
