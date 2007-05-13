@@ -29,7 +29,7 @@ public class Brett implements IBrett {
 				felder.put(new Feld(r,l), null);
 			}
 		}
-	};
+	}
 	
 	public static IBrett getInstance() {
 		if(instance == null)
@@ -238,6 +238,8 @@ public class Brett implements IBrett {
 		
 		Partiehistorie.getInstance().protokolliereStellung(false, bauer, figur);
 		Partie.getInstance().wechsleSpieler();
+		
+		figur.erzwingeUpdate();
 	}
 
 	public IFeld gebeFeld(Reihe reihe, Linie linie) {

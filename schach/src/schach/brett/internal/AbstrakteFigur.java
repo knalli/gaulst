@@ -80,10 +80,6 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 		position = feld;
 		grundposition = position;
 		AlleFiguren.getInstance().fuegeFigurAn(this);
-		
-//		informiere die Beobachter, dass sich etwas geändert hat
-		setChanged();
-		notifyObservers(); 
 	}
 
 	public Figurart gebeArt() {
@@ -122,5 +118,11 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	
 	protected void speichereVorPosition() {
 		vorposition = position;
+	}
+	
+	public void erzwingeUpdate() {
+//		informiere die Beobachter, dass sich etwas geändert hat
+		setChanged();
+		notifyObservers();
 	}
 }

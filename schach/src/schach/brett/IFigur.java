@@ -95,4 +95,6 @@ public interface IFigur {
 	public void simuliereBrettzug(IFeld start);
 	
 	public IFeld gebeVorPosition();
+
+	public void erzwingeUpdate();
 }
