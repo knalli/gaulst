@@ -34,6 +34,33 @@ public class Partiezustand implements IPartiezustand {
 
 	public boolean istPatt() {
 		// TODO Zustand#istPatt
+		
+		// funktioniert nicht wirklich!
+//		for(Farbe farbe : Farbe.values()){
+//			if(istSchach(farbe)){
+//				for(IFigur figur : AlleFiguren.getInstance().gebeFiguren(Figurart.getAll(), Arrays.asList(new Farbe[] {farbe}))){
+//					for(Reihe reihe : Reihe.values()){
+//						for(Linie linie : Linie.values()){
+//							IFeld feld = Brett.getInstance().gebeFeld(reihe, linie);
+//							IFigur figur2 = Brett.getInstance().gebeFigurVonFeld(feld);
+//							if(figur2.gebeFarbe().equals(farbe.andereFarbe()) || figur2 == null){
+//								IStellung stellung;
+//								try {
+//									stellung = Partiehistorie.getInstance().simuliereStellung(figur.gebePosition(), feld, figur2);
+//									if(!stellung.istKoenigBedroht(farbe)){
+//										return false;
+//									}
+//								} catch (NegativeConditionException e) {
+//									Logger.error("Fehler bei istPatt: Stellung simulieren.");
+//								}
+//							}
+//						}
+//					}
+//				}
+//				return true;
+//			}
+//		}
+		
 		return istPatt;
 	}
 
