@@ -50,21 +50,26 @@ public class Controller implements IController {
 			
 			// Ziehzug? (ohne spezialfälle)
 			if(zielfigur == null){
-				if(figur instanceof IKoenig){
-					if(figur.istAufGrundposition() && (ziel.gebeLinie().equals(Linie.C) || ziel.gebeLinie().equals(Linie.G))){
-						((IKoenig)figur).rochiert(ziel);
+				try {
+					if(figur instanceof IKoenig){
+						if(figur.istAufGrundposition() && (ziel.gebeLinie().equals(Linie.C) || ziel.gebeLinie().equals(Linie.G))){
+							((IKoenig)figur).rochiert(ziel);
+						}
+						else {
+							Logger.info(figur + " zieht nach "+ ziel);
+							figur.zieht(ziel);
+						}
+					}
+					else if(figur instanceof IBauer && !figur.gebePosition().gebeLinie().equals(ziel.gebeLinie()) && ziel.minusReihe(1).istBesetzt()) {
+						Logger.info(figur + " schlägt en passent "+ ziel);
+						((IBauer)figur).schlaegtEnPassant(ziel);
 					}
 					else {
 						Logger.info(figur + " zieht nach "+ ziel);
 						figur.zieht(ziel);
 					}
-				}
-				else if(!figur.gebePosition().gebeLinie().equals(ziel.gebeLinie()) && ziel.minusReihe(1).istBesetzt() && figur instanceof IBauer) {
-					Logger.info(figur + " schlägt en passent "+ ziel);
-					((IBauer)figur).schlaegtEnPassant(ziel);
-				}
-				else {
-					Logger.info(figur + " zieht nach "+ ziel);
+				} catch (NegativeConditionException e) {
+					Logger.info(figur + " zieht nach "+ ziel + " (1 kontrollierter Fehler)");
 					figur.zieht(ziel);
 				}
 			}
@@ -83,10 +88,10 @@ public class Controller implements IController {
 		} catch (NegativeConditionException e) {
 			Logger.error("Fehler: "+e.getMessage());
 			message  = e.getMessage();
-//			e.printStackTrace();
+			e.printStackTrace();
 			return false;
 		} catch (Exception e) {
-			Logger.error("Fehler: "+e.getMessage());
+			Logger.error("Schwerer Fehler: "+e.getMessage());
 			message  = e.getMessage();
 //			e.printStackTrace();
 			return false;
