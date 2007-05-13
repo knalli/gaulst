@@ -53,8 +53,12 @@ public class Partiezustand implements IPartiezustand {
 		
 	}
 
-	public boolean istRemisMoeglich() {
+	public boolean istRemisMoeglich() throws NegativeConditionException {
 		// TODO Zustand#istRemisMoeglich
+		if(Partie.getInstance().istRemisMoeglich()){
+			istRemisMoeglich=true;
+		}else{
+			istRemisMoeglich=false;		}
 		return istRemisMoeglich;
 	}
 
