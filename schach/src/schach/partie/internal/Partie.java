@@ -21,6 +21,7 @@ public class Partie implements IPartie {
 	private ISpieler gegnerischerSpieler = null;
 	private boolean istRemisAngebot = false;
 	private ISpieler istRemisAngebotVon = null;
+	private boolean istRemisAngenommen=false;
 	
 	private IPartiezustand zustand = null;
 	private IPartiehistorie historie = null;
@@ -73,7 +74,7 @@ public class Partie implements IPartie {
 		if(!istRemisMoeglich() || !istRemisAngebotVon(gegnerischerSpieler)){
 			throw new NegativePreConditionException("Remisannahme: Kein Remis verfügbar."); 
 		}
-		
+		istRemisAngenommen=true;
 		haltePartieAn();
 	}
 
@@ -122,5 +123,10 @@ public class Partie implements IPartie {
 			aktuellerSpieler = Spieler.getInstance(farbe);
 			gegnerischerSpieler = Spieler.getInstance(farbe.andereFarbe());
 		}
+	}
+	
+	public boolean istRemisangenommen(){
+		return istRemisAngenommen;
+		
 	}
 }
