@@ -71,4 +71,6 @@ public interface IPartie {
 	public void wechsleSpieler();
 	
 	public void setzeFarbe(Farbe farbe);
+	
+	public boolean istRemisangenommen();
 }
