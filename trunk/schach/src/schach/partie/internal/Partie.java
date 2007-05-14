@@ -127,6 +127,5 @@ public class Partie implements IPartie {
 	
 	public boolean istRemisangenommen(){
 		return istRemisAngenommen;
-		
 	}
 }
