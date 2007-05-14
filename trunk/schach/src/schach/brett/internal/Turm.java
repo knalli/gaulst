@@ -147,6 +147,7 @@ public class Turm extends AbstrakteFigur implements ITurm {
 		testeZug(ziel);
 		
 		position.istBesetzt(false);
+		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
 
