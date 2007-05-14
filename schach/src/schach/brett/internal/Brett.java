@@ -213,7 +213,7 @@ public class Brett implements IBrett {
 		}
 		
 		if(figur.istAufDemSchachbrett()){
-			throw new NegativePreConditionException("Die Figur steht nicht auf dem Schachbrett.");
+			throw new NegativePreConditionException("Die Figur steht auf dem Schachbrett.");
 		}
 		
 		if(figur.gebeArt().equals(Figurart.KOENIG) || figur.gebeArt().equals(Figurart.BAUER)){

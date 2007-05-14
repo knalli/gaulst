@@ -14,4 +14,10 @@ public interface IStellung {
 //	public List<IFigur> gebeFiguren(Figurart figurarte, Farbe farbe);
 	
 	public boolean istKoenigBedroht(Farbe farbe);
+	
+	public boolean istRemis();
+	
+	public boolean istPatt();
+	
+	public boolean istSchachmatt();
 }

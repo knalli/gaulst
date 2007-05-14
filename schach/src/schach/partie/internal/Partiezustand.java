@@ -1,7 +1,10 @@
 package schach.partie.internal;
 
+import java.util.List;
+
 import schach.brett.Farbe;
 import schach.partie.IPartiezustand;
+import schach.partie.IStellung;
 import schach.spieler.ISpieler;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
@@ -9,12 +12,9 @@ import schach.system.NegativePreConditionException;
 public class Partiezustand implements IPartiezustand {
 	private static IPartiezustand instance = null;
 	private boolean inpartie = false;
-	private boolean istPatt=false;
-	private boolean istRemis=false;
 	private boolean istRemisAngenommenVon=false;
 	private boolean istRemisMoeglich=false;
 	private boolean istRemisangebotVon=false;
-	private boolean istSchachmatt=false;
 	
 	
 	private Partiezustand() {
@@ -33,40 +33,13 @@ public class Partiezustand implements IPartiezustand {
 	}
 
 	public boolean istPatt() {
-		// TODO Zustand#istPatt
-		
-		// funktioniert nicht wirklich!
-//		for(Farbe farbe : Farbe.values()){
-//			if(istSchach(farbe)){
-//				for(IFigur figur : AlleFiguren.getInstance().gebeFiguren(Figurart.getAll(), Arrays.asList(new Farbe[] {farbe}))){
-//					for(Reihe reihe : Reihe.values()){
-//						for(Linie linie : Linie.values()){
-//							IFeld feld = Brett.getInstance().gebeFeld(reihe, linie);
-//							IFigur figur2 = Brett.getInstance().gebeFigurVonFeld(feld);
-//							if(figur2.gebeFarbe().equals(farbe.andereFarbe()) || figur2 == null){
-//								IStellung stellung;
-//								try {
-//									stellung = Partiehistorie.getInstance().simuliereStellung(figur.gebePosition(), feld, figur2);
-//									if(!stellung.istKoenigBedroht(farbe)){
-//										return false;
-//									}
-//								} catch (NegativeConditionException e) {
-//									Logger.error("Fehler bei istPatt: Stellung simulieren.");
-//								}
-//							}
-//						}
-//					}
-//				}
-//				return true;
-//			}
-//		}
-		
-		return istPatt;
+		List<IStellung> stellung = Partiehistorie.getInstance().gebeStellungen(1);
+		return stellung.size() > 0 && stellung.get(0).istPatt();
 	}
 
 	public boolean istRemis() {
-		// TODO Zustand#istRemis
-		return istRemis;
+		List<IStellung> stellung = Partiehistorie.getInstance().gebeStellungen(1);
+		return stellung.size() > 0 && stellung.get(0).istRemis();
 	}
 
 	public boolean istRemisAngenommenVon(ISpieler spieler) {
@@ -100,9 +73,8 @@ public class Partiezustand implements IPartiezustand {
 	}
 
 	public boolean istSchachmatt() {
-		// TODO Zustand#istSchachmatt
-	
-		return istSchachmatt;
+		List<IStellung> stellung = Partiehistorie.getInstance().gebeStellungen(1);
+		return stellung.size() > 0 && stellung.get(0).istSchachmatt();
 	}
 
 	public void haltePartieAn() throws NegativeConditionException {

@@ -1,10 +1,16 @@
 package schach.partie.internal;
 
+import java.util.Arrays;
+
 import schach.brett.Farbe;
 import schach.brett.Figurart;
+import schach.brett.IFeld;
 import schach.brett.IFigur;
 import schach.brett.IKoenig;
+import schach.brett.Linie;
+import schach.brett.Reihe;
 import schach.brett.internal.AlleFiguren;
+import schach.brett.internal.Brett;
 import schach.partie.IPartie;
 import schach.partie.IStellung;
 import schach.system.Logger;
@@ -15,7 +21,10 @@ public class Stellung implements IStellung {
 	private Figurart ziehenderFigurart = null;
 	private int halbzug = 0;
 	private boolean weisserKoenigBedroht = false;
-	private boolean schwarzerKoenigBedroht = false; 
+	private boolean schwarzerKoenigBedroht = false;
+	private boolean patt = false;
+	private boolean remis = false;
+	private boolean schachmatt = false; 
 	
 	public Stellung(boolean istSchlagzug, IFigur ziehendeFigur){
 		this(istSchlagzug, ziehendeFigur, 0);
@@ -29,13 +38,17 @@ public class Stellung implements IStellung {
 		IPartie partie = Partie.getInstance();
 		Farbe jetztFarbe = partie.aktuelleFarbe();
 		
-		boolean simuumgestellt = false;
+		boolean externeSimulationNichtAktiv = false;
 		if(!Partiehistorie.getInstance().istEineSimulation()){
-			simuumgestellt = true;
+			externeSimulationNichtAktiv = true;
 			Partiehistorie.getInstance().setzeSimulation(true);
 		}
 
 		for(Farbe farbe : Farbe.values()){
+			for(IFigur f : AlleFiguren.getInstance().gebeAlleFiguren()){
+				System.out.println(f.toString()+", ");
+			}
+			System.out.println("!!");
 			IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe)).get(0);
 			for(IFigur figur : AlleFiguren.getInstance().gebeAlleFiguren()){
 				if(!figur.gebeFarbe().equals(farbe) && figur.istAufDemSchachbrett()){
@@ -59,8 +72,44 @@ public class Stellung implements IStellung {
 			}
 		}
 		partie.setzeFarbe(jetztFarbe);
-		if(simuumgestellt)
+		if(externeSimulationNichtAktiv)
 			Partiehistorie.getInstance().setzeSimulation(false);
+		
+//		if(externeSimulationNichtAktiv){
+//			// in simulation derzeit keine patt/schach/matt findung
+//			
+//			Logger.info("Berechne Matt..");
+//			for(Farbe farbe : Farbe.values()){
+//				if(istKoenigBedroht(farbe)){
+//					schachmatt = true;
+//					for(IFigur figur : AlleFiguren.getInstance().gebeFiguren(Figurart.getAll(), Arrays.asList(new Farbe[] {farbe}))){
+//						for(Reihe reihe : Reihe.values()){
+//							for(Linie linie : Linie.values()){
+//								IFeld feld = Brett.getInstance().gebeFeld(reihe, linie);
+//								IFigur figur2 = Brett.getInstance().gebeFigurVonFeld(feld);
+//								if(figur2 == null || figur2.gebeFarbe().equals(farbe.andereFarbe())){
+//									IStellung stellung;
+//									try {
+//										stellung = Partiehistorie.getInstance().simuliereStellung(figur.gebePosition(), feld, figur2);
+//										if(!stellung.istKoenigBedroht(farbe)){
+//											schachmatt = false;
+//											break;
+//										}
+//									} catch (NegativeConditionException e) {
+//										Logger.error("Fehler bei istPatt: Stellung simulieren.");
+//									}
+//								}
+//								if(!schachmatt) break;
+//							}
+//							if(!schachmatt) break;
+//						}
+//						if(!schachmatt) break;
+//					}
+//				}
+//				if(schachmatt) break;
+//			}
+//			Logger.info("!Berechne Matt: " + (schachmatt?"ist matt":"ist nicht matt"));
+//		}
 	}
 	
 //	public List<IFigur> gebeFiguren(List<Figurart> figurarten, List<Farbe> farben) {
@@ -99,5 +148,17 @@ public class Stellung implements IStellung {
 
 	public boolean equals(Stellung stellung){
 		return this.halbzug == stellung.halbzug;
+	}
+
+	public boolean istPatt() {
+		return patt;
+	}
+
+	public boolean istRemis() {
+		return remis;
+	}
+
+	public boolean istSchachmatt() {
+		return schachmatt;
 	}
 }
