@@ -44,7 +44,7 @@ public class Partiezustand implements IPartiezustand {
 	}
 
 	public boolean istRemisAngenommenVon(ISpieler spieler) {
-		return istRemisMoeglich() && (istRemisAngenommenVon!=null || spieler.equals(istRemisangebotVon));
+		return istRemisMoeglich() && spieler.equals(istRemisangebotVon);
 	}
 
 	public boolean istRemisMoeglich() {
@@ -53,7 +53,7 @@ public class Partiezustand implements IPartiezustand {
 	}
 
 	public boolean istRemisAngebotVon(ISpieler spieler) {
-		return istRemisMoeglich() && (istRemisangebotVon!=null || spieler.equals(istRemisangebotVon));
+		return istRemisMoeglich() && spieler.equals(istRemisangebotVon);
 	}
 
 	public boolean istSchachmatt() {
@@ -82,5 +82,7 @@ public class Partiezustand implements IPartiezustand {
 			istRemisangebotVon = spieler;
 			istRemisMoeglich = true;
 		}
+		
+		AlleFiguren.getInstance().gebeAlleFiguren().get(0).erzwingeUpdate();
 	}
 }

@@ -1,30 +1,35 @@
 package schach.partie.internal;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import schach.brett.Farbe;
 import schach.brett.Figurart;
+import schach.brett.IFeld;
 import schach.brett.IFigur;
 import schach.brett.IKoenig;
+import schach.brett.Linie;
+import schach.brett.Reihe;
 import schach.brett.internal.AlleFiguren;
+import schach.brett.internal.Brett;
 import schach.partie.IPartie;
 import schach.partie.IStellung;
 import schach.system.Logger;
 import schach.system.NegativeConditionException;
 
 public class Stellung implements IStellung {
-	private boolean schlagzug = false;
-	private Figurart ziehenderFigurart = null;
-	private int halbzug = 0;
+	private final boolean schlagzug;
+	private final Figurart ziehenderFigurart;
+	private final int halbzug;
 	private boolean weisserKoenigBedroht = false;
 	private boolean schwarzerKoenigBedroht = false;
 	private boolean patt = false;
 	private boolean remis = false;
 	private boolean remismoeglich = false;
 	private boolean schachmatt = false; 
-	private String stellungshash = null;
+	private final String stellungshash;
 	
 	public Stellung(boolean istSchlagzug, IFigur ziehendeFigur){
 		this(istSchlagzug, ziehendeFigur, 0);
@@ -33,8 +38,8 @@ public class Stellung implements IStellung {
 	public Stellung(boolean istSchlagzug, IFigur ziehendeFigur, int zug){
 		ziehenderFigurart = ziehendeFigur.gebeArt();
 		
-		this.schlagzug = istSchlagzug;
-		this.halbzug = zug;
+		schlagzug = istSchlagzug;
+		halbzug = zug;
 		IPartie partie = Partie.getInstance();
 		Farbe jetztFarbe = partie.aktuelleFarbe();
 		
@@ -88,50 +93,65 @@ public class Stellung implements IStellung {
 		if(externeSimulationNichtAktiv){
 			// in simulation derzeit keine patt/schach/matt findung
 			
-//			Logger.info("Berechne Matt..");
-//			for(Farbe farbe : Farbe.values()){
-//				if(istKoenigBedroht(farbe)){
-//					schachmatt = true;
-//					for(IFigur figur : AlleFiguren.getInstance().gebeFiguren(Figurart.getAll(), Arrays.asList(new Farbe[] {farbe}))){
-//						for(Reihe reihe : Reihe.values()){
-//							for(Linie linie : Linie.values()){
-//								IFeld feld = Brett.getInstance().gebeFeld(reihe, linie);
-//								Logger.debug("Teste: "+feld+" mit "+figur);
-//								if(feld.equals(figur.gebePosition())) continue;
-//								try {
-//									Logger.debug(farbe+" Teste zug: "+figur+" auf "+feld);
-//									partie.setzeFarbe(farbe);
-//									figur.testeZug(feld);
-//									partie.setzeFarbe(jetztFarbe);
-//								} catch (NegativeConditionException e1) {
-//									Logger.debug("geht nicht. weiter");
-//									continue;
-//								}
-//								Logger.debug(farbe+" Teste zug: "+figur+" auf "+feld+" weiter");
-//								IFigur figur2 = Brett.getInstance().gebeFigurVonFeld(feld);
-//								if(figur2 == null || figur2.gebeFarbe().equals(farbe.andereFarbe())){
-//									IStellung stellung;
-//									try {
-//										stellung = Partiehistorie.getInstance().simuliereStellung(figur.gebePosition(), feld, figur2);
-//										if(!stellung.istKoenigBedroht(farbe)){
-//											Logger.debug("Kein Schachmatt, weil "+figur+" nach "+feld);
-//											schachmatt = false;
-//											break;
-//										}
-//									} catch (NegativeConditionException e) {
-//										Logger.error("Fehler bei istPatt: Stellung simulieren.");
-//									}
-//								}
-//								if(!schachmatt) break;
-//							}
-//							if(!schachmatt) break;
-//						}
-//						if(!schachmatt) break;
-//					}
-//				}
-//				if(schachmatt) break;
-//			}
-//			Logger.info("!Berechne Matt: " + (schachmatt?"ist matt":"ist nicht matt"));
+			
+			Farbe farbe = Partie.getInstance().aktuelleFarbe().andereFarbe();
+			
+			if(istKoenigBedroht(farbe)){
+				Logger.info("Berechne Matt.."+Partie.getInstance().aktuelleFarbe());
+				
+				Partiehistorie.getInstance().setzeSimulation(true);
+				partie.setzeFarbe(farbe);
+				
+				Logger.debug(farbe+" ist potenziell matt..");
+				Logger.debug(farbe.andereFarbe()+ " << andere farbe");
+				schachmatt = true;
+				for(IFigur figur : AlleFiguren.getInstance().gebeFiguren(Figurart.getAll(), Arrays.asList(new Farbe[] {farbe}))){
+					
+					for(Reihe reihe : Reihe.values()){
+						for(Linie linie : Linie.values()){
+							
+							IFeld feld = Brett.getInstance().gebeFeld(reihe, linie);
+							
+							if(feld.equals(figur.gebePosition())) continue;
+							
+							try {
+//								Logger.debug(farbe+" Teste zug: "+figur+" auf "+feld);
+								figur.testeZug(feld);
+							} catch (NegativeConditionException e1) {
+//								Logger.debug("geht nicht. weiter");
+								continue;
+							}
+//							Logger.debug(farbe+" Teste zug: "+figur+" auf "+feld+" weiter");
+							IFigur figur2 = Brett.getInstance().gebeFigurVonFeld(feld);
+							if(figur2 == null || figur2.gebeFarbe().equals(farbe.andereFarbe())){
+								IStellung stellung;
+								try {
+									stellung = Partiehistorie.getInstance().simuliereStellung(figur.gebePosition(), feld, figur2);
+									Partiehistorie.getInstance().setzeSimulation(true);
+									if(!stellung.istKoenigBedroht(farbe)){
+										Logger.debug("Kein Schachmatt, weil "+figur+" nach "+feld);
+										schachmatt = false;
+										break;
+									}
+								} catch (NegativeConditionException e) {
+									Logger.error("Fehler bei istPatt: Stellung simulieren.");
+								}
+							}
+							
+							if(!schachmatt) break;
+						} // linie
+						
+						if(!schachmatt) break;
+					} // reihe
+					
+					if(!schachmatt) break;
+				} // figur
+				
+				partie.setzeFarbe(farbe.andereFarbe());
+				Partiehistorie.getInstance().setzeSimulation(false);
+				
+				Logger.info("!Berechne Matt: " + (schachmatt?"ist matt":"ist nicht matt")+" "+Partie.getInstance().aktuelleFarbe());
+			}
 			
 			
 			// Remisregel letzten 50 ZŸgen bzw. 100 HalbzŸge
@@ -145,6 +165,7 @@ public class Stellung implements IStellung {
 					}
 				}
 			}
+			
 			if(!remismoeglich){
 				Map<String, Integer> stellungszaehler = new HashMap<String, Integer>();
 				for(IStellung stellung : Partiehistorie.getInstance().gebeAlleStellungen()){
@@ -162,21 +183,14 @@ public class Stellung implements IStellung {
 				}
 			}
 		}
-		partie.setzeFarbe(jetztFarbe);
+		
+		if(remismoeglich){
+			try {
+				Partie.getInstance().bieteRemisAn(Partie.getInstance().aktuellerSpieler());
+			} catch (NegativeConditionException e) {}
+		}
 	}
 	
-//	public List<IFigur> gebeFiguren(List<Figurart> figurarten, List<Farbe> farben) {
-//		List<IFigur> figuren2 = new ArrayList<IFigur>();
-//		
-//		for(IFigur figur : this.figuren){
-//			if(farben.contains(figur.gebeFarbe()) && figurarten.contains(figur.gebeArt())){
-//				figuren2.add(figur);
-//			}
-//		}
-//		
-//		return figuren2;
-//	}
-
 	public boolean istSchlagzug() {
 		return schlagzug;
 	}
@@ -190,14 +204,6 @@ public class Stellung implements IStellung {
 			return weisserKoenigBedroht;
 		return schwarzerKoenigBedroht;
 	}
-
-//	public List<IFigur> gebeFiguren(Figurart figurart, Farbe farbe) {
-//		List<Figurart> figurarten = new ArrayList<Figurart>(1);
-//		List<Farbe> farben = new ArrayList<Farbe>(1);
-//		figurarten.add(figurart);
-//		farben.add(farbe);
-//		return gebeFiguren(figurarten,farben);
-//	}
 
 	public boolean equals(Stellung stellung){
 		return this.halbzug == stellung.halbzug;

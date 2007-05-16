@@ -36,7 +36,6 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			throw new NegativePreConditionException("Figur steht nicht auf Schachbrett.");
 		
 		grundposition = null;
-		position.istBesetzt(false);
 		speichereVorPosition();
 		position = null;
 	}
@@ -219,7 +218,11 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		if(ziel.istBesetzt())
 			throw new NegativePreConditionException("Ziel ist besetzt");
 			
-		if(position.plusReihe(2).equals(ziel) && !wurdeBewegt()) {
+		boolean dps = false;
+		try {
+			dps = position.plusReihe(2).equals(ziel);
+		} catch (NegativePreConditionException e) {}
+		if(dps && !wurdeBewegt()) {
 			// rest in testeZug geprüft
 			macheEinenDoppelschritt = true;
 		}
