@@ -13,6 +13,8 @@ import schach.brett.Reihe;
 import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
 import schach.partie.internal.Partie;
+import schach.partie.internal.Partiezustand;
+import schach.spieler.internal.Spieler;
 import schach.system.IController;
 import schach.system.Logger;
 import schach.system.NegativeConditionException;
@@ -152,6 +154,33 @@ public class Controller implements IController {
 		}
 		if(text.equals("TURM")){
 			neueFigur(Figurart.TURM, Partie.getInstance().aktuelleFarbe());
+			return true;
+		}
+		
+		if(text.equals("REMIS")){
+			if(Partiezustand.getInstance().istRemisMoeglich()){
+				try {
+					Partie.getInstance().nehmeRemisAn(Spieler.getInstance(Partie.getInstance().aktuelleFarbe()));
+				} catch (NegativeConditionException e) {
+					message = e.getMessage();
+				}
+			}
+			else {
+				try {
+					Partie.getInstance().bieteRemisAn(Spieler.getInstance(Partie.getInstance().aktuelleFarbe()));
+				} catch (NegativeConditionException e) {
+					message = e.getMessage();
+				}
+			}
+			return true;
+		}
+		
+		if(text.equals("KEINREMIS")){
+			try {
+				Partie.getInstance().lehneRemisAb(Spieler.getInstance(Partie.getInstance().aktuelleFarbe()));
+			} catch (NegativeConditionException e) {
+				message = e.getMessage();
+			}
 			return true;
 		}
 		
