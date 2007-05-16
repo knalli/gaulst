@@ -3,9 +3,11 @@ package schach.partie.internal;
 import java.util.List;
 
 import schach.brett.Farbe;
+import schach.brett.internal.AlleFiguren;
 import schach.partie.IPartiezustand;
 import schach.partie.IStellung;
 import schach.spieler.ISpieler;
+import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
@@ -43,7 +45,7 @@ public class Partiezustand implements IPartiezustand {
 	}
 
 	public boolean istRemisAngenommenVon(ISpieler spieler) {
-		return istRemisMoeglich() && istRemisAngenommenVon.equals(spieler);
+		return istRemisMoeglich() && (istRemisAngenommenVon!=null || spieler.equals(istRemisangebotVon));
 	}
 
 	public boolean istRemisMoeglich() {
@@ -51,8 +53,8 @@ public class Partiezustand implements IPartiezustand {
 		return istRemisMoeglich || (stellung.size() > 0 && stellung.get(0).istRemisMoeglich());
 	}
 
-	public boolean istRemisangebotVon(ISpieler spieler) {
-		return istRemisMoeglich() && istRemisangebotVon.equals(spieler);
+	public boolean istRemisAngebotVon(ISpieler spieler) {
+		return istRemisMoeglich() && (istRemisangebotVon!=null || spieler.equals(istRemisangebotVon));
 	}
 
 	public boolean istSchachmatt() {
@@ -64,10 +66,22 @@ public class Partiezustand implements IPartiezustand {
 		if(!inpartie)
 			throw new NegativePreConditionException("Partie kann nicht angehalten werden, da keine läuft.");
 		inpartie = false;
+		AlleFiguren.getInstance().gebeAlleFiguren().get(0).erzwingeUpdate();
 	}
 
 	public boolean istSchach(Farbe farbe) {
 		List<IStellung> stellung = Partiehistorie.getInstance().gebeStellungen(1);
 		return stellung.size() > 0 && stellung.get(0).istKoenigBedroht(farbe);
+	}
+	
+	public void setzeRemisVon(ISpieler spieler){
+		if(spieler == null){
+			istRemisangebotVon = null;
+			istRemisMoeglich = false;	
+		}
+		else {
+			istRemisangebotVon = spieler;
+			istRemisMoeglich = true;
+		}
 	}
 }

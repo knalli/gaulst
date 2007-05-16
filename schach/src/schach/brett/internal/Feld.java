@@ -165,7 +165,7 @@ public class Feld implements IFeld {
 	}
 
 	public void istBesetzt(boolean status){
-		Logger.debug("Markiert "+this+" ist besetzt: "+status);
+//		Logger.debug("Markiert "+this+" ist besetzt: "+status);
 		besetzt = status;
 	}
 	

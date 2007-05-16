@@ -107,7 +107,7 @@ public class GuiView implements IView {
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
 			GridLayout gridLayout = new GridLayout();
-			gridLayout.setRows(2);
+			gridLayout.setRows(3);
 			gridLayout.setColumns(1);
 			jlBild = new JLabel();
 			jlBild.setIcon(new ImageIcon("images/gaul.png",""));
@@ -225,6 +225,7 @@ public class GuiView implements IView {
 			jInputField.setPreferredSize(new Dimension(140, 22));
 			jcpController.setLayout(gridLayout);
 			jcpController.add(getJpBildtrenner(), null);
+			jcpController.add(getJpRemis(), null);
 			jcpController.add(getJepSystemantwort(), null);
 			jInputField.addActionListener(parseCommand);
 			jContentPane.add(jcpController);
@@ -294,6 +295,15 @@ public class GuiView implements IView {
 		}
 		else {
 			jLabelAktuellerSpieler.setText("<html><b>Aktueller Spieler: "+(partie.aktuellerSpieler().toString())+" "+(partiezustand.istSchach(partie.aktuelleFarbe())?"(Ihr Kšnig wird bedroht!)":""));
+		}
+		
+		if(partiezustand.istRemisMoeglich()){
+			jlRemistext.setText("Es wird ein Remis angeboten.");
+			jbGibRemis.setText("Remis annehmen");
+		}
+		else {
+			jlRemistext.setText("Es wird derzeit kein Remis angeboten.");
+			jbGibRemis.setText("Remis anbieten");			
 		}
 		
 		getJTable();
@@ -438,6 +448,14 @@ public class GuiView implements IView {
 	private JButton jButton2 = null;
 
 	private JButton jButton3 = null;
+
+	private JPanel jpRemis = null;
+
+	private JLabel jlRemistext = null;
+
+	private JButton jbGibRemis = null;
+
+	private JButton jbGibKeinRemis = null;
 	/**
 	 * This method initializes jpControllereinheiten	
 	 * 	
@@ -721,5 +739,60 @@ public class GuiView implements IView {
 			});
 		}
 		return jButton3;
+	}
+
+	/**
+	 * This method initializes jpRemis	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getJpRemis() {
+		if (jpRemis == null) {
+			jlRemistext = new JLabel();
+			jlRemistext.setText("JLabel");
+			jpRemis = new JPanel();
+			jpRemis.add(jlRemistext);
+			jpRemis.add(getJbGibRemis());
+			jpRemis.add(getJbGibKeinRemis());
+		}
+		return jpRemis;
+	}
+
+	/**
+	 * This method initializes jbGibRemis	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getJbGibRemis() {
+		if (jbGibRemis == null) {
+			jbGibRemis = new JButton();
+			jbGibRemis.setText("Remis anbieten");
+			jbGibRemis.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					Controller.getInstance().parseInputString("REMIS");
+					jepSystemantwort.setText(Controller.getInstance().getMessage());
+				}
+			});
+		}
+		return jbGibRemis;
+	}
+
+	/**
+	 * This method initializes jbGibKeinRemis	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getJbGibKeinRemis() {
+		if (jbGibKeinRemis == null) {
+			jbGibKeinRemis = new JButton();
+			jbGibKeinRemis.setText("ablehnen");
+			jbGibKeinRemis.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					Controller.getInstance().parseInputString("KEINREMIS");
+					jepSystemantwort.setText(Controller.getInstance().getMessage());
+				}
+			});
+		}
+		return jbGibKeinRemis;
 	}
 }

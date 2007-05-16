@@ -110,6 +110,15 @@ public class TextView implements IView {
 			System.out.println(" +--+--+--+--+--+--+--+--+ ");
 		}
 		System.out.println(" |AA|BB|CC|DD|EE|FF|GG|HH| ");
+		
+		if(partiezustand.istPatt())
+			System.out.println("Partie ist Schachmatt! Partie zu Ende.");
+		else if(partiezustand.istSchach(Farbe.WEISS))
+			System.out.println("Der wei§e Kšnig steht im Schach.");
+		else if(partiezustand.istSchach(Farbe.SCHWARZ))
+			System.out.println("Der schwarze Kšnig steht im Schach.");
+		else if(partiezustand.istRemisMoeglich())
+			System.out.println("Remis ist mšglich! Annehmen?");
 	}
 
 }

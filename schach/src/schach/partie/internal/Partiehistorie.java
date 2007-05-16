@@ -173,7 +173,7 @@ public class Partiehistorie implements IPartiehistorie {
 				for(IFigur suchfigur : AlleFiguren.getInstance().gebeAlleFiguren()){
 					try {
 						if(suchfigur.gebeArt().equals(Figurart.BAUER) && suchfigur.gebeFarbe().equals(figur.gebeFarbe().andereFarbe())){
-							Logger.debug("en passent check: "+suchfigur+" auf Schachbrett: "+suchfigur.istAufDemSchachbrett()+" mit Grundposition "+suchfigur.gebeGrundposition()+" was mit -R "+suchfigur.gebeGrundposition().minusReihe(1)+" gleich "+figur.gebePosition()+" ist und die Vorposition "+suchfigur.gebeVorPosition()+" gleich "+figur.gebePosition()+" mit -R "+figur.gebePosition().minusReihe(1)+" ist");
+//							Logger.debug("en passent check: "+suchfigur+" auf Schachbrett: "+suchfigur.istAufDemSchachbrett()+" mit Grundposition "+suchfigur.gebeGrundposition()+" was mit -R "+suchfigur.gebeGrundposition().minusReihe(1)+" gleich "+figur.gebePosition()+" ist und die Vorposition "+suchfigur.gebeVorPosition()+" gleich "+figur.gebePosition()+" mit -R "+figur.gebePosition().minusReihe(1)+" ist");
 							if(!suchfigur.istAufDemSchachbrett() && suchfigur.gebeGrundposition().minusReihe(1).equals(figur.gebePosition()) && suchfigur.gebeVorPosition().equals(figur.gebePosition().minusReihe(1))){
 								sb.append(" e.p.");
 							}

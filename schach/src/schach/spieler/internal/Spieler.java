@@ -3,6 +3,7 @@ package schach.spieler.internal;
 import schach.brett.Farbe;
 import schach.brett.Reihe;
 import schach.partie.internal.Partie;
+import schach.partie.internal.Partiezustand;
 import schach.spieler.ISpieler;
 
 public class Spieler implements ISpieler {
@@ -41,7 +42,7 @@ public class Spieler implements ISpieler {
 	 * Prüft, ob dieser Spieler zugberechtigt ist.
 	 */
 	public boolean istZugberechtigt() {
-		return Partie.getInstance().aktuellerSpieler().equals(this);
+		return Partiezustand.getInstance().inPartie() && Partie.getInstance().aktuellerSpieler().equals(this);
 	}
 	
 	public boolean equals(Spieler spieler){

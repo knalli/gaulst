@@ -135,9 +135,6 @@ public class Controller implements IController {
 	}
 
 	public boolean parseInputString(String text) {
-		if(text.length() != 4)
-			return false;
-		
 		Logger.debug("Parse nun "+text);
 		
 		if(text.equals("DAME")){
@@ -158,9 +155,12 @@ public class Controller implements IController {
 		}
 		
 		if(text.equals("REMIS")){
+			Logger.debug("Controller.. REMIS erhalten..");
 			if(Partiezustand.getInstance().istRemisMoeglich()){
 				try {
+					Logger.info("? Remis wurde von "+Partie.getInstance().aktuelleFarbe()+" angenommen");
 					Partie.getInstance().nehmeRemisAn(Spieler.getInstance(Partie.getInstance().aktuelleFarbe()));
+					Logger.info("Remis wurde von "+Partie.getInstance().aktuelleFarbe()+" angenommen");
 				} catch (NegativeConditionException e) {
 					message = e.getMessage();
 				}
@@ -168,6 +168,7 @@ public class Controller implements IController {
 			else {
 				try {
 					Partie.getInstance().bieteRemisAn(Spieler.getInstance(Partie.getInstance().aktuelleFarbe()));
+					Logger.info("Remis wurde von "+Partie.getInstance().aktuelleFarbe()+" angeboten");
 				} catch (NegativeConditionException e) {
 					message = e.getMessage();
 				}
@@ -176,13 +177,18 @@ public class Controller implements IController {
 		}
 		
 		if(text.equals("KEINREMIS")){
+			Logger.debug("Controller.. KEINREMIS erhalten..");
 			try {
 				Partie.getInstance().lehneRemisAb(Spieler.getInstance(Partie.getInstance().aktuelleFarbe()));
+				Logger.info("Remis wurde von "+Partie.getInstance().aktuelleFarbe()+" abgelehnt");
 			} catch (NegativeConditionException e) {
 				message = e.getMessage();
 			}
 			return true;
 		}
+		
+		if(text.length() != 4)
+			return false;
 		
 		String e1,e2,e3,e4;
 		e1 = text.substring(0, 1);
