@@ -112,7 +112,9 @@ public class TextView implements IView {
 		System.out.println(" |AA|BB|CC|DD|EE|FF|GG|HH| ");
 		
 		if(partiezustand.istPatt())
-			System.out.println("Partie ist Schachmatt! Partie zu Ende.");
+			System.out.println("Partie ist Patt! Partie zu Ende.");
+		else if(partiezustand.istSchachmatt())
+			System.out.println("Partie ist Matt! Partie zu Ende.");
 		else if(partiezustand.istSchach(Farbe.WEISS))
 			System.out.println("Der wei§e Kšnig steht im Schach.");
 		else if(partiezustand.istSchach(Farbe.SCHWARZ))
