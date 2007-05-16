@@ -81,7 +81,10 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 		position.istBesetzt(false);
 		speichereVorPosition();
 		position = ziel;
-		position.istBesetzt(true);
+		position.istBesetzt(true);		
+		
+		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
+			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschlie§en)
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
@@ -132,7 +135,10 @@ public class Laeufer extends AbstrakteFigur implements ILaeufer {
 		position.istBesetzt(false);
 		speichereVorPosition();
 		position = ziel;
-		position.istBesetzt(true);
+		position.istBesetzt(true);		
+		
+		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
+			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschlie§en)
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {

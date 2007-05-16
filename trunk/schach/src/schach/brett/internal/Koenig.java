@@ -135,7 +135,10 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		position = ziel;
 		position.istBesetzt(true);
 		schonBewegt = true;
-		istineinerrochade = true;
+		istineinerrochade = true;		
+		
+		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
+			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 		
 		turm.rochiert(turmzielfeld);
 		istineinerrochade = false;
@@ -203,7 +206,10 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
-		schonBewegt = true;
+		schonBewegt = true;		
+		
+		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
+			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschlie§en)
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
@@ -258,7 +264,10 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		speichereVorPosition();
 		position = ziel;
 		position.istBesetzt(true);
-		schonBewegt = true;
+		schonBewegt = true;		
+		
+		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
+			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschlie§en)
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
