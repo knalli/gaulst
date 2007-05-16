@@ -150,7 +150,7 @@ public class Partiehistorie implements IPartiehistorie {
 		}
 	
 		
-		if(Partiezustand.getInstance().istSchach(figur.gebeFarbe()))
+		if(Partiezustand.getInstance().istSchach(figur.gebeFarbe().andereFarbe()))
 			sb.append('+');
 		
 		if(Partiezustand.getInstance().istSchachmatt())
