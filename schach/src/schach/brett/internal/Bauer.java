@@ -93,13 +93,16 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		position.istBesetzt(false);
 		speichereVorPosition();
 		position = ziel;
-		position.istBesetzt(true);
+		position.istBesetzt(true);		
+		
+		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
+			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 		
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
-		
+
 		if(!Brett.getInstance().istBauernUmwandlung()){
 			Partiehistorie.getInstance().protokolliereStellung(true, this);
 			Partie.getInstance().wechsleSpieler();
@@ -166,7 +169,11 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			position.istBesetzt(false);
 			speichereVorPosition();
 			position = ziel;
-			position.istBesetzt(true);
+			position.istBesetzt(true);		
+			
+			if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
+				Partie.getInstance().lehneRemisAb(gehoertSpieler());
+			
 //			per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
 			for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
 				((IBauer) fig).letzteRundeDoppelschritt(false);
@@ -175,7 +182,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			if(!Brett.getInstance().istBauernUmwandlung()){
 				Partiehistorie.getInstance().protokolliereStellung(true, this);
 				Partie.getInstance().wechsleSpieler();
-			}
+			}		
 			
 //			informiere die Beobachter, dass sich etwas geändert hat
 			setChanged();
@@ -230,7 +237,11 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		position.istBesetzt(false);
 		speichereVorPosition();
 		position = ziel;
-		position.istBesetzt(true);
+		position.istBesetzt(true);		
+		
+		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
+			Partie.getInstance().lehneRemisAb(gehoertSpieler());
+		
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
@@ -239,7 +250,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		if(!Brett.getInstance().istBauernUmwandlung()){
 			Partiehistorie.getInstance().protokolliereStellung(false, this);
 			Partie.getInstance().wechsleSpieler();
-		}
+		}		
 		
 //		dieser Bauer hat doch einen Doppelschritt gemacht?
 		doppelschritt = macheEinenDoppelschritt;

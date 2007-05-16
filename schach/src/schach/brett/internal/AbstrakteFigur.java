@@ -22,7 +22,6 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	protected Figurart figurart;
 	
 	public AbstrakteFigur(Farbe farbe, IFeld feld, Figurart figurart) {
-		
 		if(feld != null)
 			feld.istBesetzt(true);
 		
@@ -45,8 +44,6 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 	public void aufstellen(IFeld feld) throws NegativeConditionException {
 		if(!Partiezustand.getInstance().inPartie())
 			throw new NegativePreConditionException("Partie läuft nicht");
-		
-		// @TODO brauchen wir das überhaupt noch (siehe Knstruktor)
 	}
 
 	public Farbe gebeFarbe() {

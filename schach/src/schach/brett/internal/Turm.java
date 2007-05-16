@@ -38,7 +38,10 @@ public class Turm extends AbstrakteFigur implements ITurm {
 		position.istBesetzt(false);
 		speichereVorPosition();
 		position = ziel;
-		position.istBesetzt(true);
+		position.istBesetzt(true);		
+		
+		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
+			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 		
 		schonBewegt = true;
 	}
@@ -94,7 +97,10 @@ public class Turm extends AbstrakteFigur implements ITurm {
 		position.istBesetzt(false);
 		speichereVorPosition();
 		position = ziel;
-		position.istBesetzt(true);
+		position.istBesetzt(true);		
+		
+		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
+			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschlie§en)
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
@@ -149,7 +155,10 @@ public class Turm extends AbstrakteFigur implements ITurm {
 		position.istBesetzt(false);
 		speichereVorPosition();
 		position = ziel;
-		position.istBesetzt(true);
+		position.istBesetzt(true);		
+		
+		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
+			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschlie§en)
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
