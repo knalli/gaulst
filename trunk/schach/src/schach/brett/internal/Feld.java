@@ -5,7 +5,6 @@ import schach.brett.IFeld;
 import schach.brett.Linie;
 import schach.brett.Reihe;
 import schach.partie.internal.Partie;
-import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
