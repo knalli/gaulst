@@ -13,7 +13,6 @@ import schach.system.NegativePreConditionException;
 public class Partiezustand implements IPartiezustand {
 	private static IPartiezustand instance = null;
 	private boolean inpartie = false;
-	private ISpieler istRemisAngenommenVon=null;
 	private boolean istRemisMoeglich=false;
 	private ISpieler istRemisangebotVon=null;
 	
