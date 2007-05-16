@@ -164,7 +164,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 	}
 
 	public void testeZug(IFeld ziel) throws NegativeConditionException {
-		Logger.debug("Teste Zugart für "+Partie.getInstance().aktuelleFarbe()+": "+this+" nach "+ziel);
+//		Logger.debug("Teste Zugart für "+Partie.getInstance().aktuelleFarbe()+": "+this+" nach "+ziel);
 		
 		if(position.equals(ziel))
 			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");

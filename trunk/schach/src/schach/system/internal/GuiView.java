@@ -65,7 +65,7 @@ public class GuiView implements IView {
 		getJFrame().setSize(500, 700);
 	}
 
-	private JFrame jFrame = null;
+	private JFrame jFrame = null;  //  @jve:decl-index=0:visual-constraint="10,10"
 
 	private JPanel jContentPane = null;
 
@@ -92,7 +92,7 @@ public class GuiView implements IView {
 		if (jFrame == null) {
 			jFrame = new JFrame();
 			jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			jFrame.setSize(300, 200);
+			jFrame.setSize(334, 413);
 			jFrame.setContentPane(getJContentPane());
 			jFrame.setTitle("Die Schachpartie - Denn Schach ist einfach Pferd.");
 		}
@@ -107,21 +107,19 @@ public class GuiView implements IView {
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
 			GridLayout gridLayout = new GridLayout();
-			gridLayout.setRows(3);
+			gridLayout.setRows(2);
 			gridLayout.setColumns(1);
-			jlBild = new JLabel();
-			jlBild.setIcon(new ImageIcon("images/gaul.png",""));
-			jlBild.setPreferredSize(new Dimension(81, 150));
+
 			Aufforderung = new JLabel();
 			Aufforderung.setText("<html>Bitte geben Sie Ihren gewünschten Zugweg in <br>" +
 										"Kurznotation ein oder klicken mit der Maus die <br>" +
 										"entsprechenden Felder an.");
-			Aufforderung.setPreferredSize(new Dimension(300, 48));
+			Aufforderung.setSize(new Dimension(300, 148));
 			GridLayout gridLayout1 = new GridLayout(2, 1);
 			gridLayout1.setHgap(7);
 			gridLayout1.setVgap(7);
 			jContentPane = new JPanel();
-			jContentPane.setPreferredSize(new Dimension(1051, 447));
+			jContentPane.setPreferredSize(new Dimension(1051, 547));
 			jcpSchachbrett = new JPanel();
 			jcpController = new JPanel();
 			
@@ -225,8 +223,7 @@ public class GuiView implements IView {
 			jInputField.setPreferredSize(new Dimension(140, 22));
 			jcpController.setLayout(gridLayout);
 			jcpController.add(getJpBildtrenner(), null);
-			jcpController.add(getJpRemis(), null);
-			jcpController.add(getJepSystemantwort(), null);
+			jcpController.add(getJPanel1(), null);
 			jInputField.addActionListener(parseCommand);
 			jContentPane.add(jcpController);
 		}
@@ -292,6 +289,13 @@ public class GuiView implements IView {
 		
 		if(!partiezustand.inPartie()){
 			jLabelAktuellerSpieler.setText("<html><b>Partie läuft nicht.");
+			
+			for(JButton jb : new JButton[] {jSendButton, jbGibKeinRemis, jbGibRemis}){
+				jb.setEnabled(false);
+			}
+		}
+		else if(partiezustand.istSchachmatt()) {
+			jLabelAktuellerSpieler.setText("<html><b>Partie ist matt.");
 		}
 		else {
 			jLabelAktuellerSpieler.setText("<html><b>Aktueller Spieler: "+(partie.aktuellerSpieler().toString())+" "+(partiezustand.istSchach(partie.aktuelleFarbe())?"(Ihr König wird bedroht!)":""));
@@ -433,7 +437,7 @@ public class GuiView implements IView {
 
 	private DefaultTableModel tblmNotationen;
 
-	private JFrame jfBauernumwandlungAuswahl = null;  //  @jve:decl-index=0:visual-constraint="93,253"
+	private JFrame jfBauernumwandlungAuswahl = null;  //  @jve:decl-index=0:visual-constraint="486,364"
 
 	private JPanel jContentPane2 = null;
 
@@ -456,6 +460,8 @@ public class GuiView implements IView {
 	private JButton jbGibRemis = null;
 
 	private JButton jbGibKeinRemis = null;
+
+	private JPanel jPanel1 = null;
 	/**
 	 * This method initializes jpControllereinheiten	
 	 * 	
@@ -465,12 +471,9 @@ public class GuiView implements IView {
 		if (jpControllereinheiten == null) {
 			GridLayout gridLayout2 = new GridLayout();
 			gridLayout2.setRows(3);
-			gridLayout2.setHgap(2);
-			gridLayout2.setVgap(2);
 			gridLayout2.setColumns(1);
 			jpControllereinheiten = new JPanel();
 			jpControllereinheiten.setLayout(gridLayout2);
-			jpControllereinheiten.setSize(new Dimension(300, 58));
 			jpControllereinheiten.add(jLabelAktuellerSpieler, null);
 			jpControllereinheiten.add(Aufforderung, null);
 			jpControllereinheiten.add(getJpEingabe(), null);
@@ -485,7 +488,12 @@ public class GuiView implements IView {
 	 */
 	private JPanel getJpBildtrenner() {
 		if (jpBildtrenner == null) {
+			jlBild = new JLabel();
+			jlBild.setIcon(new ImageIcon("images/gaul.png",""));
+			jlBild.setPreferredSize(new Dimension(300, 150));
+			
 			jpBildtrenner = new JPanel();
+			jpBildtrenner.setPreferredSize(new Dimension(294, 360));
 			jpBildtrenner.add(getJpControllereinheiten(), null);
 			jpBildtrenner.add(jlBild, null);
 		}
@@ -499,14 +507,10 @@ public class GuiView implements IView {
 	 */
 	private JPanel getJpEingabe() {
 		if (jpEingabe == null) {
-			GridBagConstraints gridBagConstraints = new GridBagConstraints();
-			gridBagConstraints.fill = GridBagConstraints.VERTICAL;
-			gridBagConstraints.weightx = 1.0;
 			jpEingabe = new JPanel();
-			jpEingabe.setLayout(new GridBagLayout());
-			jpEingabe.add(jInputField, gridBagConstraints);
-			jpEingabe.add(jSendButton, new GridBagConstraints());
-			jpEingabe.add(getJbLog(), new GridBagConstraints());
+			jpEingabe.add(jInputField, null);
+			jpEingabe.add(jSendButton, null);
+			jpEingabe.add(getJbLog(), null);
 		}
 		return jpEingabe;
 	}
@@ -520,6 +524,7 @@ public class GuiView implements IView {
 		if (jepSystemantwort == null) {
 			jepSystemantwort = new JEditorPane();
 			jepSystemantwort.setEditable(false);
+			jepSystemantwort.setSize(new Dimension(380,50));
 		}
 		return jepSystemantwort;
 	}
@@ -794,5 +799,19 @@ public class GuiView implements IView {
 			});
 		}
 		return jbGibKeinRemis;
+	}
+
+	/**
+	 * This method initializes jPanel1	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getJPanel1() {
+		if (jPanel1 == null) {
+			jPanel1 = new JPanel();
+			jPanel1.add(getJpRemis(), null);
+			jPanel1.add(getJepSystemantwort(), null);
+		}
+		return jPanel1;
 	}
 }

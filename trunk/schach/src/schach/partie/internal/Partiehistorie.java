@@ -8,7 +8,6 @@ import schach.brett.Figurart;
 import schach.brett.IBauer;
 import schach.brett.IFeld;
 import schach.brett.IFigur;
-import schach.brett.IKoenig;
 import schach.brett.Linie;
 import schach.brett.Reihe;
 import schach.brett.internal.AlleFiguren;
@@ -119,7 +118,7 @@ public class Partiehistorie implements IPartiehistorie {
 	}
 	
 	private String bildeAlgebraischeNotation(IFigur figur, boolean istSchlagzug, IFigur neueFigur){
-		if(figur instanceof IKoenig){
+		if(figur.gebeArt().equals(Figurart.KOENIG)){
 			if(figur.gebeVorPosition().equals(figur.gebeGrundposition())){
 				if(figur.gebePosition().gebeLinie().equals(Linie.G)){
 					return "0-0";
@@ -150,7 +149,7 @@ public class Partiehistorie implements IPartiehistorie {
 		else 
 			sb.append(neueFigur.gebePosition().toString().toLowerCase());
 		
-		if(figur instanceof IBauer && neueFigur != null){
+		if(figur.gebeArt().equals(Figurart.BAUER) && neueFigur != null){
 			if((figur.gebeFarbe().equals(Farbe.WEISS) && neueFigur.gebePosition().gebeReihe().equals(Reihe.R8)) || (figur.gebeFarbe().equals(Farbe.SCHWARZ) && neueFigur.gebePosition().gebeReihe().equals(Reihe.R1))){
 				switch(neueFigur.gebeArt()){
 				case DAME: sb.append('D'); break;
@@ -162,10 +161,10 @@ public class Partiehistorie implements IPartiehistorie {
 		}
 	
 		
-		if(Partiehistorie.getInstance().gebeStellungen(1).get(0).istKoenigBedroht(figur.gebeFarbe()))
+		if(Partiezustand.getInstance().istSchach(figur.gebeFarbe()))
 			sb.append('+');
 		
-		if(Partiezustand.getInstance().istPatt())
+		if(Partiezustand.getInstance().istSchachmatt())
 			sb.append('+');
 		
 		try {
