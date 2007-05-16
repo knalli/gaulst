@@ -20,4 +20,10 @@ public interface IStellung {
 	public boolean istPatt();
 	
 	public boolean istSchachmatt();
+	
+	public boolean istRemisMoeglich();
+	
+	public boolean istGleicheStellung(IStellung stellung);
+	
+	public String gebeHashwert();
 }

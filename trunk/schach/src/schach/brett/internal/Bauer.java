@@ -299,7 +299,11 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		if(!gueltig)
 			throw new NegativePreConditionException("Ungültige Gangart (Ziehen).");
 		
-		if(position.plusReihe(2).equals(ziel) && !wurdeBewegt()) {
+		boolean dps = false;
+		try {
+			dps = position.plusReihe(2).equals(ziel);
+		} catch (NegativePreConditionException e) {}
+		if(dps && !wurdeBewegt()) {
 			if(position.plusReihe(1).istBesetzt() || ziel.istBesetzt())
 				throw new NegativePreConditionException("Ziel oder Zugweg ist besetzt.");
 		}
