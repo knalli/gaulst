@@ -7,7 +7,6 @@ import schach.brett.internal.AlleFiguren;
 import schach.partie.IPartiezustand;
 import schach.partie.IStellung;
 import schach.spieler.ISpieler;
-import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
