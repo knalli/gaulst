@@ -12,9 +12,9 @@ import schach.system.NegativePreConditionException;
 public class Partiezustand implements IPartiezustand {
 	private static IPartiezustand instance = null;
 	private boolean inpartie = false;
-	private boolean istRemisAngenommenVon=false;
+	private ISpieler istRemisAngenommenVon=null;
 	private boolean istRemisMoeglich=false;
-	private boolean istRemisangebotVon=false;
+	private ISpieler istRemisangebotVon=null;
 	
 	
 	private Partiezustand() {
@@ -43,33 +43,16 @@ public class Partiezustand implements IPartiezustand {
 	}
 
 	public boolean istRemisAngenommenVon(ISpieler spieler) {
-
-	if(Partie.getInstance().istRemisangenommen()){
-		istRemisAngenommenVon=true;
-	}else{
-		istRemisAngenommenVon= false;
-	}
-	return istRemisAngenommenVon;
-		
+		return istRemisMoeglich() && istRemisAngenommenVon.equals(spieler);
 	}
 
-	public boolean istRemisMoeglich() throws NegativeConditionException {
-		// TODO Zustand#istRemisMoeglich
-		if(Partie.getInstance().istRemisMoeglich()){
-			istRemisMoeglich=true;
-		}else{
-			istRemisMoeglich=false;		}
-		return istRemisMoeglich;
+	public boolean istRemisMoeglich() {
+		List<IStellung> stellung = Partiehistorie.getInstance().gebeStellungen(1);
+		return istRemisMoeglich || (stellung.size() > 0 && stellung.get(0).istRemisMoeglich());
 	}
 
-	public boolean istRemisangebotVon(ISpieler spieler) throws NegativeConditionException{
-
-		if(Partie.getInstance().istRemisAngebotVon(spieler)){
-			istRemisangebotVon=true;
-		}else{
-			istRemisangebotVon=false;
-		}
-		return istRemisangebotVon;
+	public boolean istRemisangebotVon(ISpieler spieler) {
+		return istRemisMoeglich() && istRemisangebotVon.equals(spieler);
 	}
 
 	public boolean istSchachmatt() {
@@ -84,11 +67,7 @@ public class Partiezustand implements IPartiezustand {
 	}
 
 	public boolean istSchach(Farbe farbe) {
-		//Partiehistorie.getInstance().gebeStellungen(1).get(0).);
-		try {
-			return Partiehistorie.getInstance().gebeStellungen(1).get(0).istKoenigBedroht(farbe);
-		}
-		catch(IndexOutOfBoundsException e){}
-		return false;
+		List<IStellung> stellung = Partiehistorie.getInstance().gebeStellungen(1);
+		return stellung.size() > 0 && stellung.get(0).istKoenigBedroht(farbe);
 	}
 }
