@@ -1,19 +1,14 @@
 package schach.partie.internal;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import schach.brett.Farbe;
 import schach.brett.Figurart;
-import schach.brett.IFeld;
 import schach.brett.IFigur;
 import schach.brett.IKoenig;
-import schach.brett.Linie;
-import schach.brett.Reihe;
 import schach.brett.internal.AlleFiguren;
-import schach.brett.internal.Brett;
 import schach.partie.IPartie;
 import schach.partie.IStellung;
 import schach.system.Logger;
@@ -140,12 +135,14 @@ public class Stellung implements IStellung {
 			
 			
 			// Remisregel letzten 50 Zügen bzw. 100 Halbzüge
-			List<IStellung> l50stellungen = Partiehistorie.getInstance().gebeStellungen(100);
-			remismoeglich = true;
-			for(IStellung stellung : l50stellungen){
-				if(stellung.ziehendeFigur().equals(Figurart.BAUER) || stellung.istSchlagzug()){
-					remismoeglich = false;
-					break;
+			List<IStellung> l100stellungen = Partiehistorie.getInstance().gebeStellungen(100);
+			if(l100stellungen.size() >= 100){
+				remismoeglich = true;
+				for(IStellung stellung : l100stellungen){
+					if(stellung.ziehendeFigur().equals(Figurart.BAUER) || stellung.istSchlagzug()){
+						remismoeglich = false;
+						break;
+					}
 				}
 			}
 			if(!remismoeglich){

@@ -4,7 +4,6 @@ import schach.brett.Farbe;
 import schach.brett.internal.AlleFiguren;
 import schach.partie.IPartie;
 import schach.partie.IPartiehistorie;
-import schach.partie.IPartiezustand;
 import schach.spieler.ISpieler;
 import schach.spieler.internal.Spieler;
 import schach.system.ChessException;
@@ -19,16 +18,13 @@ public class Partie implements IPartie {
 	private Farbe aktuelleFarbe = Farbe.WEISS;
 	private ISpieler aktuellerSpieler = null;
 	private ISpieler gegnerischerSpieler = null;
-	private boolean istRemisAngebot = false;
-	private ISpieler istRemisAngebotVon = null;
-	private boolean istRemisAngenommen=false;
 	
-	private IPartiezustand zustand = null;
+	private Partiezustand zustand = null;
 	private IPartiehistorie historie = null;
 	
 	private Partie() {
 		// objekte sollten schon mal erstellt werden= = sorgt nur dafür, dass sie da sind.. ist sauberer
-		zustand = Partiezustand.getInstance();
+		zustand = (Partiezustand) Partiezustand.getInstance();
 		historie = Partiehistorie.getInstance();
 		
 		aktuelleFarbe = Farbe.WEISS;
@@ -47,16 +43,14 @@ public class Partie implements IPartie {
 		return aktuellerSpieler;   
 	}
 
-	public boolean bieteRemisAn(ISpieler spieler) throws NegativeConditionException {
+	public void bieteRemisAn(ISpieler spieler) throws NegativeConditionException {
 		if(!zustand.inPartie())
 			throw new NegativePreConditionException("Es läuft keine Partie.");
 	
-		if (istRemisAngebotVon(aktuellerSpieler))
-			throw new NegativePreConditionException("Es liegt bereits ein Remisangebot des gegnerischen Spielers vor.");
+		if (zustand.istRemisMoeglich())
+			throw new NegativePreConditionException("Es liegt bereits ein Remisangebot vor.");
 		
-		istRemisAngebot = true;
-		istRemisAngebotVon = spieler;
-		return true;
+		zustand.setzeRemisVon(spieler);
 	}
 
 	public ISpieler gegnerischerSpieler() {
@@ -64,17 +58,17 @@ public class Partie implements IPartie {
 	}
 
 	public void lehneRemisAb(ISpieler spieler) throws NegativeConditionException {
-		if(!istRemisMoeglich() || !istRemisAngebotVon(gegnerischerSpieler)){
-			throw new NegativePreConditionException("Remisablehnung: Kein Remis verfügbar."); 
-		}
-		istRemisAngebot=false;
+		if(zustand.istRemisAngebotVon(spieler))
+			throw new NegativePreConditionException("Das Remis kann nicht abgelehnt werden."); 
+		
+		zustand.setzeRemisVon(null);
 	}
 
 	public void nehmeRemisAn(ISpieler spieler) throws NegativeConditionException {
-		if(!istRemisMoeglich() || !istRemisAngebotVon(gegnerischerSpieler)){
-			throw new NegativePreConditionException("Remisannahme: Kein Remis verfügbar."); 
-		}
-		istRemisAngenommen=true;
+		if(zustand.istRemisAngebotVon(spieler))
+			throw new NegativePreConditionException("Das Remis kann nicht angenommen werden."); 
+	
+		zustand.setzeRemisVon(spieler);
 		haltePartieAn();
 	}
 
@@ -107,25 +101,11 @@ public class Partie implements IPartie {
 		aktuelleFarbe = aktuelleFarbe.andereFarbe();
 	}
 
-	public boolean istRemisAngebotVon(ISpieler spieler) throws NegativeConditionException {
-		if(!zustand.inPartie())
-			throw new NegativePreConditionException("Es läuft keine Partie");
-		return spieler.equals(istRemisAngebotVon);
-	}
-
-	public boolean istRemisMoeglich() throws NegativeConditionException {
-		return istRemisAngebot;
-	}
-
 	public void setzeFarbe(Farbe farbe) {
 		if(historie.istEineSimulation()){
 			aktuelleFarbe = farbe;
 			aktuellerSpieler = Spieler.getInstance(farbe);
 			gegnerischerSpieler = Spieler.getInstance(farbe.andereFarbe());
 		}
-	}
-	
-	public boolean istRemisangenommen(){
-		return istRemisAngenommen;
 	}
 }
