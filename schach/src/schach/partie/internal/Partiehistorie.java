@@ -170,6 +170,10 @@ public class Partiehistorie implements IPartiehistorie {
 				}
 			}
 		} catch (NullPointerException e) {} // keine figurposi bei umwandlung
+		
+		if(Partiezustand.getInstance().istRemisMoeglich())
+			sb.append(" (=)");
+		
 		return sb.toString();
 	}
 }
