@@ -130,13 +130,7 @@ public class Partiehistorie implements IPartiehistorie {
 		}
 		
 		StringBuilder sb = new StringBuilder();
-		switch(figur.gebeArt()){
-		case DAME: sb.append('D'); break;
-		case KOENIG: sb.append('K'); break;
-		case LAEUFER: sb.append('L'); break;
-		case SPRINGER: sb.append('S'); break;
-		case TURM: sb.append('T'); break;
-		}
+		sb.append(figur.gebeArt().gebeKuerzel());
 		sb.append(figur.gebeVorPosition().toString().toLowerCase());
 		
 		if(istSchlagzug)
@@ -151,12 +145,7 @@ public class Partiehistorie implements IPartiehistorie {
 		
 		if(figur.gebeArt().equals(Figurart.BAUER) && neueFigur != null){
 			if((figur.gebeFarbe().equals(Farbe.WEISS) && neueFigur.gebePosition().gebeReihe().equals(Reihe.R8)) || (figur.gebeFarbe().equals(Farbe.SCHWARZ) && neueFigur.gebePosition().gebeReihe().equals(Reihe.R1))){
-				switch(neueFigur.gebeArt()){
-				case DAME: sb.append('D'); break;
-				case LAEUFER: sb.append('L'); break;
-				case SPRINGER: sb.append('S'); break;
-				case TURM: sb.append('T'); break; 
-				}
+				sb.append(figur.gebeArt().gebeKuerzel());
 			}
 		}
 	

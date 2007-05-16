@@ -10,4 +10,15 @@ public enum Figurart {
 	public static List<Figurart> getAll(){
 		return Arrays.asList(values());
 	}
+	
+	public char gebeKuerzel() {
+		switch(this){
+		case DAME: return('D');
+		case KOENIG: return('K');
+		case LAEUFER: return('L');
+		case SPRINGER: return('S');
+		case TURM: return('T');
+		}
+		return 'X'; // no way..
+	}
 }
