@@ -11,14 +11,14 @@ public enum Figurart {
 		return Arrays.asList(values());
 	}
 	
-	public char gebeKuerzel() {
+	public String gebeKuerzel() {
 		switch(this){
-		case DAME: return('D');
-		case KOENIG: return('K');
-		case LAEUFER: return('L');
-		case SPRINGER: return('S');
-		case TURM: return('T');
+		case DAME: return("D");
+		case KOENIG: return("K");
+		case LAEUFER: return("L");
+		case SPRINGER: return("S");
+		case TURM: return("T");
 		}
-		return 'X'; // no way..
+		return "";
 	}
 }
