@@ -51,14 +51,7 @@ public class Stellung implements IStellung {
 		
 		StringBuilder sb = new StringBuilder(96);
 		for(IFigur figur : AlleFiguren.getInstance().gebeAlleFiguren()){
-			switch(figur.gebeArt()){
-			case BAUER: sb.append('B'); break;
-			case DAME: sb.append('D'); break;
-			case KOENIG: sb.append('K'); break;
-			case LAEUFER: sb.append('L'); break;
-			case SPRINGER: sb.append('S'); break;
-			case TURM: sb.append('T'); break;
-			}
+			sb.append(figur.gebeArt().gebeKuerzel());
 			sb.append(figur.gebePosition());
 		}
 		stellungshash = sb.toString();
