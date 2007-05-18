@@ -10,23 +10,21 @@ import schach.brett.ISchlagbareFigur;
 import schach.partie.internal.Partie;
 import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
+import schach.spieler.ISpieler;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
-public class Bauer extends AbstrakteFigur implements IBauer {
+public class Bauer implements IBauer {
 	private boolean doppelschritt = false;
 	private boolean sollentferntwerden = false;
+	private AbstrakteFigur figur = null;
 
 	public Bauer(Farbe farbe, IFeld feld) {
-		super(farbe, feld, Figurart.BAUER);
+		figur = new AbstrakteFigur(farbe, feld, Figurart.BAUER);
 	}
 	
-	protected Bauer(IFigur figur){
-		super(figur);
-	}
-
 	public void entnehmen() throws NegativeConditionException {
-		if(!position.gebeReihe().equals(Partie.getInstance().gegnerischerSpieler().gebeGrundreihe()))
+		if(!gebePosition().gebeReihe().equals(Partie.getInstance().gegnerischerSpieler().gebeGrundreihe()))
 			throw new NegativePreConditionException("Bauer steht nicht auf der gegnerischen Grundreihe.");
 		
 		if(!Brett.getInstance().istBauernUmwandlung())
@@ -35,9 +33,9 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		if(!istAufDemSchachbrett())
 			throw new NegativePreConditionException("Figur steht nicht auf Schachbrett.");
 		
-		grundposition = null;
-		speichereVorPosition();
-		position = null;
+		figur.setzeUmGrundposition(null);
+		figur.speichereVorPosition();
+		figur.setzeUmPosition(null);
 	}
 
 	public boolean letzteRundeDoppelschritt() {
@@ -58,7 +56,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		if(Partiezustand.getInstance().istSchachmatt())
 			throw new NegativePreConditionException("Partie ist Schachmatt");
 		
-		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
+		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, gebeFarbe()).get(0));
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
@@ -67,7 +65,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		
 //		simuliere Stellung
 		try {
-			if(Partiehistorie.getInstance().simuliereStellung(position, ziel, gegner).istKoenigBedroht(farbe))
+			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel, gegner).istKoenigBedroht(gebeFarbe()))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -83,23 +81,23 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		if(!(gegner instanceof ISchlagbareFigur))
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
 		
-		if(gegner.gebeFarbe().equals(farbe))
+		if(gegner.gebeFarbe().equals(gebeFarbe()))
 			throw new NegativePreConditionException("Zu schlagende Figur gehört nicht dem gegnerischen Spieler.");
 
 		ISchlagbareFigur gegner2 = (ISchlagbareFigur) gegner;
 		gegner2.setzeSollEntferntWerden();
 		gegner2.geschlagenWerden();
 		
-		position.istBesetzt(false);
-		speichereVorPosition();
-		position = ziel;
-		position.istBesetzt(true);		
+		figur.gebePosition().istBesetzt(false);
+		figur.speichereVorPosition();
+		figur.setzeUmPosition(ziel);
+		figur.gebePosition().istBesetzt(true);
 		
 		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
 			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 		
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
-		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
+		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, gebeFarbe())) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
 
@@ -109,8 +107,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		}
 		
 //		informiere die Beobachter, dass sich etwas geändert hat
-		setChanged();
-		notifyObservers();
+		figur.erzwingeUpdate();
 	}
 
 	public void schlaegtEnPassant(IFeld ziel)
@@ -127,7 +124,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			if(Partiezustand.getInstance().istSchachmatt())
 				throw new NegativePreConditionException("Partie ist Schachmatt");
 			
-			IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
+			IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, gebeFarbe()).get(0));
 			if(koenig.istInEinerRochade())
 				throw new NegativePreConditionException("Koenig ist in einer Rochade");
 			
@@ -139,14 +136,14 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			if(!(gegner instanceof IBauer))
 				throw new NegativePreConditionException("Zu schlagende Figur ist kein Bauer.");
 			
-			if(gegner.gebeFarbe().equals(farbe))
+			if(gegner.gebeFarbe().equals(gebeFarbe()))
 				throw new NegativePreConditionException("Zu schlagende Figur gehört nicht dem gegnerischen Spieler.");
 
 			IBauer gegner2 = (IBauer) gegner;
 			
 //			simuliere Stellung
 			try {
-				if(Partiehistorie.getInstance().simuliereStellung(position, ziel, gegner).istKoenigBedroht(farbe))
+				if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel, gegner).istKoenigBedroht(gebeFarbe()))
 					throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 			} catch (IndexOutOfBoundsException e) {
 				throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -166,16 +163,16 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			gegner2.setzeSollEntferntWerden();
 			gegner2.geschlagenWerden();
 			
-			position.istBesetzt(false);
-			speichereVorPosition();
-			position = ziel;
-			position.istBesetzt(true);		
+			figur.gebePosition().istBesetzt(false);
+			figur.speichereVorPosition();
+			figur.setzeUmPosition(ziel);
+			figur.gebePosition().istBesetzt(true);	
 			
 			if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
 				Partie.getInstance().lehneRemisAb(gehoertSpieler());
 			
 //			per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
-			for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
+			for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, gebeFarbe())) {
 				((IBauer) fig).letzteRundeDoppelschritt(false);
 			}
 			
@@ -185,8 +182,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			}		
 			
 //			informiere die Beobachter, dass sich etwas geändert hat
-			setChanged();
-			notifyObservers();
+			figur.erzwingeUpdate();
 	}
 
 	public void zieht(IFeld ziel) throws NegativeConditionException {
@@ -203,7 +199,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		if(Partiezustand.getInstance().istSchachmatt())
 			throw new NegativePreConditionException("Partie ist Schachmatt");
 		
-		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
+		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, gebeFarbe()).get(0));
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
@@ -212,7 +208,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		
 //		simuliere Stellung
 		try {
-			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
+			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel).istKoenigBedroht(gebeFarbe()))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -227,23 +223,23 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			
 		boolean dps = false;
 		try {
-			dps = position.plusReihe(2).equals(ziel);
+			dps = gebePosition().plusReihe(2).equals(ziel);
 		} catch (NegativePreConditionException e) {}
 		if(dps && !wurdeBewegt()) {
 			// rest in testeZug geprüft
 			macheEinenDoppelschritt = true;
 		}
 			
-		position.istBesetzt(false);
-		speichereVorPosition();
-		position = ziel;
-		position.istBesetzt(true);		
+		figur.gebePosition().istBesetzt(false);
+		figur.speichereVorPosition();
+		figur.setzeUmPosition(ziel);
+		figur.gebePosition().istBesetzt(true);
 		
 		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
 			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 		
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
-		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
+		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, gebeFarbe())) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
 		
@@ -256,8 +252,7 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		doppelschritt = macheEinenDoppelschritt;
 		
 //		informiere die Beobachter, dass sich etwas geändert hat
-		setChanged();
-		notifyObservers();
+		figur.erzwingeUpdate();
 	}
 
 	public void geschlagenWerden() throws NegativeConditionException {
@@ -265,9 +260,9 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			throw new NegativePreConditionException("Figur darf nicht entfernt werden.");
 		}
 		
-		position.istBesetzt(false);
-		speichereVorPosition();
-		position = null;
+		figur.gebePosition().istBesetzt(false);
+		figur.speichereVorPosition();
+		figur.setzeUmPosition(null);
 //		grundposition = null;
 		
 //		keine Information an die Beobachter, da geschlagenWerden Bestandteil 
@@ -299,15 +294,15 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 	}
 	
 	private void testeZiehZug(IFeld ziel) throws NegativeConditionException{
-		if(position.equals(ziel))
+		if(gebePosition().equals(ziel))
 			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
 		
 		boolean gueltig = false;
 		try {
-			gueltig = position.plusReihe(1).equals(ziel) && !ziel.istBesetzt();
+			gueltig = gebePosition().plusReihe(1).equals(ziel) && !ziel.istBesetzt();
 		} catch(NegativeConditionException e){}
 		try {
-			gueltig = gueltig || (position.plusReihe(2).equals(ziel) && !wurdeBewegt() && !ziel.istBesetzt());
+			gueltig = gueltig || (gebePosition().plusReihe(2).equals(ziel) && !wurdeBewegt() && !ziel.istBesetzt());
 		} catch(NegativeConditionException e){}
 		
 		if(!gueltig)
@@ -315,16 +310,16 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 		
 		boolean dps = false;
 		try {
-			dps = position.plusReihe(2).equals(ziel);
+			dps = gebePosition().plusReihe(2).equals(ziel);
 		} catch (NegativePreConditionException e) {}
 		if(dps && !wurdeBewegt()) {
-			if(position.plusReihe(1).istBesetzt() || ziel.istBesetzt())
+			if(gebePosition().plusReihe(1).istBesetzt() || ziel.istBesetzt())
 				throw new NegativePreConditionException("Ziel oder Zugweg ist besetzt.");
 		}
 	}
 	
 	private void testeSchlagZug(IFeld ziel) throws NegativeConditionException{
-		if(position.equals(ziel))
+		if(gebePosition().equals(ziel))
 			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
 		
 		boolean gueltig = false;
@@ -345,5 +340,53 @@ public class Bauer extends AbstrakteFigur implements IBauer {
 			else 
 				throw new NegativePreConditionException("Erkannter Enpassent Schlagzug: Kein Bauer auf ep-Feld.");
 		}
+	}
+
+	public void aufstellen(IFeld feld) throws NegativeConditionException {
+		figur.aufstellen(feld);
+	}
+
+	public void erzwingeUpdate() {
+		figur.erzwingeUpdate();
+	}
+
+	public Figurart gebeArt() {
+		return figur.gebeArt();
+	}
+
+	public Farbe gebeFarbe() {
+		return figur.gebeFarbe();
+	}
+
+	public IFeld gebeGrundposition() {
+		return figur.gebeGrundposition();
+	}
+
+	public IFeld gebePosition() {
+		return figur.gebePosition();
+	}
+
+	public IFeld gebeVorPosition() {
+		return figur.gebeVorPosition();
+	}
+
+	public ISpieler gehoertSpieler() {
+		return figur.gehoertSpieler();
+	}
+
+	public boolean istAufDemSchachbrett() {
+		return figur.istAufDemSchachbrett();
+	}
+
+	public boolean istAufGrundposition() {
+		return figur.istAufGrundposition();
+	}
+
+	public void positionieren(IFeld feld) throws NegativeConditionException {
+		throw new NegativePreConditionException("Für den Bauern ist dieser Zug nicht möglich.");
+	}
+
+	public void simuliereBrettzug(IFeld start) {
+		figur.simuliereBrettzug(start);
 	}
 }

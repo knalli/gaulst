@@ -5,7 +5,6 @@ import java.util.List;
 import schach.brett.Farbe;
 import schach.brett.Figurart;
 import schach.brett.IBauer;
-import schach.brett.IBrett;
 import schach.brett.IFeld;
 import schach.brett.IFigur;
 import schach.brett.IKoenig;
@@ -15,26 +14,23 @@ import schach.brett.Linie;
 import schach.partie.internal.Partie;
 import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
+import schach.spieler.ISpieler;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
-public class Koenig extends AbstrakteFigur implements IKoenig {
+public class Koenig implements IKoenig {
 
-	IBrett brett = Brett.getInstance();
 	private boolean schonBewegt = false;
 	private boolean istineinerrochade = false;
+	private AbstrakteFigur figur = null;
 
 	public Koenig(Farbe farbe, IFeld feld) {
-		super(farbe, feld, Figurart.KOENIG);
-	}
-	
-	protected Koenig(IFigur figur) {
-		super(figur);
+		figur = new AbstrakteFigur(farbe, feld, Figurart.KOENIG);
 	}
 	
 	public boolean istBedroht() {
 		for(IFigur figur : AlleFiguren.getInstance().gebeAlleFiguren()){
-			if(!figur.gebeFarbe().equals(farbe) && figur.istAufDemSchachbrett()){
+			if(!figur.gebeFarbe().equals(gebeFarbe()) && figur.istAufDemSchachbrett()){
 				try {
 					figur.testeZug(gebePosition());
 					
@@ -76,7 +72,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		
 //		simuliere Stellung
 		try {
-			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
+			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel).istKoenigBedroht(gebeFarbe()))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -84,10 +80,10 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		
 		boolean gueltig = false;
 		try {
-			gueltig = position.minusLinie(2).equals(ziel);
+			gueltig = gebePosition().minusLinie(2).equals(ziel);
 		} catch(NegativeConditionException e){}
 		try {
-			gueltig = gueltig || position.plusLinie(2).equals(ziel);
+			gueltig = gueltig || gebePosition().plusLinie(2).equals(ziel);
 		} catch(NegativeConditionException e){}
 		
 		if(!gueltig)
@@ -101,11 +97,11 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		else {
 			turmfeld = Brett.getInstance().gebeFeld(gebePosition().gebeReihe(), Linie.A);
 		}
-		if(position.minusLinie(2).equals(ziel)){
-			turmzielfeld = position.minusLinie(1);
+		if(gebePosition().minusLinie(2).equals(ziel)){
+			turmzielfeld = gebePosition().minusLinie(1);
 		}
 		else {
-			turmzielfeld = position.plusLinie(1);
+			turmzielfeld = gebePosition().plusLinie(1);
 		}
 		
 		ITurm turm = (ITurm) Brett.getInstance().gebeFigurVonFeld(turmfeld);
@@ -122,7 +118,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 //		simuliere Stellung
 		for(IFeld feld : zugweg){
 			try {
-				if(Partiehistorie.getInstance().simuliereStellung(position, feld).istKoenigBedroht(farbe))
+				if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), feld).istKoenigBedroht(gebeFarbe()))
 					throw new NegativePreConditionException("König würde während der Roachde im Schach stehen.");
 			} catch (IndexOutOfBoundsException e) {
 				throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -130,10 +126,10 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		}
 		
 		
-		position.istBesetzt(false);
-		speichereVorPosition();
-		position = ziel;
-		position.istBesetzt(true);
+		figur.gebePosition().istBesetzt(false);
+		figur.speichereVorPosition();
+		figur.setzeUmPosition(ziel);
+		figur.gebePosition().istBesetzt(true);	
 		schonBewegt = true;
 		istineinerrochade = true;		
 		
@@ -144,15 +140,14 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		istineinerrochade = false;
 		
 		Partiehistorie.getInstance().protokolliereStellung(false, this); //rochade!
-		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
+		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, gebeFarbe())) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
 		
 		Partie.getInstance().wechsleSpieler();
 		
 //		informiere die Beobachter, dass sich etwas geändert hat
-		setChanged();
-		notifyObservers();
+		erzwingeUpdate();
 	}
 
 	public void schlaegt(IFeld ziel, ISchlagbareFigur gegner)
@@ -177,7 +172,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		
 //		simuliere Stellung
 		try {
-			if(Partiehistorie.getInstance().simuliereStellung(position, ziel, gegner).istKoenigBedroht(farbe))
+			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel, gegner).istKoenigBedroht(gebeFarbe()))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -194,7 +189,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		if(!(gegner instanceof ISchlagbareFigur))
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
 		
-		if(gegner.gebeFarbe().equals(farbe))
+		if(gegner.gebeFarbe().equals(gebeFarbe()))
 			throw new NegativePreConditionException("Zu schlagende Figur gehört nicht dem gegnerischen Spieler.");
 
 		ISchlagbareFigur gegner2 = (ISchlagbareFigur) gegner;
@@ -202,17 +197,17 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		gegner2.geschlagenWerden();
 		
 		
-		position.istBesetzt(false);
-		speichereVorPosition();
-		position = ziel;
-		position.istBesetzt(true);
+		figur.gebePosition().istBesetzt(false);
+		figur.speichereVorPosition();
+		figur.setzeUmPosition(ziel);
+		figur.gebePosition().istBesetzt(true);	
 		schonBewegt = true;		
 		
 		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
 			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
-		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
+		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, gebeFarbe())) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
 		
@@ -220,8 +215,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		Partie.getInstance().wechsleSpieler();
 		
 //		informiere die Beobachter, dass sich etwas geändert hat
-		setChanged();
-		notifyObservers();
+		erzwingeUpdate();
 	}
 
 	public boolean wurdeBewegt() throws NegativeConditionException {
@@ -249,7 +243,7 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		
 //		simuliere Stellung
 		try {
-			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
+			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel).istKoenigBedroht(gebeFarbe()))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -260,17 +254,17 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 
 		testeZug(ziel);
 		
-		position.istBesetzt(false);
-		speichereVorPosition();
-		position = ziel;
-		position.istBesetzt(true);
+		figur.gebePosition().istBesetzt(false);
+		figur.speichereVorPosition();
+		figur.setzeUmPosition(ziel);
+		figur.gebePosition().istBesetzt(true);	
 		schonBewegt = true;		
 		
 		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
 			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
-		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
+		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, gebeFarbe())) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
 		
@@ -278,25 +272,72 @@ public class Koenig extends AbstrakteFigur implements IKoenig {
 		Partie.getInstance().wechsleSpieler();
 		
 //		informiere die Beobachter, dass sich etwas geändert hat
-		setChanged();
-		notifyObservers();
+		erzwingeUpdate();
 	}
 
 	public void testeZug(IFeld ziel) throws NegativePreConditionException {
 		List<IFeld> zugfelder = null;
 		try {
-			if(position.gebeReihe().equals(ziel.gebeReihe()))
-				zugfelder = Brett.getInstance().gebeFelderInReihe(position, ziel);
-			else if(position.gebeLinie().equals(ziel.gebeLinie()))
-				zugfelder = Brett.getInstance().gebeFelderInLinie(position, ziel);
+			if(gebePosition().gebeReihe().equals(ziel.gebeReihe()))
+				zugfelder = Brett.getInstance().gebeFelderInReihe(gebePosition(), ziel);
+			else if(gebePosition().gebeLinie().equals(ziel.gebeLinie()))
+				zugfelder = Brett.getInstance().gebeFelderInLinie(gebePosition(), ziel);
 			else
-				zugfelder = Brett.getInstance().gebeFelderInDiagonalen(position, ziel);
+				zugfelder = Brett.getInstance().gebeFelderInDiagonalen(gebePosition(), ziel);
 		} catch (NegativeConditionException e) { }
 		
 		if(zugfelder == null || zugfelder.size() != 0) // bei 1-Feld-abstand gibts eine leereliste, kein null!
 			throw new NegativePreConditionException("Ungültiges Zielfeld.");
 		
-		if(position.equals(ziel))
+		if(gebePosition().equals(ziel))
 			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+	}
+
+	public void aufstellen(IFeld feld) throws NegativeConditionException {
+		figur.aufstellen(feld);
+	}
+
+	public void erzwingeUpdate() {
+		figur.erzwingeUpdate();
+	}
+
+	public Figurart gebeArt() {
+		return figur.gebeArt();
+	}
+
+	public Farbe gebeFarbe() {
+		return figur.gebeFarbe();
+	}
+
+	public IFeld gebeGrundposition() {
+		return figur.gebeGrundposition();
+	}
+
+	public IFeld gebePosition() {
+		return figur.gebePosition();
+	}
+
+	public IFeld gebeVorPosition() {
+		return figur.gebeVorPosition();
+	}
+
+	public ISpieler gehoertSpieler() {
+		return figur.gehoertSpieler();
+	}
+
+	public boolean istAufDemSchachbrett() {
+		return figur.istAufDemSchachbrett();
+	}
+
+	public boolean istAufGrundposition() {
+		return figur.istAufGrundposition();
+	}
+
+	public void positionieren(IFeld feld) throws NegativeConditionException {
+		throw new NegativePreConditionException("Für den König ist dieser Zug nicht möglich.");
+	}
+
+	public void simuliereBrettzug(IFeld start) {
+		figur.simuliereBrettzug(start);
 	}
 }
