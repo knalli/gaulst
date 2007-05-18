@@ -15,11 +15,11 @@ import schach.system.NegativePreConditionException;
 import schach.system.View;
 
 public abstract class AbstrakteFigur extends Observable implements IFigur {
-	protected IFeld position;
-	protected IFeld vorposition;
-	protected IFeld grundposition;
-	protected Farbe farbe;
-	protected Figurart figurart;
+	protected IFeld position = null;
+	protected IFeld vorposition = null;
+	protected IFeld grundposition = null;
+	protected Farbe farbe = null;
+	protected Figurart figurart = null;
 	
 	public AbstrakteFigur(Farbe farbe, IFeld feld, Figurart figurart) {
 		if(feld != null)
@@ -43,7 +43,7 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 
 	public void aufstellen(IFeld feld) throws NegativeConditionException {
 		if(!Partiezustand.getInstance().inPartie())
-			throw new NegativePreConditionException("Partie läuft nicht");
+			throw new NegativePreConditionException("Partie läuft nicht.");
 	}
 
 	public Farbe gebeFarbe() {
@@ -85,21 +85,6 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 
 	public String toString(){
 		return figurart+" "+farbe+" ["+(position==null?"weg":position)+"]";
-	}
-	
-	public IFigur clone(IFeld neuesfeld) {
-		IFigur figur = null;
-		
-		switch(figurart){
-		case BAUER: 	figur = new Bauer(this);	break;
-		case DAME: 		figur = new Dame(this);		break;
-		case KOENIG: 	figur = new Koenig(this);	break;
-		case LAEUFER: 	figur = new Laeufer(this);	break;
-		case SPRINGER: 	figur = new Springer(this);	break;
-		case TURM: 		figur = new Turm(this);		break;
-		}
-		
-		return figur;
 	}
 	
 	public void simuliereBrettzug(IFeld ziel) {

@@ -171,10 +171,4 @@ public class Feld implements IFeld {
 	public String toString(){
 		return ""+linie+reihe;
 	}
-	
-	public IFeld clone(){
-		IFeld feld = new Feld(reihe, linie);
-		feld.istBesetzt(besetzt);
-		return feld;
-	}
 }
