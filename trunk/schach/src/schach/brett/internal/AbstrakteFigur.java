@@ -14,7 +14,7 @@ import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 import schach.system.View;
 
-public abstract class AbstrakteFigur extends Observable implements IFigur {
+public class AbstrakteFigur extends Observable {
 	protected IFeld position = null;
 	protected IFeld vorposition = null;
 	protected IFeld grundposition = null;
@@ -70,13 +70,16 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 		return istAufDemSchachbrett() && position.equals(grundposition);
 	}
 
-	public void positionieren(IFeld feld) throws NegativeConditionException {
+	public void positionieren(IFigur figur, IFeld feld) throws NegativeConditionException {
 		if(!Brett.getInstance().istBauernUmwandlung())
 			throw new NegativePreConditionException("Es besteht derzeit keine Bauernumwandlung.");
 		
+		if(figur.gebeArt().equals(Figurart.BAUER) || figur.gebeArt().equals(Figurart.KOENIG))
+			throw new NegativePreConditionException("Auszutauschende Figur darf kein Bauer oder König sein.");
+		
 		position = feld;
 		grundposition = position;
-		AlleFiguren.getInstance().fuegeFigurAn(this);
+		AlleFiguren.getInstance().fuegeFigurAn(figur);
 	}
 
 	public Figurart gebeArt() {
@@ -106,5 +109,13 @@ public abstract class AbstrakteFigur extends Observable implements IFigur {
 //		informiere die Beobachter, dass sich etwas geändert hat
 		setChanged();
 		notifyObservers();
+	}
+
+	public void setzeUmPosition(IFeld feld){
+		position = feld;
+	}
+	
+	public void setzeUmGrundposition(IFeld feld){
+		grundposition = feld;
 	}
 }

@@ -11,22 +11,20 @@ import schach.brett.ISpringer;
 import schach.partie.internal.Partie;
 import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
+import schach.spieler.ISpieler;
 import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
-public class Springer extends AbstrakteFigur implements ISpringer {
+public class Springer implements ISpringer {
 
 	private boolean sollentferntwerden;
+	private AbstrakteFigur figur = null;
 
 	public Springer(Farbe farbe, IFeld feld) {
-		super(farbe, feld, Figurart.SPRINGER);
+		figur = new AbstrakteFigur(farbe, feld, Figurart.SPRINGER);
 	}
 
-	protected Springer(IFigur figur){
-		super(figur);
-	}
-	
 	public void schlaegt(IFeld ziel, ISchlagbareFigur gegner)
 			throws NegativeConditionException {
 		if(!gehoertSpieler().istZugberechtigt())
@@ -41,7 +39,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		if(Partiezustand.getInstance().istSchachmatt())
 			throw new NegativePreConditionException("Partie ist Schachmatt");
 		
-		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
+		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, gebeFarbe()).get(0));
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
@@ -50,7 +48,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		
 //		simuliere Stellung
 		try {
-			if(Partiehistorie.getInstance().simuliereStellung(position, ziel, gegner).istKoenigBedroht(farbe))
+			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel, gegner).istKoenigBedroht(gebeFarbe()))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -67,7 +65,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		
 		testeZug(ziel);
 		
-		if(gegner.gebeFarbe().equals(farbe))
+		if(gegner.gebeFarbe().equals(gebeFarbe()))
 			throw new NegativePreConditionException("Zu schlagende Figur gehört nicht dem gegnerischen Spieler.");
 
 		ISchlagbareFigur gegner2 = (ISchlagbareFigur) gegner;
@@ -75,16 +73,16 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		gegner2.geschlagenWerden();
 		
 		
-		position.istBesetzt(false);
-		speichereVorPosition();
-		position = ziel;
-		position.istBesetzt(true);		
+		figur.gebePosition().istBesetzt(false);
+		figur.speichereVorPosition();
+		figur.setzeUmPosition(ziel);
+		figur.gebePosition().istBesetzt(true);		
 		
 		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
 			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
-		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
+		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, gebeFarbe())) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
 		
@@ -92,8 +90,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		Partie.getInstance().wechsleSpieler();
 		
 //		informiere die Beobachter, dass sich etwas geändert hat
-		setChanged();
-		notifyObservers();
+		erzwingeUpdate();
 	}
 
 	public void zieht(IFeld ziel) throws NegativeConditionException {
@@ -109,7 +106,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		if(Partiezustand.getInstance().istSchachmatt())
 			throw new NegativePreConditionException("Partie ist Schachmatt");
 		
-		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, farbe).get(0));
+		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, gebeFarbe()).get(0));
 		if(koenig.istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
@@ -118,7 +115,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		
 //		simuliere Stellung
 		try {
-			if(Partiehistorie.getInstance().simuliereStellung(position, ziel).istKoenigBedroht(farbe))
+			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel).istKoenigBedroht(gebeFarbe()))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 		} catch (IndexOutOfBoundsException e) {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
@@ -129,16 +126,16 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		
 		testeZug(ziel);
 		
-		position.istBesetzt(false);
-		speichereVorPosition();
-		position = ziel;
-		position.istBesetzt(true);		
+		figur.gebePosition().istBesetzt(false);
+		figur.speichereVorPosition();
+		figur.setzeUmPosition(ziel);
+		figur.gebePosition().istBesetzt(true);		
 		
 		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
 			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 
 //		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschließen)
-		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, farbe)) {
+		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, gebeFarbe())) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
 		
@@ -146,8 +143,7 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 		Partie.getInstance().wechsleSpieler();
 		
 //		informiere die Beobachter, dass sich etwas geändert hat
-		setChanged();
-		notifyObservers();
+		erzwingeUpdate();
 	}
 
 	public void geschlagenWerden() throws NegativeConditionException {
@@ -155,10 +151,10 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 			throw new NegativePreConditionException();
 		}
 		
-		position.istBesetzt(false);
-		speichereVorPosition();
-		position = null;
-		grundposition = null;
+		figur.gebePosition().istBesetzt(false);
+		figur.speichereVorPosition();
+		figur.setzeUmPosition(null);
+		figur.setzeUmGrundposition(null);
 	}
 
 	public boolean sollEntferntWerden() {
@@ -172,37 +168,37 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 	public void testeZug(IFeld ziel) throws NegativeConditionException {
 //		Logger.debug("Teste Zugart für "+Partie.getInstance().aktuelleFarbe()+": "+this+" nach "+ziel);
 		
-		if(position.equals(ziel))
+		if(gebePosition().equals(ziel))
 			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
 		
 		boolean gueltigerZug = false;
 		
 		try {
-			gueltigerZug = position.plusReihe(1).plusLinie(2).equals(ziel);
+			gueltigerZug = gebePosition().plusReihe(1).plusLinie(2).equals(ziel);
 		} catch(NegativeConditionException e){}
 		try {
-			gueltigerZug = gueltigerZug || position.plusReihe(1).minusLinie(2).equals(ziel);
-		} catch(NegativeConditionException e){}
-		
-		try {
-			gueltigerZug = gueltigerZug || position.minusReihe(1).plusLinie(2).equals(ziel);
-		} catch(NegativeConditionException e){}
-		try {
-			gueltigerZug = gueltigerZug || position.minusReihe(1).minusLinie(2).equals(ziel);
+			gueltigerZug = gueltigerZug || gebePosition().plusReihe(1).minusLinie(2).equals(ziel);
 		} catch(NegativeConditionException e){}
 		
 		try {
-			gueltigerZug = gueltigerZug || position.plusReihe(2).plusLinie(1).equals(ziel);
+			gueltigerZug = gueltigerZug || gebePosition().minusReihe(1).plusLinie(2).equals(ziel);
 		} catch(NegativeConditionException e){}
 		try {
-			gueltigerZug = gueltigerZug || position.plusReihe(2).minusLinie(1).equals(ziel);
+			gueltigerZug = gueltigerZug || gebePosition().minusReihe(1).minusLinie(2).equals(ziel);
 		} catch(NegativeConditionException e){}
 		
 		try {
-			gueltigerZug = gueltigerZug || position.minusReihe(2).plusLinie(1).equals(ziel);
+			gueltigerZug = gueltigerZug || gebePosition().plusReihe(2).plusLinie(1).equals(ziel);
 		} catch(NegativeConditionException e){}
 		try {
-			gueltigerZug = gueltigerZug || position.minusReihe(2).minusLinie(1).equals(ziel);
+			gueltigerZug = gueltigerZug || gebePosition().plusReihe(2).minusLinie(1).equals(ziel);
+		} catch(NegativeConditionException e){}
+		
+		try {
+			gueltigerZug = gueltigerZug || gebePosition().minusReihe(2).plusLinie(1).equals(ziel);
+		} catch(NegativeConditionException e){}
+		try {
+			gueltigerZug = gueltigerZug || gebePosition().minusReihe(2).minusLinie(1).equals(ziel);
 		} catch(NegativeConditionException e){}
 				
 		if(!gueltigerZug){
@@ -210,5 +206,53 @@ public class Springer extends AbstrakteFigur implements ISpringer {
 			throw new NegativePreConditionException("Ungültiges Zielfeld.");
 		}
 		Logger.debug("Zugart gültig.");
+	}
+
+	public void aufstellen(IFeld feld) throws NegativeConditionException {
+		figur.aufstellen(feld);
+	}
+
+	public void erzwingeUpdate() {
+		figur.erzwingeUpdate();
+	}
+
+	public Figurart gebeArt() {
+		return figur.gebeArt();
+	}
+
+	public Farbe gebeFarbe() {
+		return figur.gebeFarbe();
+	}
+
+	public IFeld gebeGrundposition() {
+		return figur.gebeGrundposition();
+	}
+
+	public IFeld gebePosition() {
+		return figur.gebePosition();
+	}
+
+	public IFeld gebeVorPosition() {
+		return figur.gebeVorPosition();
+	}
+
+	public ISpieler gehoertSpieler() {
+		return figur.gehoertSpieler();
+	}
+
+	public boolean istAufDemSchachbrett() {
+		return figur.istAufDemSchachbrett();
+	}
+
+	public boolean istAufGrundposition() {
+		return figur.istAufGrundposition();
+	}
+
+	public void positionieren(IFeld feld) throws NegativeConditionException {
+		figur.positionieren(this, feld);
+	}
+
+	public void simuliereBrettzug(IFeld start) {
+		figur.simuliereBrettzug(start);
 	}
 }
