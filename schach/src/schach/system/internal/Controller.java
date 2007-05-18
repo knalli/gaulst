@@ -18,6 +18,7 @@ import schach.spieler.internal.Spieler;
 import schach.system.IController;
 import schach.system.Logger;
 import schach.system.NegativeConditionException;
+import schach.system.NegativePreConditionException;
 
 public class Controller implements IController {
 	private static IController instance = null;
@@ -39,8 +40,16 @@ public class Controller implements IController {
 		return message;
 	}
 	
-	private boolean evaluateAction() {
-		Logger.debug("evaluiere: "+figur + " -> "+ziel);
+	private boolean evaluateAction(){
+		try {
+			return evaluateAction(false);
+		} catch (NegativeConditionException e) {
+			return false;
+		}
+	}
+	
+	private boolean evaluateAction(boolean throwsexception) throws NegativeConditionException{
+//		Logger.debug("evaluiere: "+figur + " -> "+ziel);
 		IBrett brett = Brett.getInstance();
 		IFigur zielfigur = brett.gebeFigurVonFeld(ziel);
 		
@@ -58,20 +67,20 @@ public class Controller implements IController {
 							((IKoenig)figur).rochiert(ziel);
 						}
 						else {
-							Logger.info(figur + " zieht nach "+ ziel);
+//							Logger.info(figur + " zieht nach "+ ziel);
 							figur.zieht(ziel);
 						}
 					}
 					else if(figur instanceof IBauer && !figur.gebePosition().gebeLinie().equals(ziel.gebeLinie()) && ziel.minusReihe(1).istBesetzt()) {
-						Logger.info(figur + " schlägt en passent "+ ziel);
+//						Logger.info(figur + " schlägt en passent "+ ziel);
 						((IBauer)figur).schlaegtEnPassant(ziel);
 					}
 					else {
-						Logger.info(figur + " zieht nach "+ ziel);
+//						Logger.info(figur + " zieht nach "+ ziel);
 						figur.zieht(ziel);
 					}
 				} catch (NegativeConditionException e) {
-					Logger.info(figur + " zieht nach "+ ziel + " (1 kontrollierter Fehler)");
+//					Logger.info(figur + " zieht nach "+ ziel + " (1 kontrollierter Fehler)");
 					figur.zieht(ziel);
 				}
 			}
@@ -91,10 +100,14 @@ public class Controller implements IController {
 			Logger.error("Fehler: "+e.getMessage());
 			message  = e.getMessage();
 //			e.printStackTrace();
+			if(throwsexception)
+				throw new NegativePreConditionException(message);
 			return false;
 		} catch (Exception e) {
 			Logger.error("Schwerer Fehler: "+e.getMessage());
 			message  = e.getMessage();
+			if(throwsexception)
+				throw new NegativePreConditionException(message);
 //			e.printStackTrace();
 			return false;
 		}
@@ -114,27 +127,38 @@ public class Controller implements IController {
 
 	public void setzeFigur(Reihe reihe, Linie linie) {
 		IBrett brett = Brett.getInstance();
-		Logger.debug("Suche auf "+linie.toString()+reihe.toString());
+//		Logger.debug("Suche auf "+linie.toString()+reihe.toString());
 		figur = brett.gebeFigurVonFeld(reihe, linie);
 		ziel = null;
 	}
 
 	public void setzeZielFeld(IFeld feld) {
+		try {
+			setzeZielFeld(feld, false);
+		} catch (NegativeConditionException e) {}
+	}
+	
+	public void setzeZielFeld(IFeld feld, boolean throwsexception) throws NegativeConditionException {
 		ziel = feld;
-		if(evaluateAction()){
-			
+		if(evaluateAction(throwsexception)){
 			clearState();
 		}
 		else{
 			ziel = null;
 		}
 	}
-
+	
 	public void setzeZielFeld(Reihe reihe, Linie linie) {
-		setzeZielFeld(Brett.getInstance().gebeFeld(reihe, linie)); 
+		try {
+			setzeZielFeld(reihe, linie, false);
+		} catch (NegativeConditionException e) {}
 	}
 
-	public boolean parseInputString(String text) {
+	public void setzeZielFeld(Reihe reihe, Linie linie, boolean throwsexception) throws NegativeConditionException {
+		setzeZielFeld(Brett.getInstance().gebeFeld(reihe, linie), throwsexception); 
+	}
+
+	public boolean parseInputString(String text, boolean throwexceptions) throws NegativeConditionException{
 		Logger.debug("Parse nun "+text);
 		
 		if(text.equals("DAME")){
@@ -163,6 +187,10 @@ public class Controller implements IController {
 					Logger.info("Remis wurde von "+Partie.getInstance().aktuelleFarbe()+" angenommen");
 				} catch (NegativeConditionException e) {
 					message = e.getMessage();
+					
+					// doch weiterwerfen?
+					if(throwexceptions)
+						throw new NegativePreConditionException(message);
 				}
 			}
 			else {
@@ -171,6 +199,10 @@ public class Controller implements IController {
 					Logger.info("Remis wurde von "+Partie.getInstance().aktuelleFarbe()+" angeboten");
 				} catch (NegativeConditionException e) {
 					message = e.getMessage();
+					
+					// doch weiterwerfen?
+					if(throwexceptions)
+						throw new NegativePreConditionException(message);
 				}
 			}
 			return true;
@@ -183,6 +215,10 @@ public class Controller implements IController {
 				Logger.info("Remis wurde von "+Partie.getInstance().aktuelleFarbe()+" abgelehnt");
 			} catch (NegativeConditionException e) {
 				message = e.getMessage();
+				
+				// doch weiterwerfen?
+				if(throwexceptions)
+					throw new NegativePreConditionException(message);
 			}
 			return true;
 		}
@@ -208,12 +244,20 @@ public class Controller implements IController {
 			Logger.debug("Konnte nicht erfolgreich ermittelt werden.");
 			return false;
 		}
-		Logger.debug("Ermittelte Felder: "+l1+r1+" nach "+l2+r2);
+//		Logger.debug("Ermittelte Felder: "+l1+r1+" nach "+l2+r2);
 		
 		setzeFigur(r1, l1);
-		setzeZielFeld(r2, l2);
+		setzeZielFeld(r2, l2, throwexceptions);
 		
 		return true;
+	}
+	
+	public boolean parseInputString(String text) {
+		try {
+			return parseInputString(text, false);
+		} catch (NegativeConditionException e) {
+			return false;
+		}
 	}
 
 	private Reihe ermittleReihe(String e) {
