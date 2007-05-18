@@ -36,4 +36,10 @@ public class Logger {
 			logger.debug(string);
 		}
 	}
+	
+	public static void test(String string){
+		for(ILogger logger : loggers){
+			logger.test(string);
+		}
+	}
 }
