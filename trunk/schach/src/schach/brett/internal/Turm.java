@@ -253,5 +253,8 @@ public class Turm implements ITurm {
 
 	public void simuliereBrettzug(IFeld start) {
 		figur.simuliereBrettzug(start);
+	}	
+	public String toString(){
+		return figur.toString();
 	}
 }

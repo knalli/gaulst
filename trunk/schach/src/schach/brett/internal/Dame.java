@@ -233,5 +233,8 @@ public class Dame implements IDame {
 
 	public void simuliereBrettzug(IFeld start) {
 		figur.simuliereBrettzug(start);
+	}	
+	public String toString(){
+		return figur.toString();
 	}
 }
