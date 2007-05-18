@@ -71,6 +71,4 @@ public interface IFeld {
 	 * @param status
 	 */
 	public void istBesetzt(boolean status);
-	
-	public IFeld clone();
 }
