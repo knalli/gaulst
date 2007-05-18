@@ -228,5 +228,8 @@ public class Laeufer implements ILaeufer {
 
 	public void simuliereBrettzug(IFeld start) {
 		figur.simuliereBrettzug(start);
+	}	
+	public String toString(){
+		return figur.toString();
 	}
 }

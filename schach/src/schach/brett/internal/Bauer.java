@@ -389,4 +389,8 @@ public class Bauer implements IBauer {
 	public void simuliereBrettzug(IFeld start) {
 		figur.simuliereBrettzug(start);
 	}
+	
+	public String toString(){
+		return figur.toString();
+	}
 }
