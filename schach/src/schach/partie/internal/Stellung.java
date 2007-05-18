@@ -30,6 +30,7 @@ public class Stellung implements IStellung {
 	private boolean remismoeglich = false;
 	private boolean schachmatt = false; 
 	private final String stellungshash;
+	private boolean remismoeglichdurchwiederholung = false;
 	
 	public Stellung(boolean istSchlagzug, IFigur ziehendeFigur){
 		this(istSchlagzug, ziehendeFigur, 0);
@@ -159,7 +160,7 @@ public class Stellung implements IStellung {
 				}
 			}
 			
-			if(!remismoeglich){
+			if(!Partiezustand.getInstance().warBereitsStellungswiederholung()){
 				Map<String, Integer> stellungszaehler = new HashMap<String, Integer>();
 				for(IStellung stellung : Partiehistorie.getInstance().gebeAlleStellungen()){
 					if(!stellungszaehler.containsKey(stellung.gebeHashwert())){
@@ -168,6 +169,7 @@ public class Stellung implements IStellung {
 					else {
 						if(stellungszaehler.get(stellung.gebeHashwert()) == 2) {
 							remismoeglich = true;
+							remismoeglichdurchwiederholung  = true;
 							Logger.debug("Remis mšglich nach 3 gleichen Stellungen");
 							break;
 						}
@@ -216,6 +218,10 @@ public class Stellung implements IStellung {
 	
 	public boolean istRemisMoeglich(){
 		return remismoeglich;
+	}
+	
+	public boolean istRemisMoeglichDurchStellungswiederholung(){
+		return remismoeglichdurchwiederholung;
 	}
 	
 	public boolean istGleicheStellung(IStellung stellung){

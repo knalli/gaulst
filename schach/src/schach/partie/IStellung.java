@@ -26,4 +26,6 @@ public interface IStellung {
 	public boolean istGleicheStellung(IStellung stellung);
 	
 	public String gebeHashwert();
+	
+	public boolean istRemisMoeglichDurchStellungswiederholung();
 }

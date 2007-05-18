@@ -22,4 +22,6 @@ public interface IPartiezustand {
 	public void haltePartieAn() throws NegativeConditionException;
 
 	public boolean istSchach(Farbe farbe);
+	
+	public boolean warBereitsStellungswiederholung();
 }
