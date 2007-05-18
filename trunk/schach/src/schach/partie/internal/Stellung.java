@@ -88,18 +88,17 @@ public class Stellung implements IStellung {
 			// in simulation derzeit keine patt/schach/matt findung
 			
 			
-			Farbe farbe = Partie.getInstance().aktuelleFarbe().andereFarbe();
-			
-			if(istKoenigBedroht(farbe)){
+			Farbe gegnerfarbe = Partie.getInstance().aktuelleFarbe().andereFarbe();
+			if(istKoenigBedroht(gegnerfarbe)){
 				Logger.info("Berechne Matt.."+Partie.getInstance().aktuelleFarbe());
 				
 				Partiehistorie.getInstance().setzeSimulation(true);
-				partie.setzeFarbe(farbe);
+				partie.setzeFarbe(gegnerfarbe);
 				
-				Logger.debug(farbe+" ist potenziell matt..");
-				Logger.debug(farbe.andereFarbe()+ " << andere farbe");
+				Logger.debug(gegnerfarbe+" ist potenziell matt..");
+				Logger.debug(gegnerfarbe.andereFarbe()+ " << andere farbe");
 				schachmatt = true;
-				for(IFigur figur : AlleFiguren.getInstance().gebeFiguren(Figurart.getAll(), Arrays.asList(new Farbe[] {farbe}))){
+				for(IFigur figur : AlleFiguren.getInstance().gebeFiguren(Figurart.getAll(), Arrays.asList(new Farbe[] {gegnerfarbe}))){
 					
 					for(Reihe reihe : Reihe.values()){
 						for(Linie linie : Linie.values()){
@@ -117,18 +116,18 @@ public class Stellung implements IStellung {
 							}
 //							Logger.debug(farbe+" Teste zug: "+figur+" auf "+feld+" weiter");
 							IFigur figur2 = Brett.getInstance().gebeFigurVonFeld(feld);
-							if(figur2 == null || figur2.gebeFarbe().equals(farbe.andereFarbe())){
+							if(figur2 == null || figur2.gebeFarbe().equals(gegnerfarbe.andereFarbe())){
 								IStellung stellung;
 								try {
 									stellung = Partiehistorie.getInstance().simuliereStellung(figur.gebePosition(), feld, figur2);
 									Partiehistorie.getInstance().setzeSimulation(true);
-									if(!stellung.istKoenigBedroht(farbe)){
+									if(!stellung.istKoenigBedroht(gegnerfarbe)){
 										Logger.debug("Kein Schachmatt, weil "+figur+" nach "+feld);
 										schachmatt = false;
 										break;
 									}
 								} catch (NegativeConditionException e) {
-									Logger.error("Fehler bei istPatt: Stellung simulieren.");
+									Logger.error("Fehler bei istMatt: Stellung simulieren.");
 								}
 							}
 							
@@ -141,7 +140,7 @@ public class Stellung implements IStellung {
 					if(!schachmatt) break;
 				} // figur
 				
-				partie.setzeFarbe(farbe.andereFarbe());
+				partie.setzeFarbe(gegnerfarbe.andereFarbe());
 				Partiehistorie.getInstance().setzeSimulation(false);
 				
 				Logger.info("!Berechne Matt: " + (schachmatt?"ist matt":"ist nicht matt")+" "+Partie.getInstance().aktuelleFarbe());
@@ -176,6 +175,60 @@ public class Stellung implements IStellung {
 						stellungszaehler.put(stellung.gebeHashwert(), stellungszaehler.get(stellung.gebeHashwert())+1);
 					}
 				}
+			}
+			
+			if(!schachmatt && !istKoenigBedroht(gegnerfarbe)){
+				Logger.info("Berechne Matt.."+Partie.getInstance().aktuelleFarbe());
+				
+				Partiehistorie.getInstance().setzeSimulation(true);
+				partie.setzeFarbe(gegnerfarbe);
+				
+				Logger.debug(gegnerfarbe+" ist potenziell patt..");
+				Logger.debug(gegnerfarbe.andereFarbe()+ " << andere farbe");
+				patt = true;
+				for(IFigur figur : AlleFiguren.getInstance().gebeFiguren(Figurart.getAll(), Arrays.asList(new Farbe[] {gegnerfarbe}))){
+					
+					for(Reihe reihe : Reihe.values()){
+						for(Linie linie : Linie.values()){
+							
+							IFeld feld = Brett.getInstance().gebeFeld(reihe, linie);
+							
+							if(feld.equals(figur.gebePosition())) continue;
+							
+							try {
+								figur.testeZug(feld);
+							} catch (NegativeConditionException e1) {
+								continue;
+							}
+							IFigur figur2 = Brett.getInstance().gebeFigurVonFeld(feld);
+							if(figur2 == null || figur2.gebeFarbe().equals(gegnerfarbe.andereFarbe())){
+								IStellung stellung;
+								try {
+									stellung = Partiehistorie.getInstance().simuliereStellung(figur.gebePosition(), feld, figur2);
+									Partiehistorie.getInstance().setzeSimulation(true);
+									if(!stellung.istKoenigBedroht(gegnerfarbe)){
+										Logger.debug("Kein Patt, weil "+figur+" nach "+feld);
+										patt = false;
+										break;
+									}
+								} catch (NegativeConditionException e) {
+									Logger.error("Fehler bei istPatt: Stellung simulieren.");
+								}
+							}
+							
+							if(!patt) break;
+						} // linie
+						
+						if(!patt) break;
+					} // reihe
+					
+					if(!patt) break;
+				} // figur
+				
+				partie.setzeFarbe(gegnerfarbe.andereFarbe());
+				Partiehistorie.getInstance().setzeSimulation(false);
+				
+				Logger.info("!Berechne Patt: " + (patt?"ist patt":"ist nicht patt")+" "+Partie.getInstance().aktuelleFarbe());
 			}
 		}
 		
