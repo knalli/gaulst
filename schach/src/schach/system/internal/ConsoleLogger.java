@@ -26,4 +26,7 @@ public class ConsoleLogger implements ILogger {
 		print(System.err, "WARNING: "+string);
 	}
 
+	public void test(String string) {
+		print(System.out, "TEST: "+string);
+	}
 }
