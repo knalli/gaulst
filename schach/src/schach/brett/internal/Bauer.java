@@ -334,7 +334,8 @@ public class Bauer implements IBauer {
 			throw new NegativePreConditionException("Ungültige Gangart (schlagen).");
 		
 		if(!ziel.istBesetzt()){
-			if(ziel.minusReihe(1).istBesetzt() && (Brett.getInstance().gebeFigurVonFeld(ziel.minusReihe(1))) instanceof IBauer){
+			IFigur potbauer = Brett.getInstance().gebeFigurVonFeld(ziel.minusReihe(1));
+			if(ziel.minusReihe(1).istBesetzt() && potbauer != null && potbauer.gebeArt().equals(Figurart.BAUER) && ((IBauer)potbauer).letzteRundeDoppelschritt()){
 				// alles okay
 			}
 			else 
