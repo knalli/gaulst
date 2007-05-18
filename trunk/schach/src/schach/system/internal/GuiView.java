@@ -294,6 +294,9 @@ public class GuiView implements IView {
 				jb.setEnabled(false);
 			}
 		}
+		else if(partiezustand.istPatt()) {
+			jLabelAktuellerSpieler.setText("<html><b>Partie ist patt.");
+		}
 		else if(partiezustand.istSchachmatt()) {
 			jLabelAktuellerSpieler.setText("<html><b>Partie ist matt.");
 		}
