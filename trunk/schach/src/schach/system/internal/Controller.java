@@ -90,12 +90,12 @@ public class Controller implements IController {
 		} catch (NegativeConditionException e) {
 			Logger.error("Fehler: "+e.getMessage());
 			message  = e.getMessage();
-			e.printStackTrace();
+//			e.printStackTrace();
 			return false;
 		} catch (Exception e) {
 			Logger.error("Schwerer Fehler: "+e.getMessage());
 			message  = e.getMessage();
-			e.printStackTrace();
+//			e.printStackTrace();
 			return false;
 		}
 		
