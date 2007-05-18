@@ -84,4 +84,12 @@ public class Partiezustand implements IPartiezustand {
 		
 		AlleFiguren.getInstance().gebeAlleFiguren().get(0).erzwingeUpdate();
 	}
+
+	public boolean warBereitsStellungswiederholung() {
+		for(IStellung stellung : Partiehistorie.getInstance().gebeAlleStellungen()){
+			if(stellung.istRemisMoeglichDurchStellungswiederholung())
+				return true;
+		}
+		return false; 
+	}
 }
