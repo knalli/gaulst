@@ -12,6 +12,7 @@ public class View {
 	public static final int TEXT = 0;
 	public static final int GUI = 1;
 	public static final int MULTI = 2;
+	public static final int NET = 3;
 	
 	/**
 	 * Erstellt ein neues View-Objekt. 
