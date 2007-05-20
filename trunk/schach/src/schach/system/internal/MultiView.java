@@ -25,6 +25,8 @@ public class MultiView implements IView {
 		} catch (Exception e) {
 			Logger.error("MultiView: Fehler beim Starten der grafischen Oberfläche");
 		}	
+		
+		views.add(new NetView());
 	}
 
 	public void update() {
