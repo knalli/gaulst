@@ -106,7 +106,7 @@ public class Koenig implements IKoenig {
 		
 		IFigur figt = (ITurm) Brett.getInstance().gebeFigurVonFeld(turmfeld);
 		if(figt == null)
-			throw new NegativePreConditionException("Rochade nicht erlaubt, da kein Roachdepartner vorhanden ist.");
+			throw new NegativePreConditionException("Rochade nicht erlaubt, da Turm nicht mehr vorhanden.");
 		
 		if(!figt.gebeArt().equals(Figurart.TURM))
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Roachdepartner kein Turm ist.");
@@ -115,8 +115,6 @@ public class Koenig implements IKoenig {
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Roachdepartner kein Turm des Spielers ist.");
 		
 		ITurm turm = (ITurm) figt;
-		if(turm == null)
-			throw new NegativePreConditionException("Rochade nicht erlaubt, da Turm nicht mehr vorhanden.");
 		if(turm.wurdeBewegt())
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Turm bewegt wurde.");
 		
