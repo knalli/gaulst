@@ -105,6 +105,9 @@ public class Koenig implements IKoenig {
 		}
 		
 		IFigur figt = (ITurm) Brett.getInstance().gebeFigurVonFeld(turmfeld);
+		if(figt == null)
+			throw new NegativePreConditionException("Rochade nicht erlaubt, da kein Roachdepartner vorhanden ist.");
+		
 		if(!figt.gebeArt().equals(Figurart.TURM))
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Roachdepartner kein Turm ist.");
 		
