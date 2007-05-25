@@ -104,7 +104,14 @@ public class Koenig implements IKoenig {
 			turmzielfeld = gebePosition().plusLinie(1);
 		}
 		
-		ITurm turm = (ITurm) Brett.getInstance().gebeFigurVonFeld(turmfeld);
+		IFigur figt = (ITurm) Brett.getInstance().gebeFigurVonFeld(turmfeld);
+		if(!figt.gebeArt().equals(Figurart.TURM))
+			throw new NegativePreConditionException("Rochade nicht erlaubt, da Roachdepartner kein Turm ist.");
+		
+		if(!figt.gehoertSpieler().istZugberechtigt())
+			throw new NegativePreConditionException("Rochade nicht erlaubt, da Roachdepartner kein Turm des Spielers ist.");
+		
+		ITurm turm = (ITurm) figt;
 		if(turm == null)
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Turm nicht mehr vorhanden.");
 		if(turm.wurdeBewegt())
