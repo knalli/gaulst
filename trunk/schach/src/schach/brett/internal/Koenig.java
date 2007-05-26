@@ -49,28 +49,35 @@ public class Koenig implements IKoenig {
 	}
 
 	public void rochiert(IFeld ziel) throws NegativeConditionException {
+		//ns1
 		if(!gehoertSpieler().istZugberechtigt())
 			throw new NegativePreConditionException("Spieler dieser Figur ist nicht zugberechtigt.");
 		
+		//ns2
 		if(Partiezustand.getInstance().istRemis())
 			throw new NegativePreConditionException("Partie ist Remis");
 		
+		//ns3
 		if(Partiezustand.getInstance().istPatt())
 			throw new NegativePreConditionException("Partie ist Patt");
 		
+		//ns4
 		if(Partiezustand.getInstance().istSchachmatt())
 			throw new NegativePreConditionException("Partie ist Schachmatt");
 		
+		//ns5
 		if(istInEinerRochade())
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
+		//ns6
 		if(Brett.getInstance().istBauernUmwandlung())
 			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
 		
+		//ns7
 		if(wurdeBewegt())
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Köenig bewegt wurde.");
 		
-//		simuliere Stellung
+		//ns8
 		try {
 			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel).istKoenigBedroht(gebeFarbe()))
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
@@ -78,25 +85,31 @@ public class Koenig implements IKoenig {
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
 		}
 		
+		//ns9
 		boolean gueltig = false;
 		try {
+			//ns9a
 			gueltig = gebePosition().minusLinie(2).equals(ziel);
 		} catch(NegativeConditionException e){}
 		try {
+			//ns9b
 			gueltig = gueltig || gebePosition().plusLinie(2).equals(ziel);
 		} catch(NegativeConditionException e){}
 		
+		//ns9 (final)
 		if(!gueltig)
 			throw new NegativePreConditionException("Ungültiges Zielfeld (Rochade).");
 		
 		IFeld turmfeld = null;
 		IFeld turmzielfeld = null;
+		//ns10
 		if(ziel.gebeLinie().equals(Linie.G)){
 			turmfeld = Brett.getInstance().gebeFeld(gebePosition().gebeReihe(), Linie.H);
 		}
 		else {
 			turmfeld = Brett.getInstance().gebeFeld(gebePosition().gebeReihe(), Linie.A);
 		}
+		//ns10b
 		if(gebePosition().minusLinie(2).equals(ziel)){
 			turmzielfeld = gebePosition().minusLinie(1);
 		}
@@ -104,26 +117,31 @@ public class Koenig implements IKoenig {
 			turmzielfeld = gebePosition().plusLinie(1);
 		}
 		
+		//ns11
 		IFigur figt = (ITurm) Brett.getInstance().gebeFigurVonFeld(turmfeld);
 		if(figt == null)
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Turm nicht mehr vorhanden.");
 		
+		//ns12
 		if(!figt.gebeArt().equals(Figurart.TURM))
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Roachdepartner kein Turm ist.");
 		
+		//ns13
 		if(!figt.gehoertSpieler().istZugberechtigt())
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Roachdepartner kein Turm des Spielers ist.");
 		
 		ITurm turm = (ITurm) figt;
+		//ns14
 		if(turm.wurdeBewegt())
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Turm bewegt wurde.");
 		
 		List<IFeld> zugweg = Brett.getInstance().gebeFelderInReihe(gebePosition(), turmfeld);
+		//ns15
 		if(!Brett.getInstance().sindAlleFelderFrei(zugweg))
 			throw new NegativePreConditionException("Die Felder zwischen König und Turm sind nicht frei.");
 		
 		zugweg.remove(ziel);
-//		simuliere Stellung
+		//ns16
 		for(IFeld feld : zugweg){
 			try {
 				if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), feld).istKoenigBedroht(gebeFarbe()))
@@ -141,6 +159,7 @@ public class Koenig implements IKoenig {
 		schonBewegt = true;
 		istineinerrochade = true;		
 		
+		//ns17
 		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
 			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 		
