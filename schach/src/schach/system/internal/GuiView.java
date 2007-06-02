@@ -3,6 +3,7 @@ package schach.system.internal;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -92,12 +93,16 @@ public class GuiView implements IView {
 		if (jFrame == null) {
 			jFrame = new JFrame();
 			jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			jFrame.setSize(334, 413);
+			jFrame.setSize(463, 376);
 			jFrame.setContentPane(getJContentPane());
 			jFrame.setTitle("Die Schachpartie - Denn Schach ist einfach Pferd.");
 		}
 		return jFrame;
 	}
+	
+	private Map<String,ImageIcon> images = new HashMap<String,ImageIcon>();  //  @jve:decl-index=0:
+	private Color bgWEISS = new Color(255,206,158);  //  @jve:decl-index=0:
+	private Color bgSCHWARZ = new Color(201,139,71);
 
 	/**
 	 * This method initializes jContentPane
@@ -106,6 +111,13 @@ public class GuiView implements IView {
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
+			for(String name : new String[] {"s","sa",	"sbs","sds","sks","sls","sss","sts",
+														"sbw","sdw","skw","slw","ssw","stw",
+											"w","wa",	"wbs","wds","wks","wls","wss","wts",
+														"wbw","wdw","wkw","wlw","wsw","wtw"}){
+				images.put(name, new ImageIcon(ClassLoader.getSystemResource("images/"+name+".png")) );
+			}
+			
 			GridLayout gridLayout = new GridLayout();
 			gridLayout.setRows(2);
 			gridLayout.setColumns(1);
@@ -116,14 +128,15 @@ public class GuiView implements IView {
 										"entsprechenden Felder an.");
 			Aufforderung.setSize(new Dimension(300, 148));
 			GridLayout gridLayout1 = new GridLayout(2, 1);
-			gridLayout1.setHgap(7);
-			gridLayout1.setVgap(7);
+			gridLayout1.setHgap(3);
+			gridLayout1.setVgap(3);
 			jContentPane = new JPanel();
-			jContentPane.setPreferredSize(new Dimension(1051, 547));
+			jContentPane.setPreferredSize(new Dimension(1051, 447));
 			jcpSchachbrett = new JPanel();
 			jcpController = new JPanel();
 			
 			jcpSchachbrett.setLayout(new GridLayout(10,10));
+			jcpSchachbrett.setPreferredSize(new Dimension(440,440));
 			
 			jLabelAktuellerSpieler = new JLabel("Partie wird gestartet..");
 			jLabelAktuellerSpieler.setPreferredSize(new Dimension(300, 16));
@@ -166,15 +179,23 @@ public class GuiView implements IView {
 				for(int l=1; l<=8; l++){
 					panel = new JPanel();
 					feld1 = new JLabel();
+					panel.setPreferredSize(new Dimension(44,44));
+					feld1.setPreferredSize(new Dimension(44,44));
+					FlowLayout layout = new FlowLayout(0,0,0);
+					panel.setLayout(layout);
 					besetzteFelder2.put(Brett.getInstance().gebeFeld(Reihe.values()[r-1],Linie.values()[l-1]), feld1);
-					feld1.setText(""+abcdefgh[l]+r);
+//					feld1.setText(""+abcdefgh[l]+r);
 					if(r%2==1 && l%2==0 || r%2==0 && l%2==1){
-						panel.setBackground(Color.WHITE);
+//						panel.setBackground(Color.WHITE);
+						panel.setBackground(bgWEISS);
 						feld1.setForeground(Color.BLACK);
+						feld1.setIcon( images.get("w") );
 					} 
 					else {
-						panel.setBackground(Color.BLACK);
+//						panel.setBackground(Color.BLACK);
+						panel.setBackground(bgSCHWARZ);
 						feld1.setForeground(Color.WHITE);
+						feld1.setIcon( images.get("s") );
 					}
 					panel.add(feld1,null);
 					jcpSchachbrett.add(panel, null);
@@ -260,10 +281,10 @@ public class GuiView implements IView {
 					klickfeld = "";
 					
 					if(altesFeldSchwarz){
-						altesFeld.setBackground(Color.BLACK);
+						altesFeld.setBackground(bgSCHWARZ);
 					}
 					else {
-						altesFeld.setBackground(Color.WHITE);
+						altesFeld.setBackground(bgWEISS);
 					}
 				}
 				
@@ -273,7 +294,7 @@ public class GuiView implements IView {
 
 
 	private Map<IFeld,IFigur> besetzteFelder = new HashMap<IFeld,IFigur>();  //  @jve:decl-index=0:
-	private Map<IFeld,JLabel> besetzteFelder2 = new HashMap<IFeld,JLabel>();
+	private Map<IFeld,JLabel> besetzteFelder2 = new HashMap<IFeld,JLabel>();  //  @jve:decl-index=0:
 	private static IAlleFiguren allefiguren = null;
 	private static List<Figurart> listeFigurarten = Arrays.asList(Figurart.values());
 	private static List<Farbe> listeFarben = Arrays.asList(Farbe.values());
@@ -337,9 +358,15 @@ public class GuiView implements IView {
 		IFeld feld;
 		IFigur figur;
 		IBrett brett = Brett.getInstance();
+		JLabel a;
 		for(Reihe r : Reihe.values()){
 			for(Linie l : Linie.values()){
-				besetzteFelder2.get(brett.gebeFeld(r,l)).setText("");
+//				besetzteFelder2.get(brett.gebeFeld(r,l)).setText("");
+				a = besetzteFelder2.get(brett.gebeFeld(r,l));
+				if(!a.getForeground().equals(Color.BLACK))
+					a.setIcon( images.get("s") );
+				else
+					a.setIcon( images.get("w") );
 			}
 		}
 		
@@ -354,35 +381,40 @@ public class GuiView implements IView {
 					
 					switch(figur.gebeFarbe()){
 					case SCHWARZ:
-						sb.append('S');
+						sb.append('s');
 						break;
 					case WEISS:
 					default:
-						sb.append('W');
+						sb.append('w');
 					}
 					
 					switch(figur.gebeArt()){
 					case BAUER:
-						sb.append('B');
+						sb.append('b');
 						break;
 					case DAME:
-						sb.append('D');
+						sb.append('d');
 						break;
 					case KOENIG:
-						sb.append('K');
+						sb.append('k');
 						break;
 					case LAEUFER:
-						sb.append('L');
+						sb.append('l');
 						break;
 					case SPRINGER:
-						sb.append('S');
+						sb.append('s');
 						break;
 					case TURM:
-						sb.append('T');
+						sb.append('t');
 						break;
 					}
 					
-					besetzteFelder2.get(brett.gebeFeld(r,l)).setText(sb.toString());
+//					besetzteFelder2.get(brett.gebeFeld(r,l)).setText(sb.toString());
+					a = besetzteFelder2.get(brett.gebeFeld(r,l));
+					if(!a.getForeground().equals(Color.BLACK))
+						a.setIcon( images.get(sb.append('s').toString()) );
+					else
+						a.setIcon( images.get(sb.append('w').toString()) );
 				}
 			}
 		}
@@ -496,7 +528,7 @@ public class GuiView implements IView {
 			jlBild.setPreferredSize(new Dimension(300, 150));
 			
 			jpBildtrenner = new JPanel();
-			jpBildtrenner.setPreferredSize(new Dimension(294, 360));
+			jpBildtrenner.setPreferredSize(new Dimension(294, 260));
 			jpBildtrenner.add(getJpControllereinheiten(), null);
 			jpBildtrenner.add(jlBild, null);
 		}
