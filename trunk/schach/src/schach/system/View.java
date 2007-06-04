@@ -41,10 +41,10 @@ public class View {
 			}
 			viewer = GuiView.getInstance();	
 		}
-		else if(type==DEVNULL) {
+		else if(type==TEXT) {
 			viewer = new TextView();
 		}
-		else if(type==TEXT) {
+		else if(type==DEVNULL) {
 			viewer = new DevNullView();
 		}
 		else {
