@@ -6,4 +6,5 @@ public interface ILogger {
 	public void error(String string);
 	public void warning(String string);
 	public void test(String string);
+	public void disableAllExceptTest();
 }

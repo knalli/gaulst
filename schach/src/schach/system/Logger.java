@@ -42,4 +42,10 @@ public class Logger {
 			logger.test(string);
 		}
 	}
+
+	public static void disableAllExceptTest() {
+		for(ILogger logger : loggers){
+			logger.disableAllExceptTest();
+		}
+	}
 }
