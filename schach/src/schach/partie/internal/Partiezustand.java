@@ -18,7 +18,13 @@ public class Partiezustand implements IPartiezustand {
 	
 	
 	private Partiezustand() {
+		restart();
+	}
+	
+	public void restart() {
 		inpartie = true;
+		istRemisangebotVon=null;
+		istRemisMoeglich = false;
 	}
 	
 	public static IPartiezustand getInstance() {

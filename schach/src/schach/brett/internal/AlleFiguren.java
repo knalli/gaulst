@@ -22,9 +22,9 @@ import schach.system.NegativePreConditionException;
 public class AlleFiguren implements IAlleFiguren {
 	private static IAlleFiguren instance = null;
 	private AlleFiguren(){
-		Logger.debug("AlleFiguren Konstruktor");
+		restart();
 	};
-	private List<IFigur> figuren = new LinkedList<IFigur>();
+	private List<IFigur> figuren = null;
 	
 	public static IAlleFiguren getInstance() {
 		if(instance == null)
@@ -149,5 +149,10 @@ public class AlleFiguren implements IAlleFiguren {
 
 	public IFigur erstelleFigur(Figurart art, Farbe farbe) {
 		return erzeugeFigur(farbe, art, null);
+	}
+	
+	public void restart() {
+		figuren = new LinkedList<IFigur>();
+		Logger.debug("AlleFiguren Konstruktor");
 	}
 }

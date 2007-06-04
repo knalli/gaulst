@@ -23,13 +23,7 @@ public class Partie implements IPartie {
 	private IPartiehistorie historie = null;
 	
 	private Partie() {
-		// objekte sollten schon mal erstellt werden= = sorgt nur dafür, dass sie da sind.. ist sauberer
-		zustand = (Partiezustand) Partiezustand.getInstance();
-		historie = Partiehistorie.getInstance();
-		
-		aktuelleFarbe = Farbe.WEISS;
-		aktuellerSpieler = Spieler.getInstance(aktuelleFarbe);
-		gegnerischerSpieler = Spieler.getInstance(aktuelleFarbe.andereFarbe());
+		restart();
 	}
 	
 	public static IPartie getInstance() {
@@ -107,5 +101,15 @@ public class Partie implements IPartie {
 			aktuellerSpieler = Spieler.getInstance(farbe);
 			gegnerischerSpieler = Spieler.getInstance(farbe.andereFarbe());
 		}
+	}
+	
+	public void restart() {
+//		 objekte sollten schon mal erstellt werden= = sorgt nur dafür, dass sie da sind.. ist sauberer
+		zustand = (Partiezustand) Partiezustand.getInstance();
+		historie = Partiehistorie.getInstance();
+		
+		aktuelleFarbe = Farbe.WEISS;
+		aktuellerSpieler = Spieler.getInstance(aktuelleFarbe);
+		gegnerischerSpieler = Spieler.getInstance(aktuelleFarbe.andereFarbe());
 	}
 }
