@@ -22,13 +22,9 @@ import schach.system.NegativePreConditionException;
 
 public class Brett implements IBrett {
 	private static IBrett instance = null;
-	private Map<IFeld,IFigur> felder = new HashMap<IFeld,IFigur>();
+	private Map<IFeld,IFigur> felder = null;
 	private Brett(){
-		for(Reihe r : Reihe.values()){
-			for(Linie l : Linie.values()){
-				felder.put(new Feld(r,l), null);
-			}
-		}
+		restart();
 	}
 	
 	public static IBrett getInstance() {
@@ -251,5 +247,14 @@ public class Brett implements IBrett {
 			}
 		}
 		return null;
+	}
+	
+	public void restart() {
+		felder = new HashMap<IFeld,IFigur>();
+		for(Reihe r : Reihe.values()){
+			for(Linie l : Linie.values()){
+				felder.put(new Feld(r,l), null);
+			}
+		}
 	}
 }

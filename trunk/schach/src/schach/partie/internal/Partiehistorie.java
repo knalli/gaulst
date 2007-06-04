@@ -20,10 +20,12 @@ import schach.system.NegativePreConditionException;
 
 public class Partiehistorie implements IPartiehistorie {
 	private static IPartiehistorie instance = null;
-	private List<IStellung> stellungen=new ArrayList<IStellung>();
+	private List<IStellung> stellungen = null;
 	private boolean simuliere = false;
-	private Partiehistorie() {}
-	private List<String> algebraischeNotation = new ArrayList<String>();
+	private Partiehistorie() {
+		restart();
+	}
+	private List<String> algebraischeNotation = null;
 	
 	public List<String> gebeBisherigeNotationen() {
 		return algebraischeNotation;
@@ -175,5 +177,11 @@ public class Partiehistorie implements IPartiehistorie {
 			sb.append(" (=)");
 		
 		return sb.toString();
+	}
+	
+	public void restart() {
+		algebraischeNotation = new ArrayList<String>();
+		stellungen=new ArrayList<IStellung>();
+		simuliere = false;
 	}
 }
