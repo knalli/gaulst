@@ -2,6 +2,7 @@ package schach.system;
 
 import javax.swing.SwingUtilities;
 
+import schach.system.internal.DevNullView;
 import schach.system.internal.GuiView;
 import schach.system.internal.MultiView;
 import schach.system.internal.TextView;
@@ -13,6 +14,7 @@ public class View {
 	public static final int GUI = 1;
 	public static final int MULTI = 2;
 	public static final int NET = 3;
+	public static final int DEVNULL = 4;
 	
 	/**
 	 * Erstellt ein neues View-Objekt. 
@@ -39,8 +41,11 @@ public class View {
 			}
 			viewer = GuiView.getInstance();	
 		}
-		else if(type==TEXT) {
+		else if(type==DEVNULL) {
 			viewer = new TextView();
+		}
+		else if(type==TEXT) {
+			viewer = new DevNullView();
 		}
 		else {
 			Logger.error("Unbekannte View angegeben.. starte Textview!");
