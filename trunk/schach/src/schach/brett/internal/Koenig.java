@@ -226,6 +226,7 @@ public class Koenig implements IKoenig {
 		//b17
 		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler())){
 			Logger.test("B17 kein Remisangebot des Spielers = TRUE");
+			//ns14a
 			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 		}else 
 			Logger.test("B17 kein Remisangebot des Spielers = FALSE");
