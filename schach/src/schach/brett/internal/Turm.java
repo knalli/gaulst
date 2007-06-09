@@ -95,7 +95,8 @@ public class Turm implements ITurm {
 		figur.gebePosition().istBesetzt(false);
 		figur.speichereVorPosition();
 		figur.setzeUmPosition(ziel);
-		figur.gebePosition().istBesetzt(true);		
+		figur.gebePosition().istBesetzt(true);			
+		schonBewegt = true;
 		
 		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
 			Partie.getInstance().lehneRemisAb(gehoertSpieler());
@@ -153,6 +154,7 @@ public class Turm implements ITurm {
 		figur.speichereVorPosition();
 		figur.setzeUmPosition(ziel);
 		figur.gebePosition().istBesetzt(true);		
+		schonBewegt = true;
 		
 		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
 			Partie.getInstance().lehneRemisAb(gehoertSpieler());

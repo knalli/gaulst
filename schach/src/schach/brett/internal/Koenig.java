@@ -15,6 +15,7 @@ import schach.partie.internal.Partie;
 import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
 import schach.spieler.ISpieler;
+import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
@@ -47,111 +48,174 @@ public class Koenig implements IKoenig {
 	public boolean istInEinerRochade() {
 		return istineinerrochade ;
 	}
+	
+	public void setzeIstInEinerRochade(boolean status){
+		istineinerrochade = status;
+	}
 
 	public void rochiert(IFeld ziel) throws NegativeConditionException {
-		//ns1
-		if(!gehoertSpieler().istZugberechtigt())
+		//b01
+		if(!gehoertSpieler().istZugberechtigt()){
+			Logger.test("B01 gehoertSpieler.istZugberechtigt = FALSE");
 			throw new NegativePreConditionException("Spieler dieser Figur ist nicht zugberechtigt.");
+		}
+		Logger.test("B01 gehoertSpieler().istZugberechtigt() = TRUE");
 		
-		//ns2
-		if(Partiezustand.getInstance().istRemis())
+		//b02
+		if(Partiezustand.getInstance().istRemis()){
+			Logger.test("B02 istRemis = TRUE");
 			throw new NegativePreConditionException("Partie ist Remis");
+		}
+		Logger.test("B02 istRemis = FALSE");
 		
-		//ns3
-		if(Partiezustand.getInstance().istPatt())
+		//b03
+		if(Partiezustand.getInstance().istPatt()){
+			Logger.test("B03 istPatt = TRUE");
 			throw new NegativePreConditionException("Partie ist Patt");
+		}
+		Logger.test("B03 istPatt = FALSE");
 		
-		//ns4
-		if(Partiezustand.getInstance().istSchachmatt())
+		//b04
+		if(Partiezustand.getInstance().istSchachmatt()){
+			Logger.test("B04 istMatt = TRUE");
 			throw new NegativePreConditionException("Partie ist Schachmatt");
+		}
+		Logger.test("B04 istMatt = FALSE");
 		
-		//ns5
-		if(istInEinerRochade())
+		//b05
+		if(istInEinerRochade()){
+			Logger.test("B05 istInEinerRochade = TRUE");
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
+		}
+		Logger.test("B05 istInEinerRochade = FALSE");
 		
-		//ns6
-		if(Brett.getInstance().istBauernUmwandlung())
+		//b06
+		if(Brett.getInstance().istBauernUmwandlung()){
+			Logger.test("B06 istBauernUmwandlung = TRUE");
 			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
+		}
+		Logger.test("B06 istBauernUmwandlung = FALSE");
 		
-		//ns7
-		if(wurdeBewegt())
+		//b07
+		if(wurdeBewegt()){
+			Logger.test("B07 Koenig.wurdeBewegt = TRUE");
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Köenig bewegt wurde.");
+		}
+		Logger.test("B07 Koenig.wurdeBewegt = FALSE");
 		
-		//ns8
+		//b08
 		try {
-			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel).istKoenigBedroht(gebeFarbe()))
+			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel).istKoenigBedroht(gebeFarbe())){
+				Logger.test("B08 istKoenigBedroht = TRUE");
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
+			}
+			Logger.test("B08 istKoenigBedroht = FALSE");
 		} catch (IndexOutOfBoundsException e) {
+			Logger.test("B08 Koenig.wurdeBewegt = UNKNOWN");
 			throw new NegativePreConditionException("Upps, kein König mehr da?!");
 		}
 		
-		//ns9
+		//b09
 		boolean gueltig = false;
 		try {
-			//ns9a
+			//b09a
 			gueltig = gebePosition().minusLinie(2).equals(ziel);
-		} catch(NegativeConditionException e){}
+			Logger.test("B09 gueltigesZielfeld links = TRUE");
+			Logger.test("B09 gueltigesZielfeld rechts = IRRELEVANT");
+		} catch(NegativeConditionException e){
+			Logger.test("B09 gueltigesZielfeld links = FALSE");
+		}
 		try {
-			//ns9b
+			//b09b
 			gueltig = gueltig || gebePosition().plusLinie(2).equals(ziel);
-		} catch(NegativeConditionException e){}
+			Logger.test("B09 gueltigesZielfeld rechts = TRUE");
+		} catch(NegativeConditionException e){
+			Logger.test("B09 gueltigesZielfeld rechts = FALSE");
+		}
 		
-		//ns9 (final)
-		if(!gueltig)
+		//b09final
+		if(!gueltig){
+			Logger.test("B09 gueltigesZielfeld = FALSE");
 			throw new NegativePreConditionException("Ungültiges Zielfeld (Rochade).");
+		}
+		Logger.test("B09 gueltigesZielfeld = TRUE");
 		
 		IFeld turmfeld = null;
 		IFeld turmzielfeld = null;
-		//ns10
+		//folge von 09
 		if(ziel.gebeLinie().equals(Linie.G)){
+			//ns01
 			turmfeld = Brett.getInstance().gebeFeld(gebePosition().gebeReihe(), Linie.H);
 		}
 		else {
+			//ns02
 			turmfeld = Brett.getInstance().gebeFeld(gebePosition().gebeReihe(), Linie.A);
 		}
-		//ns10b
+		//folge von 09
 		if(gebePosition().minusLinie(2).equals(ziel)){
+			//ns03
 			turmzielfeld = gebePosition().minusLinie(1);
 		}
 		else {
+			//ns04
 			turmzielfeld = gebePosition().plusLinie(1);
 		}
 		
-		//ns11
-		IFigur figt = (ITurm) Brett.getInstance().gebeFigurVonFeld(turmfeld);
-		if(figt == null)
+		//b11
+		//ns05
+		IFigur figt = Brett.getInstance().gebeFigurVonFeld(turmfeld);
+		if(figt == null){
+			Logger.test("B11 Turmfeld ist besetzt = FALSE");
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Turm nicht mehr vorhanden.");
+		}
+		Logger.test("B04 Turmfeld ist besetzt = TRUE");
 		
-		//ns12
-		if(!figt.gebeArt().equals(Figurart.TURM))
+		//b12
+		if(!figt.gebeArt().equals(Figurart.TURM)){
+			Logger.test("B12 Turmfeld ist mit Turm besetzt = FALSE");
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Roachdepartner kein Turm ist.");
+		}
+		Logger.test("B12 Turmfeld ist mit Turm besetzt = TRUE");
 		
-		//ns13
+		//b13 eigentlich irrelevant, weil dann es ein turm sein muss (s.o.) und der könig dann bedroht wäre (s.o.)!
 		if(!figt.gehoertSpieler().istZugberechtigt())
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Roachdepartner kein Turm des Spielers ist.");
 		
+		// nur casting
 		ITurm turm = (ITurm) figt;
-		//ns14
-		if(turm.wurdeBewegt())
+		//b14
+		if(turm.wurdeBewegt()){
+			Logger.test("B14 Turm wurde nicht bewegt = FALSE");
 			throw new NegativePreConditionException("Rochade nicht erlaubt, da Turm bewegt wurde.");
+		}
+		Logger.test("B14 Turm wurde nicht bewegt = TRUE");
 		
+		//ns06
 		List<IFeld> zugweg = Brett.getInstance().gebeFelderInReihe(gebePosition(), turmfeld);
-		//ns15
-		if(!Brett.getInstance().sindAlleFelderFrei(zugweg))
+		//b15
+		if(!Brett.getInstance().sindAlleFelderFrei(zugweg)){
+			Logger.test("B15 Felder zwischen König und Turm sind frei = FALSE");
 			throw new NegativePreConditionException("Die Felder zwischen König und Turm sind nicht frei.");
+		}
+		Logger.test("B15 Felder zwischen König und Turm sind frei = TRUE");
 		
+		//ns07
 		zugweg.remove(ziel);
-		//ns16
+		//b16
 		for(IFeld feld : zugweg){
 			try {
-				if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), feld).istKoenigBedroht(gebeFarbe()))
+				if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), feld).istKoenigBedroht(gebeFarbe())){
+					Logger.test("B16 Zugweg des Königs sind unbedroht = FALSE");
 					throw new NegativePreConditionException("König würde während der Roachde im Schach stehen.");
+				}
 			} catch (IndexOutOfBoundsException e) {
 				throw new NegativePreConditionException("Upps, kein König mehr da?!");
 			}
 		}
+		Logger.test("B16 Zugweg des Königs sind unbedroht = TRUE");
 		
 		
+		//ns08-ns13
 		figur.gebePosition().istBesetzt(false);
 		figur.speichereVorPosition();
 		figur.setzeUmPosition(ziel);
@@ -159,21 +223,28 @@ public class Koenig implements IKoenig {
 		schonBewegt = true;
 		istineinerrochade = true;		
 		
-		//ns17
-		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
+		//b17
+		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler())){
+			Logger.test("B17 kein Remisangebot des Spielers = TRUE");
 			Partie.getInstance().lehneRemisAb(gehoertSpieler());
+		}else 
+			Logger.test("B17 kein Remisangebot des Spielers = FALSE");
 		
+		//ns14,15
 		turm.rochiert(turmzielfeld);
 		istineinerrochade = false;
 		
+		//ns16a-h
 		Partiehistorie.getInstance().protokolliereStellung(false, this); //rochade!
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, gebeFarbe())) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
 		
+		//ns17
 		Partie.getInstance().wechsleSpieler();
 		
 //		informiere die Beobachter, dass sich etwas geändert hat
+		//ns18
 		erzwingeUpdate();
 	}
 
