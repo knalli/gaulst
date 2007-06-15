@@ -11,6 +11,7 @@ import schach.partie.internal.Partie;
 import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
 import schach.spieler.ISpieler;
+import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
 
@@ -44,46 +45,87 @@ public class Bauer implements IBauer {
 
 	public void schlaegt(IFeld ziel, ISchlagbareFigur gegner)
 			throws NegativeConditionException {
-		if(!gehoertSpieler().istZugberechtigt())
+		
+		// b01
+		if(!gehoertSpieler().istZugberechtigt()){
+			Logger.test("B01 gehoertSpieler.istZugberechtigt = FALSE");	
 			throw new NegativePreConditionException("Spieler dieser Figur ist nicht zugberechtigt.");
-		
-		if(Partiezustand.getInstance().istRemis())
+		}
+		Logger.test("B01 gehoertSpieler().istZugberechtigt() = TRUE");
+
+		// b02
+		if(Partiezustand.getInstance().istRemis()){
+			Logger.test("B02 istRemis = TRUE");
 			throw new NegativePreConditionException("Partie ist Remis");
+		}
+		Logger.test("B02 istRemis = FALSE");
 		
-		if(Partiezustand.getInstance().istPatt())
+		// b03
+		if(Partiezustand.getInstance().istPatt()) {
+			Logger.test("B03 istPatt = TRUE");
 			throw new NegativePreConditionException("Partie ist Patt");
+		}
+		Logger.test("B03 istPatt = FALSE");
 		
-		if(Partiezustand.getInstance().istSchachmatt())
+		// b04
+		if(Partiezustand.getInstance().istSchachmatt()){
+			Logger.test("B04 istMatt = TRUE");
 			throw new NegativePreConditionException("Partie ist Schachmatt");
+		}
+		Logger.test("B04 istMatt = False");
 		
+		// b05
 		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, gebeFarbe()).get(0));
-		if(koenig.istInEinerRochade())
+		if(koenig.istInEinerRochade()){
+			Logger.test("B05 istInEinerRochade = TRUE");
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
+		}
+		Logger.test("B05 istInEinerRochade = False");
 		
-		if(Brett.getInstance().istBauernUmwandlung())
+		// b06
+		if(Brett.getInstance().istBauernUmwandlung()){
+			Logger.test("B06 istBauernUmwandlung = TRUE");
 			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
+		}
+		Logger.test("B06 istBauernUmwandlung = False");
 		
 //		simuliere Stellung
+		// b07
 		try {
-			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel, gegner).istKoenigBedroht(gebeFarbe()))
-				throw new NegativePreConditionException("Kšnig wŸrde im nŠchsten Zug im Schach stehen.");
+			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel, gegner).istKoenigBedroht(gebeFarbe())){
+				Logger.test("B07 König im nächsten Zug bedroht? = TRUE");
+				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
+			}
 		} catch (IndexOutOfBoundsException e) {
-			throw new NegativePreConditionException("Upps, kein Kšnig mehr da?!");
+			throw new NegativePreConditionException("Upps, kein König mehr da?!");
 		}
+		Logger.test("B07 König im nächsten Zug bedroht? = False");
 		
 //		if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel))
 //			throw new NegativePreConditionException("UngŸltiges Zielfeld");
 		testeSchlagZug(ziel);
 		
-		if(!ziel.istBesetzt())
+		// b08
+		if(!ziel.istBesetzt()) {
+			Logger.test("B08 Zielfed nicht besetzt = TRUE");
 			throw new NegativePreConditionException("Schlagzug: Zielfeld ist nicht besetzt.");
+		}
+		Logger.test("B08 Zielfed nicht besetzt = False");
 		
-		if(!(gegner instanceof ISchlagbareFigur))
+		// b09
+		if(!(gegner instanceof ISchlagbareFigur)){
+			Logger.test("B09 Figur ist nicht schlagbar = TRUE");
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
+		}
+		Logger.test("B09 Figur ist nicht schlagbar = False");
 		
-		if(gegner.gebeFarbe().equals(gebeFarbe()))
+		// b10
+		if(gegner.gebeFarbe().equals(gebeFarbe())) {
+			Logger.test("B10 zu schlagende Figur hat eigene Farbe  = True");
 			throw new NegativePreConditionException("Zu schlagende Figur gehšrt nicht dem gegnerischen Spieler.");
-
+		}
+		Logger.test("B10 zu schlagende Figur hat eigene Farbe  = False");
+		
 		ISchlagbareFigur gegner2 = (ISchlagbareFigur) gegner;
 		gegner2.setzeSollEntferntWerden();
 		gegner2.geschlagenWerden();
