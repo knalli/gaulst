@@ -106,7 +106,6 @@ public class Koenig implements IKoenig {
 		//b08
 		try {
 			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel).istKoenigBedroht(gebeFarbe())){
-				Logger.test("B08 istKoenigBedroht = TRUE");
 				throw new NegativePreConditionException("Kšnig wŸrde im nŠchsten Zug im Schach stehen.");
 			}
 			Logger.test("B08 istKoenigBedroht = FALSE");
@@ -212,7 +211,7 @@ public class Koenig implements IKoenig {
 				throw new NegativePreConditionException("Upps, kein Kšnig mehr da?!");
 			}
 		}
-		Logger.test("B16 Zugweg des Kšnigs sind unbedroht = TRUE");
+		Logger.test("B16 Zugweg des Königs ist unbedroht = TRUE");
 		
 		
 		//ns08-ns13
