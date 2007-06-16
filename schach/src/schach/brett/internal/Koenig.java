@@ -106,6 +106,7 @@ public class Koenig implements IKoenig {
 		//b08
 		try {
 			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel).istKoenigBedroht(gebeFarbe())){
+				Logger.test("B08 istKoenigBedroht = TRUE");
 				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
 			}
 			Logger.test("B08 istKoenigBedroht = FALSE");
