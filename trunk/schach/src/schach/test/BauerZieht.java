@@ -74,19 +74,22 @@ public class BauerZieht {
 	public void tearDown() throws Exception {
 	}
 	
-
-	 public void b00aAllesOkay() throws NegativeConditionException{
-		  Logger.test("B00a Gueltiger Zug");
-		  Logger.noTest();
-		  createTestCaseOK00a();
-		  Logger.disableAllExceptTest();
-		  execWeisserBauerZieht();
+	@Test
+	public void b00aAllesOkay() throws NegativeConditionException{
+		Logger.test("B00a Gueltiger Zug");
+		Logger.noTest();
+		createTestCaseOK00a();
+		Logger.disableAllExceptTest();
+		execWeisserBauerZieht();
 	}
 	 
 	@Test
 	public void b00bAllesOkay() throws NegativeConditionException{
 		Logger.test("B00b Gueltiger Zug");
+		Logger.noTest();
 		createTestCaseOK00b();
+		Logger.disableAllExceptTest();
+		execWeisserBauerZieht();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
@@ -135,7 +138,10 @@ public class BauerZieht {
 		for(String cmd : new String[] {"D2D4", "C7C5", "C1D2", "REMIS", "H7H5", "REMIS"})
 			controller.parseInputString(cmd, true);
 	}
-	
+	public void createTestCase02a() throws NegativeConditionException {
+		for(String cmd : new String[] {"REMIS", "REMIS"})
+			controller.parseInputString(cmd, true);
+	}
 	
 	public void createTestCase03() throws NegativeConditionException {
 		for(String cmd : new String[]{
