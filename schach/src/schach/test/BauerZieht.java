@@ -14,6 +14,7 @@ import schach.brett.Reihe;
 import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
 import schach.brett.internal.Bauer;
+import schach.brett.internal.Koenig;
 import schach.partie.internal.Partie;
 import schach.partie.internal.Partiehistorie;
 import schach.partie.internal.Partiezustand;
@@ -62,8 +63,9 @@ public class BauerZieht {
 	}
 	
 	private void execWeisserBauerZieht() throws NegativeConditionException {
-		controller.parseInputString("h2h3", true);
+		controller.parseInputString("H2H3", true);
 	}
+	
 	
 	private static IController controller;
 
@@ -74,6 +76,7 @@ public class BauerZieht {
 	public void tearDown() throws Exception {
 	}
 	
+	// test 1
 	@Test
 	public void b00aAllesOkay() throws NegativeConditionException{
 		Logger.test("B00a Gueltiger Zug");
@@ -82,7 +85,8 @@ public class BauerZieht {
 		Logger.disableAllExceptTest();
 		execWeisserBauerZieht();
 	}
-	 
+	
+	// test 2
 	@Test
 	public void b00bAllesOkay() throws NegativeConditionException{
 		Logger.test("B00b Gueltiger Zug");
@@ -92,40 +96,110 @@ public class BauerZieht {
 		execWeisserBauerZieht();
 	}
 	
+	// t01
 	@Test (expected=NegativeConditionException.class)
 	public void b01FarbeAmZugFalse() throws NegativeConditionException{
-		Logger.test("B01 ist der Spieler weiss zugberechtigt?");
+		Logger.test("T01 ist der Spieler weiss zugberechtigt?");
 		Logger.noTest();
 		CreateTestCase01();
 		Logger.disableAllExceptTest();
 		execWeisserBauerZieht();
 	}
 	
+	// t02
 	@Test (expected=NegativeConditionException.class)
 	public void b02NichtRemisFalse() throws NegativeConditionException{
-		Logger.test("B02: ist die Partie Remis ?");
+		Logger.test("t02: ist die Partie Remis ?");
 		Logger.noTest();
 		createTestCase02();
 		Logger.disableAllExceptTest();
 		execWeisserBauerZieht();
 	}
+	
+	// t03
 	@Test(expected=NegativeConditionException.class)
 	public void b03NichtPattFalse() throws NegativeConditionException{
-		Logger.test("B03: ist die Partie Patt ?");
+		Logger.test("t03: ist die Partie Patt ?");
 		Logger.noTest();
 		createTestCase03();
 		Logger.disableAllExceptTest();
 		execWeisserBauerZieht();
 	}
 	
+	// b04
 	@Test (expected=NegativeConditionException.class)
 	public void b04NichtMattFalse() throws NegativeConditionException{
-		Logger.test("B04: ist die Partie Matt ?");
+		Logger.test("t04: ist die Partie Matt ?");
 		Logger.noTest();
 		createTestCase04();
 		Logger.disableAllExceptTest();
 		execWeisserBauerZieht();
 	}	
+	
+	// b05
+	@Test (expected=NegativeConditionException.class)
+	public void b05KoenigBereitsInEinerRochadeFalse() throws NegativeConditionException {
+		Logger.test("t05: Befindet sich der weisse Koenig bereits in einer Rochade?");
+		Logger.noTest();
+		createTestCase05();
+		Koenig k = (Koenig) AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, Farbe.WEISS).get(0);
+		Logger.disableAllExceptTest();
+		k.setzeIstInEinerRochade(true);
+		execWeisserBauerZieht();
+	}
+	
+	// b06
+	@Test (expected=NegativeConditionException.class)
+	public void b06KeineBauernUmwandlungFalse() throws NegativeConditionException {
+		Logger.test("t06: Besteht derzeit eine Bauernumwandlung bevor?");
+		Logger.noTest();
+		createTestCase06();
+		Logger.disableAllExceptTest();
+		execWeisserBauerZieht();
+	}
+	
+	// b07
+	@Test (expected=NegativeConditionException.class)
+	public void b07KoenigNichtBedrohtImNaechstenZugFalse() throws NegativeConditionException {
+		Logger.test("t07: Waere der weisse Koenig im naechsten Zug direkt bedroht?");
+		Logger.noTest();
+		createTestCase07();
+		Logger.disableAllExceptTest();
+		controller.parseInputString("F2F4", true);
+	}
+	
+	// b08
+	@Test (expected=NegativeConditionException.class)
+	public void b08ZielfeldNichtBesetztFalse() throws NegativeConditionException {
+		Logger.test("t08: Zugfeld besetzt?");
+		Logger.noTest();
+		createTestCase08();
+		Logger.disableAllExceptTest();
+		Brett.getInstance().gebeFigurVonFeld(Reihe.R2, Linie.C).zieht(Brett.getInstance().gebeFeld(Reihe.R3, Linie.C));
+	}
+	
+	// t09
+	@Test (expected=NegativeConditionException.class)
+	public void b09DoppelzugFalse() throws NegativeConditionException {
+		Logger.test("t09: Doppelzug erlaubt?");
+		Logger.noTest();
+		createTestCase09();
+		Logger.disableAllExceptTest();
+		controller.parseInputString("D3D5", true);
+	}
+	
+	@Test (expected=NegativeConditionException.class)
+	public void b10GangartErlaubtFalse() throws NegativeConditionException {
+		Logger.test("t10: Gangart gueltig?");
+		Logger.noTest();
+		createTestCase09();
+		Logger.disableAllExceptTest();
+		controller.parseInputString("D3E4", true);
+	}
+	
+	
+	
+	
 	
 	private void CreateTestCase01() throws NegativeConditionException{
 		for(String cmd : new String[]{
@@ -164,42 +238,49 @@ public class BauerZieht {
 			controller.parseInputString(cmd, true);
 	}
 
+	public void createTestCase05() throws NegativeConditionException {
+		for(String cmd : new String[]{
+				"B1A3", "B8A6",
+				"D2D4", "D7D5",
+				"D1D3", "D8D6",
+				"C1D2", "C8D7"})
+			controller.parseInputString(cmd, true);
+	}
 
 	public void createTestCase06() throws NegativeConditionException {
 		for(String cmd : new String[]{
-				"B2B4", "B7B5",
-				"C2C4", "B5C4",
-				"B4B5", "B8C6",
-				"B5B6", "C8A6",
-				"B6B7", "A8A6",
-				"B7B8", "C4C3" })
+				"B1A3", "B8A6",
+				"D2D4", "D7D5",
+				"D1D3", "D8D6",
+				"C1D2", "C8D7",
+				"C2C4", "B7B5",
+				"C4B5", "C7C5", 
+				"B5C6", "D7C8",
+				"C6C7", "C8D7",
+				"C7C8"})
 			controller.parseInputString(cmd, true);
 	}
 			
 	public void createTestCase07() throws NegativeConditionException {
 		for(String cmd : new String[]{
 				"D2D3", "E7E6",
-				"E2E3", "D8H4",
-				"F2F4" })
+				"E2E3", "D8H4" })
 			controller.parseInputString(cmd, true);
 	}
 	
-	public void createTestCase09() throws NegativeConditionException {
-		for(String cmd : new String[]{
-				"D2D3", "B8A6", "D3D5"})
+	public void createTestCase08() throws NegativeConditionException {
+		for(String cmd : new String[]{"B1C3","H7H6"})
 		controller.parseInputString(cmd, true);
 	}
 	
-	public void createTestCase10() throws NegativeConditionException {
-		for(String cmd : new String[]{"H2G3"})
-		controller.parseInputString(cmd, true);
-	}
-
-	public void createTestCase11() throws NegativeConditionException {
+	
+	public void createTestCase09() throws NegativeConditionException {
 		for(String cmd : new String[]{
-				"G1F3", "E6E4", "G2G4"})
+				"D2D3", "B8A6"})
 		controller.parseInputString(cmd, true);
 	}
+	
+
 	
 	public void createTestCaseOK00a() throws NegativeConditionException {
 		for(String cmd : new String[]{
