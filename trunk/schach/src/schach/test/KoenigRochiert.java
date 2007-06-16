@@ -108,21 +108,27 @@ public class KoenigRochiert {
 	@Test
 	public void b00aAllesOkay() throws NegativeConditionException {
 		Logger.test("B00: Gültige Rochade ausführen");
+		Logger.noTest();
 		createTestCase09a();
+		Logger.disableAllExceptTest();
 		execGrosseRoachadeNachLinksMitWeiss();
 	}
 	
 	@Test
 	public void b00bAllesOkay() throws NegativeConditionException {
 		Logger.test("B00: Gültige Rochade ausführen");
+		Logger.noTest();
 		createTestCase09b();
+		Logger.disableAllExceptTest();
 		execKleineRoachadeNachRechtsMitWeiss();
 	}
 	
 	@Test
 	public void b00cAllesOkay() throws NegativeConditionException {
 		Logger.test("B00: Gültige Rochade ausführen");
+		Logger.noTest();
 		createTestCase09b();
+		Logger.disableAllExceptTest();
 		controller.parseInputString("REMIS", true);
 		execKleineRoachadeNachRechtsMitWeiss();
 	}
@@ -130,35 +136,45 @@ public class KoenigRochiert {
 	@Test (expected=NegativeConditionException.class)
 	public void b01FarbeAmZugFalse() throws NegativeConditionException {
 		Logger.test("B01: Ist der Spieler WEISS nicht zugberechtigt?");
+		Logger.noTest();
 		createTestCase01();
+		Logger.disableAllExceptTest();
 		execGrosseRoachadeNachLinksMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b02NichtRemisFalse() throws NegativeConditionException {
 		Logger.test("B02: Ist die Partie remis?");
+		Logger.noTest();
 		createTestCase02();
+		Logger.disableAllExceptTest();
 		execGrosseRoachadeNachLinksMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b03NichtPattFalse() throws NegativeConditionException {
 		Logger.test("B03: Ist die Partie patt? (Sonderfall, Schwarze Rochade)");
+		Logger.noTest();
 		createTestCase03();
+		Logger.disableAllExceptTest();
 		execGrosseRochadeNachLinksMitSchwarz();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b04NichtMattFalse() throws NegativeConditionException {
 		Logger.test("B04: Ist die Partie matt?");
+		Logger.noTest();
 		createTestCase04();
+		Logger.disableAllExceptTest();
 		execGrosseRoachadeNachLinksMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b05KoenigBereitsInEinerRochadeFalse() throws NegativeConditionException {
 		Logger.test("B05: Befindet sich der weiße König bereits in einer Rochade?");
+		Logger.noTest();
 		createTestCase05();
+		Logger.disableAllExceptTest();
 		Koenig k = (Koenig) AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, Farbe.WEISS).get(0);
 		k.setzeIstInEinerRochade(true);
 		execGrosseRoachadeNachLinksMitWeiss();
@@ -167,28 +183,36 @@ public class KoenigRochiert {
 	@Test (expected=NegativeConditionException.class)
 	public void b06KeineBauernUmwandlungFalse() throws NegativeConditionException {
 		Logger.test("B06: Besteht derzeit eine Bauernumwandlung bevor?");
+		Logger.noTest();
 		createTestCase06();
+		Logger.disableAllExceptTest();
 		execGrosseRoachadeNachLinksMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b07KoenigNichtBedrohtImNaechstenZugFalse() throws NegativeConditionException {
 		Logger.test("B07: Wäre der weiße König im nächsten Zug direkt bedroht?");
+		Logger.noTest();
 		createTestCase07();
+		Logger.disableAllExceptTest();
 		execGrosseRoachadeNachLinksMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b08KoenigWurdeNichtBewegtFalse() throws NegativeConditionException {
 		Logger.test("B08: Wurde der weiße König bereits bewegt?");
+		Logger.noTest();
 		createTestCase08();
+		Logger.disableAllExceptTest();
 		execGrosseRoachadeNachLinksMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b09ARichtigesZielfeldFalse() throws NegativeConditionException {
 		Logger.test("B09a: Zielfeld ist links nicht richtig?");
+		Logger.noTest();
 		createTestCase09a();
+		Logger.disableAllExceptTest();
 		//controller.parseInputString("E1B1", true);
 		((IKoenig) (AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, Farbe.WEISS).get(0))).rochiert(Brett.getInstance().gebeFeld(Reihe.R1, Linie.B));
 	}
@@ -196,7 +220,9 @@ public class KoenigRochiert {
 	@Test (expected=NegativeConditionException.class)
 	public void b09BRichtigesZielfeldFalse() throws NegativeConditionException {
 		Logger.test("B09b: Zielfeld ist rechts nicht richtig?");
+		Logger.noTest();
 		createTestCase09b();
+		Logger.disableAllExceptTest();
 		((IKoenig) (AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, Farbe.WEISS).get(0))).rochiert(Brett.getInstance().gebeFeld(Reihe.R1, Linie.F));
 		//controller.parseInputString("E1F1", true);
 	}
@@ -204,70 +230,90 @@ public class KoenigRochiert {
 	@Test (expected=NegativeConditionException.class)
 	public void b11ATurmfeldBesetztFalse() throws NegativeConditionException {
 		Logger.test("B11a: Turmfeld nicht besetzt?");
+		Logger.noTest();
 		createTestCase11a();
+		Logger.disableAllExceptTest();
 		execGrosseRoachadeNachLinksMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b11BTurmfeldBesetztFalse() throws NegativeConditionException {
 		Logger.test("B11b: Turmfeld nicht besetzt?");
+		Logger.noTest();
 		createTestCase11b();
+		Logger.disableAllExceptTest();
 		execKleineRoachadeNachRechtsMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b12aTurmfeldMitTurmBesetztFalse() throws NegativeConditionException {
 		Logger.test("B12a: Turmfeld ist mit einem Turm besetzt?");
+		Logger.noTest();
 		createTestCase12a();
+		Logger.disableAllExceptTest();
 		execGrosseRoachadeNachLinksMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b12bTurmfeldMitTurmBesetztFalse() throws NegativeConditionException {
 		Logger.test("B12b: Turmfeld ist mit einem Turm besetzt?");
+		Logger.noTest();
 		createTestCase12b();
+		Logger.disableAllExceptTest();
 		execKleineRoachadeNachRechtsMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b14aTurmWurdeNichtBewegtFalse() throws NegativeConditionException {
 		Logger.test("B14a: Der Turm wurde bereits bewegt?");
+		Logger.noTest();
 		createTestCase14a();
+		Logger.disableAllExceptTest();
 		execGrosseRoachadeNachLinksMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b14bTurmWurdeNichtBewegtFalse() throws NegativeConditionException {
 		Logger.test("B14b: Der Turm wurde bereits bewegt?");
+		Logger.noTest();
 		createTestCase14b();
+		Logger.disableAllExceptTest();
 		execKleineRoachadeNachRechtsMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b15aFelderZwischenKoenigTurmNichtBesetztFalse() throws NegativeConditionException {
 		Logger.test("B15a: Die Felder zwischen weißen König und Turm sind besetzt?");
+		Logger.noTest();
 		createTestCase15a();
+		Logger.disableAllExceptTest();
 		execGrosseRoachadeNachLinksMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b15bFelderZwischenKoenigTurmNichtBesetztFalse() throws NegativeConditionException {
 		Logger.test("B15b: Die Felder zwischen weißen König und Turm sind besetzt?");
+		Logger.noTest();
 		createTestCase15b();
+		Logger.disableAllExceptTest();
 		execKleineRoachadeNachRechtsMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b16aZugwegDesKoenigNichtBedrohtFalse() throws NegativeConditionException {
 		Logger.test("B16a: Die Zugfelder des weißen Königs sind nicht bedroht?");
+		Logger.noTest();
 		createTestCase16a();
+		Logger.disableAllExceptTest();
 		execGrosseRoachadeNachLinksMitWeiss();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b16bZugwegDesKoenigNichtBedrohtFalse() throws NegativeConditionException {
 		Logger.test("B16b: Die Zugfelder des weissen Königs sind nicht bedroht?");
+		Logger.noTest();
 		createTestCase16b();
+		Logger.disableAllExceptTest();
 		execKleineRoachadeNachRechtsMitWeiss();
 	}
 	
