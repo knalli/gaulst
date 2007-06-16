@@ -99,6 +99,20 @@ public class Partiehistorie implements IPartiehistorie {
 
 		simuliere = false;
 		Logger.debug("Simulation Ende..");
+		
+		/* quick & dirty fix */
+		for(Reihe r : Reihe.values()){
+			for(Linie l : Linie.values()){
+				Brett.getInstance().gebeFeld(r, l).istBesetzt(false);
+			}
+		}
+		for(IFigur f : AlleFiguren.getInstance().gebeAlleFiguren()){
+			if(f.istAufDemSchachbrett()){
+				f.gebePosition().istBesetzt(true);
+			}
+		}
+		/* quick & dirty fix */
+		
 		return simulation;
 	}
 
