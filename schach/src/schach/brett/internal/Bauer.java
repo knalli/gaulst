@@ -226,46 +226,82 @@ public class Bauer implements IBauer {
 
 	public void zieht(IFeld ziel) throws NegativeConditionException {
 		boolean macheEinenDoppelschritt = false;
-		if(!gehoertSpieler().istZugberechtigt())
+		
+		// b01
+		if(!gehoertSpieler().istZugberechtigt()){
+			Logger.test("B01 Spieler ist zugberechtigt = FALSE");
 			throw new NegativePreConditionException("Spieler dieser Figur ist nicht zugberechtigt.");
+		}
+		Logger.test("B01 Spieler ist zugberechtigt = TRUE");	
 		
-		if(Partiezustand.getInstance().istRemis())
+		// b02
+		if(Partiezustand.getInstance().istRemis()){
+			Logger.test("B02 Partie ist Remis = TRUE");
 			throw new NegativePreConditionException("Partie ist Remis");
+		}
+		Logger.test("B02 Partie ist Remis  = FALSE");
 		
-		if(Partiezustand.getInstance().istPatt())
+		// b03
+		if(Partiezustand.getInstance().istPatt()) {
+			Logger.test("B03 Partie ist Patt = TRUE");
 			throw new NegativePreConditionException("Partie ist Patt");
+		}
+		Logger.test("B03 Partie ist Patt = FALSE");
 		
-		if(Partiezustand.getInstance().istSchachmatt())
+		// b04
+		if(Partiezustand.getInstance().istSchachmatt()){
+			Logger.test("B04 Partie ist Matt = TRUE");
 			throw new NegativePreConditionException("Partie ist Schachmatt");
+		}
+		Logger.test("B04 Partie ist Matt = FALSE");
 		
 		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, gebeFarbe()).get(0));
-		if(koenig.istInEinerRochade())
-			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		
-		if(Brett.getInstance().istBauernUmwandlung())
+		// b05
+		if(koenig.istInEinerRochade()){
+			Logger.test("B05 Koenig ist in einer Rochade = TRUE");
+			throw new NegativePreConditionException("Koenig ist in einer Rochade");
+		}
+		Logger.test("B05 Koenig ist in einer Rochade = FALSE");
+		
+		// b06
+		if(Brett.getInstance().istBauernUmwandlung()){
+			Logger.test("B06 eine Bauernumwandlung steht an = TRUE");
 			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
+		}
+		Logger.test("B06 eine Bauernumwandlung steht an = FALSE");
 		
 //		simuliere Stellung
+		// b07
 		try {
-			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel).istKoenigBedroht(gebeFarbe()))
-				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
+			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel).istKoenigBedroht(gebeFarbe())){
+				Logger.test("B07 Koenig wird im naechsten Zug bedroht = TRUE");
+				throw new NegativePreConditionException("Koenig wuerde im naechsten Zug im Schach stehen.");
+			}
+				
 		} catch (IndexOutOfBoundsException e) {
-			throw new NegativePreConditionException("Upps, kein König mehr da?!");
+			throw new NegativePreConditionException("Upps, kein Koenig mehr da?!");
 		}
+		Logger.test("B07 Koenig wird im naechsten Zug bedroht = FALSE");
 		
 //		if(!position.plusReihe(1).equals(ziel) && !(position.plusReihe(2).equals(ziel) && !doppelschritt))
 //			throw new NegativePreConditionException("Ungültiges Ziel");
 		testeZiehZug(ziel);
 		
-		if(ziel.istBesetzt())
+		// b08
+		if(ziel.istBesetzt()){
+			Logger.test("B08 Zielfed ist besetzt = TRUE");
 			throw new NegativePreConditionException("Ziel ist besetzt");
+		}
+		Logger.test("B08 Zielfed ist besetzt = FALSE");
+			
 			
 		boolean dps = false;
 		try {
 			dps = gebePosition().plusReihe(2).equals(ziel);
 		} catch (NegativePreConditionException e) {}
 		if(dps && !wurdeBewegt()) {
-			// rest in testeZug geprüft
+			// rest in testeZug geprueft
 			macheEinenDoppelschritt = true;
 		}
 			
@@ -345,7 +381,7 @@ public class Bauer implements IBauer {
 		} catch(NegativeConditionException e){}
 		
 		if(!gueltig)
-			throw new NegativePreConditionException("Ungültige Gangart (Ziehen).");
+			throw new NegativePreConditionException("Ungueltige Gangart (Ziehen).");
 		
 		boolean dps = false;
 		try {
