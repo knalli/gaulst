@@ -14,6 +14,8 @@ import schach.spieler.ISpieler;
 import schach.system.Logger;
 import schach.system.NegativeConditionException;
 import schach.system.NegativePreConditionException;
+import schach.brett.Linie;
+import schach.brett.Reihe;
 
 public class Bauer implements IBauer {
 	private boolean doppelschritt = false;
@@ -44,85 +46,78 @@ public class Bauer implements IBauer {
 	}
 
 	public void schlaegt(IFeld ziel, ISchlagbareFigur gegner)
-			throws NegativeConditionException {
-		
-		// b01
+	throws NegativeConditionException {
+
 		if(!gehoertSpieler().istZugberechtigt()){
-			Logger.test("B01 Spieler ist zugberechtigt = FALSE");	
+			Logger.test("B01 gehoertSpieler.istZugberechtigt = FALSE");
 			throw new NegativePreConditionException("Spieler dieser Figur ist nicht zugberechtigt.");
 		}
-		Logger.test("B01 Spieler ist zugberechtigt = TRUE");
-
-		// b02
+		Logger.test("B01 gehoertSpieler.istZugberechtigt = TRUE");
+		
 		if(Partiezustand.getInstance().istRemis()){
-			Logger.test("B02 Partie ist Remis = TRUE");
+			Logger.test("B02 istRemis = TRUE");
 			throw new NegativePreConditionException("Partie ist Remis");
 		}
-		Logger.test("B02 Partie ist Remis  = FALSE");
+		Logger.test("B02 istRemis = FALSE");
 		
-		// b03
-		if(Partiezustand.getInstance().istPatt()) {
-			Logger.test("B03 Partie ist Patt = TRUE");
+		if(Partiezustand.getInstance().istPatt()){
+			Logger.test("B03 istPatt = TRUE");
 			throw new NegativePreConditionException("Partie ist Patt");
 		}
-		Logger.test("B03 Partie ist Patt = FALSE");
+		Logger.test("B03 istPatt = FALSE");
 		
-		// b04
 		if(Partiezustand.getInstance().istSchachmatt()){
-			Logger.test("B04 Partie ist Matt = TRUE");
+			Logger.test("B04 istMatt = TRUE");
 			throw new NegativePreConditionException("Partie ist Schachmatt");
 		}
-		Logger.test("B04 Partie ist Matt = FALSE");
+		Logger.test("B04 istMatt = FALSE");
 		
-		// b05
 		IKoenig koenig = (IKoenig)(AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, gebeFarbe()).get(0));
 		if(koenig.istInEinerRochade()){
-			Logger.test("B05 Koenig ist in einer Rochade = TRUE");
+			Logger.test("B05 istInEinerRochade = TRUE");
 			throw new NegativePreConditionException("Koenig ist in einer Rochade");
 		}
-		Logger.test("B05 Koenig ist in einer Rochade = FALSE");
-		
-		// b06
+		Logger.test("B05 istInEinerRochade = FALSE");
 		if(Brett.getInstance().istBauernUmwandlung()){
-			Logger.test("B06 eine Bauernumwandlung steht an = TRUE");
+			Logger.test("B06 istBauernUmwandlung = TRUE");
 			throw new NegativePreConditionException("Eine Bauernumwandlung steht an.");
 		}
-		Logger.test("B06 eine Bauernumwandlung steht an = FALSE");
-		
-		// b07
+		Logger.test("B06 istBauernUmwandlung = FALSE");
+		//simuliere Stellung
 		try {
 			if(Partiehistorie.getInstance().simuliereStellung(gebePosition(), ziel, gegner).istKoenigBedroht(gebeFarbe())){
-				Logger.test("B07 Koenig wird im naechsten Zug bedroht = TRUE");
-				throw new NegativePreConditionException("König würde im nächsten Zug im Schach stehen.");
+				Logger.test("B07 ist könig bedroht = TRUE");
+				throw new NegativePreConditionException("Kšnig wŸrde im nŠchsten Zug im Schach stehen.");
 			}
+			Logger.test("B07 ist könig bedroht = FALSE");
 		} catch (IndexOutOfBoundsException e) {
-			throw new NegativePreConditionException("Upps, kein König mehr da?!");
+			throw new NegativePreConditionException("Upps, kein Kšnig mehr da?!");
 		}
-		Logger.test("B07 Koenig wird im naechsten Zug bedroht = FALSE");
 		
+		if(!gebePosition().plusReihe(1).minusLinie(1).equals(ziel) && !gebePosition().plusReihe(1).plusLinie(1).equals(ziel)){
+			Logger.test("B08 Gültige Gangart = FALSE");
+			throw new NegativePreConditionException("UngŸltiges Zielfeld");
+		}
+		Logger.test("B08 Gültige Gangart = TRUE");
 		testeSchlagZug(ziel);
 		
-		// b08
-		if(!ziel.istBesetzt()) {
-			Logger.test("B08 Zielfed ist besetzt = TRUE");
+		if(!ziel.istBesetzt()){
+			Logger.test("B09 ziel ist nicht Besetzt = TRUE");
 			throw new NegativePreConditionException("Schlagzug: Zielfeld ist nicht besetzt.");
 		}
-		Logger.test("B08 Zielfed ist besetzt = FALSE");
+		Logger.test("B09 ziel ist nicht Besetzt = FALSE");
 		
-		// b09
 		if(!(gegner instanceof ISchlagbareFigur)){
-			Logger.test("B09 Figur ist nicht schlagbar = TRUE");
+			Logger.test("B10 zu schlagende Figur Schlagbar = FALSE");
 			throw new NegativePreConditionException("Zu schlagende Figur ist nicht schlagbar.");
 		}
-		Logger.test("B09 Figur ist nicht schlagbar = FALSE");
+		Logger.test("B10 zu schlagende Figur Schlagbar = TRUE");
 		
-		// b10
-		if(gegner.gebeFarbe().equals(gebeFarbe())) {
-			Logger.test("B10 zu schlagende Figur hat eigene Farbe  = TRUE");
+		if(gegner.gebeFarbe().equals(gebeFarbe())){
+			Logger.test("B11 Farbe des Schlagenden == Farbed es Zuschlagende Figur = FALSE");
 			throw new NegativePreConditionException("Zu schlagende Figur gehšrt nicht dem gegnerischen Spieler.");
 		}
-		Logger.test("B10 zu schlagende Figur hat eigene Farbe  = FALSE");
-		
+		Logger.test("B11 Farbe des Schlagenden == Farbed es Zuschlagende Figur = TRUE");
 		ISchlagbareFigur gegner2 = (ISchlagbareFigur) gegner;
 		gegner2.setzeSollEntferntWerden();
 		gegner2.geschlagenWerden();
@@ -135,19 +130,20 @@ public class Bauer implements IBauer {
 		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
 			Partie.getInstance().lehneRemisAb(gehoertSpieler());
 		
-//		per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschlie§en)
+		//per se, alle Bauern haben erstmal keinen Doppelschritt gemacht (false positive ausschlie§en)
 		for(IFigur fig : AlleFiguren.getInstance().gebeFiguren(Figurart.BAUER, gebeFarbe())) {
 			((IBauer) fig).letzteRundeDoppelschritt(false);
 		}
-
+		
 		if(!Brett.getInstance().istBauernUmwandlung()){
+			
 			Partiehistorie.getInstance().protokolliereStellung(true, this);
 			Partie.getInstance().wechsleSpieler();
 		}
 		
-//		informiere die Beobachter, dass sich etwas geŠndert hat
+		//informiere die Beobachter, dass sich etwas geŠndert hat
 		figur.erzwingeUpdate();
-	}
+		}
 
 	public void schlaegtEnPassant(IFeld ziel)
 			throws NegativeConditionException {
@@ -289,19 +285,19 @@ public class Bauer implements IBauer {
 		try{
 			testeZiehZug(ziel);
 		} catch (NegativePreConditionException e) {
-			Logger.test("B09 Teste Zug gueltig = FALSE");
+			Logger.test("B08 Teste Zug gueltig = FALSE");
 			throw new NegativePreConditionException("ZiehZug nicht in Ordnung");			
 		}
-		Logger.test("B09 Teste Zug gueltig = TRUE");
+		Logger.test("B08 Teste Zug gueltig = TRUE");
 		
 		
 		// b08
 		if(ziel.istBesetzt()){
 			
-			Logger.test("B08 Zielfed ist besetzt = TRUE");
+			Logger.test("B09 Zielfed ist besetzt = TRUE");
 			throw new NegativePreConditionException("Ziel ist besetzt");
 		}
-		Logger.test("B08 Zielfed ist besetzt = FALSE");
+		Logger.test("B0 Zielfed ist besetzt = FALSE");
 			
 			
 		boolean dps = false;
@@ -378,6 +374,7 @@ public class Bauer implements IBauer {
 	
 	private void testeZiehZug(IFeld ziel) throws NegativeConditionException{
 		//Logger.test("führe aus: zieht nach "+ziel);
+		//Logger.test("figur auf C3: "+ Brett.getInstance().gebeFigurVonFeld(Brett.getInstance().gebeFeld(Reihe.R3, Linie.C)));
 		if(gebePosition().equals(ziel)){
 		//	Logger.test("B09 Zielfeld != Startfeld = FALSE");
 			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
