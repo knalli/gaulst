@@ -34,7 +34,7 @@ public class ConsoleLogger implements ILogger {
 	}
 
 	public void test(String string) {
-		if(notest)
+		if(!notest)
 			print(System.out, "TEST: "+string);
 	}
 
