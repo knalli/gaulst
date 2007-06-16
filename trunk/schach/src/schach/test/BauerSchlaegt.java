@@ -92,56 +92,120 @@ public class BauerSchlaegt {
 		CreateTestCase02();
 		
 	}
+	@Test(expected=NegativeConditionException.class)
+	public void b03NichtPattFalse() throws NegativeConditionException{
+		Logger.test("B03: ist die Partie Patt ?");
+		CreateTestCase03();
+		execSchwarzerBauerSchlaegtWeisserBauer();
+	}
 	
 	/*vor matt muss noch patt kommen*/
 	@Test (expected=NegativeConditionException.class)
 	public void b04NichtMattFalse() throws NegativeConditionException{
 		Logger.test("B04: ist die Partie Matt");
 		CreateTestCase04();
+		execweisserBauerSchlaegtSchwarzerBauer();
+		
+	}
+	
+	@Test (expected=NegativeConditionException.class)
+	public void b05KoenigBereitsInEinerRochadeFalse() throws NegativeConditionException{
+		Logger.test("B05: Befindet sich der Weisse König in einer Rochade?");
+		createTestCase05();
+		Koenig k = (Koenig) AlleFiguren.getInstance().gebeFiguren(Figurart.KOENIG, Farbe.WEISS).get(0);
+		k.setzeIstInEinerRochade(true);
+		execweisserBauerSchlaegtSchwarzerBauer();
+		
+	}
+	
+	@Test (expected=NegativeConditionException.class)
+	public void b06KeineBauernUmwandlungFalse() throws NegativeConditionException{
+		Logger.test("B06: Besteht derzeit eine Bauernumwandlung bevor ?");
+		createTestCase06();
+		execSchwarzerBauerSchlaegtWeisserBauer();
+		
+	}
+	
+	@Test (expected=NegativeConditionException.class)
+	public void b07KoenigNichtBedrohtImNaechstenZugFalse() throws NegativeConditionException{
+		Logger.test("B07: Wäre der Weisse König im nächsten Zug bedroht ?");
+		createTestCase07();
+		execweisserBauerSchlaegtSchwarzerBauer();
 		
 	}
 
 
 	private void CreateTestCase01() throws NegativeConditionException{
-	
 		for(String cmd : new String[]{
 				"E7E5","D1C1","D4E5"})
 			controller.parseInputString(cmd, true);
-		
-		
 	}
 	private void CreateTestCase02() throws NegativeConditionException{
-		// TODO Auto-generated method stub
 		for(String cmd : new String[]{
 				"E7E5","D1C1","D4E5","REMIS","B6B5","D4E5"})
 			controller.parseInputString(cmd, true);
-		
 	}
 	
-	private void CreateTestCase04() throws NegativeConditionException{
-		// TODO Auto-generated method stub
-		/*.	a2-a4	Lc8-b7
-		7.	d4-d5	Dd8-c8
-		8.	Ld2-e3	Dc8-c7
-		9.	d5-d6	Dc7-c6
-		10.	h2-h4	Dc6-c5
-		11.	b2-b4	a7-a6
-		12.	b4xc5	Sg8-h6
-		13.	Sg1-f3	Ke8-d8
-		14.	c5-c6	g7-g6
-		15.	c6-c7+	*/
+	private void CreateTestCase03() throws NegativeConditionException{
+
+
 		for(String cmd : new String[]{
-				"A2-A4","C8-B7","D4-D5","D8-C8","D2-E3","C8-C7",
-				"D5-D6","C7-C6","H2-H4","C6-C5","B2-B4","G8-H6","G1-F3",
-				"E8-D8","C5-C6","G7-G6","C6-C7"})
+				"A4C5", "D4D6",
+				"D2E5", "F4E4",
+				"H3E7", "H2H4",
+				"A3E6", "G3B3",
+				"D2A5", "D5E3 ",
+				"C4F5", "F3F4"})
+			controller.parseInputString(cmd, true);
+		
+	}
+	private void CreateTestCase04() throws NegativeConditionException{
+
+		for(String cmd : new String[]{
+				"F2F3", "E7E6",
+				"G2G4", "D8H8"})
+			controller.parseInputString(cmd, true);
+	}
+	
+	private void createTestCase05() throws NegativeConditionException{
+		// TODO Auto-generated method stub
+		for(String cmd : new String[]{
+				"B1A3", "B8A6",
+				"D2D4", "D7D5",
+				"D1D3", "D8D6",
+				"C1D2", "C8D7"})
+			controller.parseInputString(cmd, true);	
+	}
+	
+	private void createTestCase06() throws NegativeConditionException{
+
+		for(String cmd : new String[]{
+				"B1A3", "B8A6",
+				"D2D4", "D7D5",
+				"D1D3", "D8D6",
+				"C1D2", "C8D7",
+				"C2C4", "B7B5",
+				"C4B5", "C7C5", 
+				"B5C6", "D7C8",
+				"C6C7", "C8D7",
+				"C7C8"})
 			controller.parseInputString(cmd, true);
 		
 	}
 	
-	
-	
-
-
+	private void createTestCase07() throws NegativeConditionException{
+		// TODO Auto-generated method stub
+		for(String cmd : new String[]{
+				"B1A3", "B8A6", 
+				"D2D3", "D7D6", 
+				"C1E3", "C8D7", 
+				"F2F3", "E7E6", 
+				"D1D2", "D8G5",
+				"D2C3", "G5E3",
+				"A3B5", "E3D3"})
+			controller.parseInputString(cmd, true);
+		
+	}
 	private void createTestCaseOkayb() throws NegativeConditionException{
 	
 		for(String cmd : new String[]{
