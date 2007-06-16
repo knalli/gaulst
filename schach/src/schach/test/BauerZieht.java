@@ -62,7 +62,7 @@ public class BauerZieht {
 	}
 	
 	private void execWeisserBauerZieht() throws NegativeConditionException {
-		controller.parseInputString("E2E3", true);
+		controller.parseInputString("h2h3", true);
 	}
 	
 	private static IController controller;
@@ -92,60 +92,67 @@ public class BauerZieht {
 	@Test (expected=NegativeConditionException.class)
 	public void b01FarbeAmZugFalse() throws NegativeConditionException{
 		Logger.test("B01 ist der Spieler weiss zugberechtigt?");
+		Logger.noTest();
 		CreateTestCase01();
+		Logger.disableAllExceptTest();
 		execWeisserBauerZieht();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b02NichtRemisFalse() throws NegativeConditionException{
 		Logger.test("B02: ist die Partie Remis ?");
-		//CreateTestCase02();
+		Logger.noTest();
+		createTestCase02();
+		Logger.disableAllExceptTest();
+		execWeisserBauerZieht();
 	}
 	@Test(expected=NegativeConditionException.class)
 	public void b03NichtPattFalse() throws NegativeConditionException{
 		Logger.test("B03: ist die Partie Patt ?");
-		//CreateTestCase03();
+		Logger.noTest();
+		createTestCase03();
+		Logger.disableAllExceptTest();
+		execWeisserBauerZieht();
 	}
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b04NichtMattFalse() throws NegativeConditionException{
 		Logger.test("B04: ist die Partie Matt ?");
-		//CreateTestCase04();
+		Logger.noTest();
+
+		Logger.disableAllExceptTest();
+		execWeisserBauerZieht();
 	}	
 	
 	private void CreateTestCase01() throws NegativeConditionException{
 		for(String cmd : new String[]{
-				"A2A3","B8C6",
-				"C1A2"})
+				"B2B3","B8C6",
+				"C1B2"})
 			controller.parseInputString(cmd, true);
 	}
 	
-	private void CreateTestCase02() throws NegativeConditionException{
+	public void createTestCase02() throws NegativeConditionException {
+		for(String cmd : new String[] {"D2D4", "C7C5", "C1D2", "REMIS", "H7H5", "REMIS"})
+			controller.parseInputString(cmd, true);
+	}
+	
+	
+	public void createTestCase03() throws NegativeConditionException {
 		for(String cmd : new String[]{
-				"E7E5","D1C1",
-				"D4E5","REMIS",
-				"B6B5","D4E5"})
+				"E2E3", "A7A5",
+				"D1H5", "A8A6",
+				"H5A5", "H7H5",
+				"A5C7", "A6H6",
+				"H2H4", "F7F6",
+				"C7D7", "E8F7",
+				"D7B7", "D8D3",
+				"B7B8", "D3H7",
+				"B8C8", "F7G6",
+				"C8E6"})
 			controller.parseInputString(cmd, true);
 	}
 	
-	
-	private void CreateTestCase03() throws NegativeConditionException{
-		for(String cmd : new String[]{
-				"A4C5", "D4D6",
-				"D2E5", "F4E4",
-				"H3E7", "H2H4",
-				"A3E6", "G3B3",
-				"D2A5", "D5E3",
-				"C4F5", "F3F4"})
-			controller.parseInputString(cmd, true);
-	}
-	private void CreateTestCase04() throws NegativeConditionException{
 
-		for(String cmd : new String[]{
-				"F2F3", "E7E6",
-				"G2G4", "D8H8"})
-			controller.parseInputString(cmd, true);
-	}
 
 	public void createTestCase06() throws NegativeConditionException {
 		for(String cmd : new String[]{
