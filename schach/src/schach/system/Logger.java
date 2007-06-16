@@ -48,4 +48,10 @@ public class Logger {
 			logger.disableAllExceptTest();
 		}
 	}
+	
+	public static void noTest() {
+		for(ILogger logger : loggers){
+			logger.noTest();
+		}
+	}
 }

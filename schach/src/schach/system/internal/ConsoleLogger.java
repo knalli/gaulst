@@ -7,6 +7,7 @@ import schach.system.ILogger;
 public class ConsoleLogger implements ILogger {
 	
 	private boolean onlytest = false;
+	private boolean notest = false;
 
 	private void print(PrintStream out, String string){
 		out.println(string);
@@ -33,10 +34,16 @@ public class ConsoleLogger implements ILogger {
 	}
 
 	public void test(String string) {
-		print(System.out, "TEST: "+string);
+		if(notest)
+			print(System.out, "TEST: "+string);
 	}
 
 	public void disableAllExceptTest() {
 		onlytest = true;
+		notest  = false;
+	}
+
+	public void noTest() {
+		notest = true;
 	}
 }
