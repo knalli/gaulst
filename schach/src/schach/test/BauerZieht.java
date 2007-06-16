@@ -8,12 +8,10 @@ import org.junit.Test;
 
 import schach.brett.Farbe;
 import schach.brett.Figurart;
-import schach.brett.IBauer;
 import schach.brett.Linie;
 import schach.brett.Reihe;
 import schach.brett.internal.AlleFiguren;
 import schach.brett.internal.Brett;
-import schach.brett.internal.Bauer;
 import schach.brett.internal.Koenig;
 import schach.partie.internal.Partie;
 import schach.partie.internal.Partiehistorie;
@@ -126,7 +124,7 @@ public class BauerZieht {
 		execWeisserBauerZieht();
 	}
 	
-	// b04
+	// t04
 	@Test (expected=NegativeConditionException.class)
 	public void b04NichtMattFalse() throws NegativeConditionException{
 		Logger.test("t04: ist die Partie Matt ?");
@@ -136,7 +134,7 @@ public class BauerZieht {
 		execWeisserBauerZieht();
 	}	
 	
-	// b05
+	// t05
 	@Test (expected=NegativeConditionException.class)
 	public void b05KoenigBereitsInEinerRochadeFalse() throws NegativeConditionException {
 		Logger.test("t05: Befindet sich der weisse Koenig bereits in einer Rochade?");
@@ -148,7 +146,7 @@ public class BauerZieht {
 		execWeisserBauerZieht();
 	}
 	
-	// b06
+	// t06
 	@Test (expected=NegativeConditionException.class)
 	public void b06KeineBauernUmwandlungFalse() throws NegativeConditionException {
 		Logger.test("t06: Besteht derzeit eine Bauernumwandlung bevor?");
@@ -158,7 +156,7 @@ public class BauerZieht {
 		execWeisserBauerZieht();
 	}
 	
-	// b07
+	// t07
 	@Test (expected=NegativeConditionException.class)
 	public void b07KoenigNichtBedrohtImNaechstenZugFalse() throws NegativeConditionException {
 		Logger.test("t07: Waere der weisse Koenig im naechsten Zug direkt bedroht?");
@@ -168,7 +166,7 @@ public class BauerZieht {
 		controller.parseInputString("F2F4", true);
 	}
 	
-	// b08
+	// t08
 	@Test (expected=NegativeConditionException.class)
 	public void b08ZielfeldNichtBesetztFalse() throws NegativeConditionException {
 		Logger.test("t08: Zugfeld besetzt?");
@@ -188,6 +186,7 @@ public class BauerZieht {
 		controller.parseInputString("D3D5", true);
 	}
 	
+	// t10
 	@Test (expected=NegativeConditionException.class)
 	public void b10GangartErlaubtFalse() throws NegativeConditionException {
 		Logger.test("t10: Gangart gueltig?");
@@ -196,9 +195,6 @@ public class BauerZieht {
 		Logger.disableAllExceptTest();
 		controller.parseInputString("D3E4", true);
 	}
-	
-	
-	
 	
 	
 	private void CreateTestCase01() throws NegativeConditionException{
@@ -273,14 +269,11 @@ public class BauerZieht {
 		controller.parseInputString(cmd, true);
 	}
 	
-	
 	public void createTestCase09() throws NegativeConditionException {
 		for(String cmd : new String[]{
 				"D2D3", "B8A6"})
 		controller.parseInputString(cmd, true);
 	}
-	
-
 	
 	public void createTestCaseOK00a() throws NegativeConditionException {
 		for(String cmd : new String[]{
