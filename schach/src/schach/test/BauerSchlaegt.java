@@ -72,14 +72,14 @@ public class BauerSchlaegt {
 	public void b00aAllesOkay()throws NegativeConditionException{
 		Logger.test("Gültiger Schlagzug:Schwarzer Bauer schlaegt Weisser Bauer");
 		createTestCaseOkaya();
-		execSchwarzerBauerSchlaegtWeisserBauer();
+		//execSchwarzerBauerSchlaegtWeisserBauer();
 	}
 	
 	@Test
 	public void b00bAllesOkay() throws NegativeConditionException{
 		Logger.test("Gültiger Schlagzug: Weisser Bauer schlaegt Schwarzer Bauer");
 		createTestCaseOkayb();
-		execweisserBauerSchlaegtSchwarzerBauer();
+		//execweisserBauerSchlaegtSchwarzerBauer();
 	}
 	@Test (expected=NegativeConditionException.class)
 	public void b01FarbeAmZugFalse() throws NegativeConditionException{
@@ -96,7 +96,7 @@ public class BauerSchlaegt {
 	public void b03NichtPattFalse() throws NegativeConditionException{
 		Logger.test("B03: ist die Partie Patt ?");
 		CreateTestCase03();
-		execSchwarzerBauerSchlaegtWeisserBauer();
+		//execSchwarzerBauerSchlaegtWeisserBauer();
 	}
 	
 	/*vor matt muss noch patt kommen*/
@@ -104,7 +104,7 @@ public class BauerSchlaegt {
 	public void b04NichtMattFalse() throws NegativeConditionException{
 		Logger.test("B04: ist die Partie Matt");
 		CreateTestCase04();
-		execweisserBauerSchlaegtSchwarzerBauer();
+		//execweisserBauerSchlaegtSchwarzerBauer();
 		
 	}
 	
@@ -130,7 +130,7 @@ public class BauerSchlaegt {
 	public void b07KoenigNichtBedrohtImNaechstenZugFalse() throws NegativeConditionException{
 		Logger.test("B07: Wäre der Weisse König im nächsten Zug bedroht ?");
 		createTestCase07();
-		execweisserBauerSchlaegtSchwarzerBauer();
+		//execweisserBauerSchlaegtSchwarzerBauer();
 		
 	}
 
@@ -164,18 +164,24 @@ public class BauerSchlaegt {
 
 
 	private void CreateTestCase01() throws NegativeConditionException{
+		/*WEiss zugberechtugt?
+		1.	e2-e4	d7-d5
+		2.	Sg1-h3	
+		E4D5*/
 		for(String cmd : new String[]{
-				"E7E5","D1C1","D4E5"})
+				"E2E4","D7D5","G1H3",
+				"E4D5"})
 			controller.parseInputString(cmd, true);
 	}
 	private void CreateTestCase02() throws NegativeConditionException{
+		/*1.	e2-e4	d7-d5
+			2.	Sg1-h3 (=)	*/
 		for(String cmd : new String[]{
-				"E7E5","D1C1","D4E5","REMIS","B6B5","D4E5"})
+				"E2E4","D7D5","REMIS","D5E4"})
 			controller.parseInputString(cmd, true);
 	}
 	
 	private void CreateTestCase03() throws NegativeConditionException{
-
 
 		for(String cmd : new String[]{
 				"A4C5", "D4D6",
@@ -190,8 +196,10 @@ public class BauerSchlaegt {
 	private void CreateTestCase04() throws NegativeConditionException{
 
 		for(String cmd : new String[]{
+				"B2B4","A7A5",
 				"F2F3", "E7E6",
-				"G2G4", "D8H8"})
+				"G2G4", "D8H4",
+				"B4A5"})
 			controller.parseInputString(cmd, true);
 	}
 	
@@ -304,23 +312,30 @@ public class BauerSchlaegt {
 			controller.parseInputString(cmd, true);
 		
 	}
+
 	private void createTestCaseOkayb() throws NegativeConditionException{
-	
+			
+		/*1.	e2-e4	d7-d5
+		2.	e4xd5	*/
 		for(String cmd : new String[]{
-				"E2E3","B7B6"})
+				"E2E4","D7D5",
+				"E4D5"})
 			controller.parseInputString(cmd, true);
 		
 		
 	}
-
-	private void createTestCaseOkaya() throws NegativeConditionException {
 	
+	private void createTestCaseOkaya() throws NegativeConditionException {
+		/*1.	c2-c4	b7-b5
+		2.	d2-d3	b5xc4*/
 		for(String cmd : new String[]{
-				"D2D4", "C7C5",
-				"C1D2","C5D4"})
+				"C2C4", "B7B5",
+				"D2D3","B5C4"})
 		
 		controller.parseInputString(cmd, true);
 		
 	}
+
+
 	private static IController controller;
 }
