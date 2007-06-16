@@ -35,7 +35,7 @@ import schach.system.internal.Controller;
  * Dies testet den Operator Koenig.rochiert() mittels MINIMALEN MEHRFACHBEDINGUNGSTEST!
  * 
  * Junit-Funktionen
- * <ul><li>setUpBeforeClass wird benštigt, um einmalig etwas zu initialisieren</li>
+ * <ul><li>setUpBeforeClass wird benötigt, um einmalig etwas zu initialisieren</li>
  * <li>tearDownAfterClass wird benštigt, um (optional) etwas ganz Ende wieder zu entfernen</li>
  * <li>setUp wird benštigt, um vor jedem Testfall die Situation zu resetten</li>
  * <li>tearDown wird benštigt, um optional nach jedem Testfall etwas zu berechnen</li>
@@ -266,7 +266,7 @@ public class KoenigRochiert {
 	
 	@Test (expected=NegativeConditionException.class)
 	public void b16bZugwegDesKoenigNichtBedrohtFalse() throws NegativeConditionException {
-		Logger.test("B16b: Die Zugfelder des wei§en Kšnigs sind nicht bedroht?");
+		Logger.test("B16b: Die Zugfelder des weissen Kšnigs sind nicht bedroht?");
 		createTestCase16b();
 		execKleineRoachadeNachRechtsMitWeiss();
 	}
