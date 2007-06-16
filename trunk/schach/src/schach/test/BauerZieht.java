@@ -31,7 +31,7 @@ public class BauerZieht {
 		View.setView(View.DEVNULL);
 		Logger.appendLogger("console");
 		Logger.disableAllExceptTest();
-		Logger.test("Test WEISSER KOENIG ROCHIERT gestartet..");
+		Logger.test("Test WEISSER BAUER ZIEHT gestartet..");
 		
 		Brett.getInstance();
 		Partie.getInstance().start();
@@ -119,7 +119,7 @@ public class BauerZieht {
 	public void b04NichtMattFalse() throws NegativeConditionException{
 		Logger.test("B04: ist die Partie Matt ?");
 		Logger.noTest();
-
+		createTestCase04();
 		Logger.disableAllExceptTest();
 		execWeisserBauerZieht();
 	}	
@@ -151,7 +151,12 @@ public class BauerZieht {
 				"C8E6"})
 			controller.parseInputString(cmd, true);
 	}
-	
+	public void createTestCase04() throws NegativeConditionException {
+		for(String cmd : new String[]{
+				"F2F3", "E7E6",
+				"G2G4", "D8H4"})
+			controller.parseInputString(cmd, true);
+	}
 
 
 	public void createTestCase06() throws NegativeConditionException {
