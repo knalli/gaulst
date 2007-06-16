@@ -7,4 +7,5 @@ public interface ILogger {
 	public void warning(String string);
 	public void test(String string);
 	public void disableAllExceptTest();
+	public void noTest();
 }
