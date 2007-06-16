@@ -286,10 +286,18 @@ public class Bauer implements IBauer {
 		
 //		if(!position.plusReihe(1).equals(ziel) && !(position.plusReihe(2).equals(ziel) && !doppelschritt))
 //			throw new NegativePreConditionException("UngŸltiges Ziel");
-		testeZiehZug(ziel);
+		try{
+			testeZiehZug(ziel);
+		} catch (NegativePreConditionException e) {
+			Logger.test("B09 Teste Zug gueltig = FALSE");
+			throw new NegativePreConditionException("ZiehZug nicht in Ordnung");			
+		}
+		Logger.test("B09 Teste Zug gueltig = TRUE");
+		
 		
 		// b08
 		if(ziel.istBesetzt()){
+			
 			Logger.test("B08 Zielfed ist besetzt = TRUE");
 			throw new NegativePreConditionException("Ziel ist besetzt");
 		}
@@ -369,11 +377,12 @@ public class Bauer implements IBauer {
 	}
 	
 	private void testeZiehZug(IFeld ziel) throws NegativeConditionException{
+		//Logger.test("führe aus: zieht nach "+ziel);
 		if(gebePosition().equals(ziel)){
-			Logger.test("B09 Zielfeld != Startfeld = FALSE");
+		//	Logger.test("B09 Zielfeld != Startfeld = FALSE");
 			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
 		}
-		Logger.test("B09 Zielfeld != Startfeld = TRUE");
+		//Logger.test("B09 Zielfeld != Startfeld = TRUE");
 		
 		boolean gueltig = false;
 		try {
@@ -384,10 +393,10 @@ public class Bauer implements IBauer {
 		} catch(NegativeConditionException e){}
 		
 		if(!gueltig){
-			Logger.test("B10 Gangart ist gueltig = FALSE");
+		//	Logger.test("B10 Gangart ist gueltig = FALSE");
 			throw new NegativePreConditionException("Ungueltige Gangart (Ziehen).");
 		}
-		Logger.test("B10 Gangart ist gueltig = TRUE");
+		//Logger.test("B10 Gangart ist gueltig = TRUE");
 		
 		boolean dps = false;
 		try {
@@ -395,10 +404,10 @@ public class Bauer implements IBauer {
 		} catch (NegativePreConditionException e) {}
 		if(dps && !wurdeBewegt()) {
 			if(gebePosition().plusReihe(1).istBesetzt() || ziel.istBesetzt()){
-				Logger.test("B11 Ziel und Zugweg sind frei = FALSE");	
+			//	Logger.test("B11 Ziel und Zugweg sind frei = FALSE");	
 				throw new NegativePreConditionException("Ziel oder Zugweg ist besetzt.");
 			}
-			Logger.test("B11 Ziel und Zugweg sind frei = TRUE");
+			//Logger.test("B11 Ziel und Zugweg sind frei = TRUE");
 		}
 	}
 	
