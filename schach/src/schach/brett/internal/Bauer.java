@@ -369,8 +369,11 @@ public class Bauer implements IBauer {
 	}
 	
 	private void testeZiehZug(IFeld ziel) throws NegativeConditionException{
-		if(gebePosition().equals(ziel))
+		if(gebePosition().equals(ziel)){
+			Logger.test("B09 Zielfeld != Startfeld = FALSE");
 			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+		}
+		Logger.test("B09 Zielfeld != Startfeld = TRUE");
 		
 		boolean gueltig = false;
 		try {
@@ -380,22 +383,32 @@ public class Bauer implements IBauer {
 			gueltig = gueltig || (gebePosition().plusReihe(2).equals(ziel) && !wurdeBewegt() && !ziel.istBesetzt());
 		} catch(NegativeConditionException e){}
 		
-		if(!gueltig)
+		if(!gueltig){
+			Logger.test("B10 Gangart ist gueltig = FALSE");
 			throw new NegativePreConditionException("Ungueltige Gangart (Ziehen).");
+		}
+		Logger.test("B10 Gangart ist gueltig = TRUE");
 		
 		boolean dps = false;
 		try {
 			dps = gebePosition().plusReihe(2).equals(ziel);
 		} catch (NegativePreConditionException e) {}
 		if(dps && !wurdeBewegt()) {
-			if(gebePosition().plusReihe(1).istBesetzt() || ziel.istBesetzt())
+			if(gebePosition().plusReihe(1).istBesetzt() || ziel.istBesetzt()){
+				Logger.test("B11 Ziel und Zugweg sind frei = FALSE");	
 				throw new NegativePreConditionException("Ziel oder Zugweg ist besetzt.");
+			}
+			Logger.test("B11 Ziel und Zugweg sind frei = TRUE");
 		}
 	}
 	
 	private void testeSchlagZug(IFeld ziel) throws NegativeConditionException{
-		if(gebePosition().equals(ziel))
+		if(gebePosition().equals(ziel)){
+		//	Logger.test("B11 Zielfeld != Startfeld = FALSE");
 			throw new NegativePreConditionException("Zielfeld kann nicht Startfeld sein.");
+		}
+		//Logger.test("B11 Zielfeld != Startfeld = TRUE");
+			
 		
 		boolean gueltig = false;
 		try {
@@ -405,8 +418,11 @@ public class Bauer implements IBauer {
 			gueltig = gueltig || gebePosition().plusReihe(1).plusLinie(1).equals(ziel);
 		} catch(NegativeConditionException e){}
 		
-		if(!gueltig)
+		if(!gueltig){
+		//	Logger.test("B12 Gangart ist gueltig = FALSE");
 			throw new NegativePreConditionException("Ungültige Gangart (schlagen).");
+		}
+		//Logger.test("B12 Gangart ist gueltig = TRUE");
 		
 		if(!ziel.istBesetzt()){
 			IFigur potbauer = Brett.getInstance().gebeFigurVonFeld(ziel.minusReihe(1));
