@@ -299,8 +299,7 @@ public class Bauer implements IBauer {
 		}
 		Logger.test("B07 Koenig wird im naechsten Zug bedroht = FALSE");
 		
-//		if(!position.plusReihe(1).equals(ziel) && !(position.plusReihe(2).equals(ziel) && !doppelschritt))
-//			throw new NegativePreConditionException("UngŸltiges Ziel");
+		// b08
 		try{
 			testeZiehZug(ziel);
 		} catch (NegativePreConditionException e) {
@@ -310,13 +309,13 @@ public class Bauer implements IBauer {
 		Logger.test("B08 Teste Zug gueltig = TRUE");
 		
 		
-		// b08
+		// b09
 		if(ziel.istBesetzt()){
 			
 			Logger.test("B09 Zielfed ist besetzt = TRUE");
 			throw new NegativePreConditionException("Ziel ist besetzt");
 		}
-		Logger.test("B0 Zielfed ist besetzt = FALSE");
+		Logger.test("B09 Zielfed ist besetzt = FALSE");
 			
 			
 		boolean dps = false;
@@ -328,10 +327,15 @@ public class Bauer implements IBauer {
 			macheEinenDoppelschritt = true;
 		}
 			
+		//ns0
 		figur.gebePosition().istBesetzt(false);
+		//ns1
 		figur.speichereVorPosition();
+		//ns2
 		figur.setzeUmPosition(ziel);
+		//ns3
 		figur.gebePosition().istBesetzt(true);
+		Logger.test("Operation ns0 - ns3 wird ausgeführt-> Figur wird umpositioniert und besetzt das Neue Feld");	
 		
 		if(!Partiezustand.getInstance().istRemisAngebotVon(gehoertSpieler()))
 			Partie.getInstance().lehneRemisAb(gehoertSpieler());
