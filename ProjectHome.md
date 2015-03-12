@@ -1,0 +1,1 @@
+Ein Schachprogramm von ST.
